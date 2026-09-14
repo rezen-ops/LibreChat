@@ -1,7 +1,7 @@
 import { useMemo } from 'react';
 import { useRecoilValue } from 'recoil';
-import { BarChart3, MessagesSquare } from 'lucide-react';
 import { useLocation, useNavigate } from 'react-router-dom';
+import { BarChart3, BookOpen, MessagesSquare } from 'lucide-react';
 import { useUserKeyQuery } from 'librechat-data-provider/react-query';
 import { getConfigDefaults, getEndpointField } from 'librechat-data-provider';
 import type { TEndpointsConfig } from 'librechat-data-provider';
@@ -9,6 +9,7 @@ import type { NavLink } from '~/common';
 import { useGetEndpointsQuery, useGetStartupConfig, useInsightsAccessQuery } from '~/data-provider';
 import ConversationsSection from '~/components/UnifiedSidebar/ConversationsSection';
 import useSideNavLinks from '~/hooks/Nav/useSideNavLinks';
+import KmhDocs from '~/components/Kmh/KmhDocs';
 import { useAuthContext } from '~/hooks';
 import store from '~/store';
 
@@ -64,6 +65,14 @@ export default function useUnifiedSidebarLinks() {
   });
 
   const links = useMemo(() => {
+    /** KMH: appended last so upstream tabs keep their positions. */
+    const docsLink: NavLink = {
+      title: 'com_kmh_docs',
+      label: '',
+      icon: BookOpen,
+      id: 'kmh-docs',
+      Component: KmhDocs,
+    };
     const conversationLink: NavLink = {
       title: 'com_ui_chat_history',
       label: '',
@@ -76,7 +85,7 @@ export default function useUnifiedSidebarLinks() {
       !insightsFeatureEnabled ||
       (!isInsightsRoute && !isInsightsAccessLoading && insightsAccess?.access !== true)
     ) {
-      return [conversationLink, ...sideNavLinks];
+      return [conversationLink, ...sideNavLinks, docsLink];
     }
 
     const insightsLink: NavLink = {
@@ -95,7 +104,7 @@ export default function useUnifiedSidebarLinks() {
     const nextLinks = [...sideNavLinks];
     nextLinks.splice(mcpIndex >= 0 ? mcpIndex + 1 : nextLinks.length, 0, insightsLink);
 
-    return [conversationLink, ...nextLinks];
+    return [conversationLink, ...nextLinks, docsLink];
   }, [
     insightsAccess?.access,
     insightsFeatureEnabled,
