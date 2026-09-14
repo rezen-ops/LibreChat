@@ -22,6 +22,7 @@ import {
   useToastContext,
 } from '@librechat/client';
 import type { TChatProject } from 'librechat-data-provider';
+import PodColorPicker from '~/components/Kmh/PodColorPicker';
 import { useCreateProjectMutation } from '~/data-provider';
 import { useLocalize } from '~/hooks';
 
@@ -45,6 +46,7 @@ export default function ProjectCreateDialog({
   const inputRef = useRef<HTMLInputElement | null>(null);
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
+  const [color, setColor] = useState<string>('');
   const createProject = useCreateProjectMutation();
   const { showToast } = useToastContext();
 
@@ -80,6 +82,7 @@ export default function ProjectCreateDialog({
       const project = await createProject.mutateAsync({
         name: trimmedName,
         ...(trimmedDescription ? { description: trimmedDescription } : {}),
+        ...(color && color !== 'none' ? { color } : {}),
       });
       resetForm();
       onOpenChange(false);
@@ -114,6 +117,15 @@ export default function ProjectCreateDialog({
                 maxLength={MAX_CHAT_PROJECT_NAME_LENGTH}
                 className="w-full"
               />
+            </div>
+            <div className="space-y-2">
+              <Label className="text-sm font-medium text-text-primary">
+                {localize('com_kmh_pod_colour')}{' '}
+                <span className="font-normal text-text-secondary">
+                  {localize('com_ui_optional')}
+                </span>
+              </Label>
+              <PodColorPicker value={color} onChange={setColor} />
             </div>
             <div className="space-y-2">
               <Label

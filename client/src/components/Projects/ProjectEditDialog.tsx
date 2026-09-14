@@ -14,6 +14,7 @@ import {
   useToastContext,
 } from '@librechat/client';
 import type { TChatProject } from 'librechat-data-provider';
+import PodColorPicker from '~/components/Kmh/PodColorPicker';
 import { useUpdateProjectMutation } from '~/data-provider';
 import { NotificationSeverity } from '~/common';
 import { useLocalize } from '~/hooks';
@@ -30,6 +31,7 @@ export default function ProjectEditDialog({ open, onOpenChange, project }: Proje
   const inputRef = useRef<HTMLInputElement | null>(null);
   const [name, setName] = useState(project.name);
   const [description, setDescription] = useState(project.description ?? '');
+  const [color, setColor] = useState<string>(project.color ?? '');
   const [wasOpen, setWasOpen] = useState(open);
   const updateProject = useUpdateProjectMutation();
   const { showToast } = useToastContext();
@@ -39,6 +41,7 @@ export default function ProjectEditDialog({ open, onOpenChange, project }: Proje
     if (open) {
       setName(project.name);
       setDescription(project.description ?? '');
+      setColor(project.color ?? '');
     }
   }
 
@@ -53,7 +56,9 @@ export default function ProjectEditDialog({ open, onOpenChange, project }: Proje
   const trimmedName = name.trim();
   const trimmedDescription = description.trim();
   const isUnchanged =
-    trimmedName === project.name && trimmedDescription === (project.description ?? '').trim();
+    trimmedName === project.name &&
+    trimmedDescription === (project.description ?? '').trim() &&
+    color === (project.color ?? '');
 
   const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -66,6 +71,7 @@ export default function ProjectEditDialog({ open, onOpenChange, project }: Proje
         projectId: project._id,
         name: trimmedName,
         description: trimmedDescription,
+        color: color === 'none' ? '' : color,
       },
       {
         onSuccess: () => onOpenChange(false),
@@ -99,6 +105,12 @@ export default function ProjectEditDialog({ open, onOpenChange, project }: Proje
                 maxLength={MAX_CHAT_PROJECT_NAME_LENGTH}
                 className="w-full"
               />
+            </div>
+            <div className="space-y-2">
+              <Label className="text-sm font-medium text-text-primary">
+                {localize('com_kmh_pod_colour')}
+              </Label>
+              <PodColorPicker value={color} onChange={setColor} />
             </div>
             <div className="space-y-2">
               <Label

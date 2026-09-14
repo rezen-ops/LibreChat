@@ -17,6 +17,7 @@ import type { LocalizeFunction, MenuItemProps, RenderProp } from '~/common';
 import { useProjectsInfiniteQuery } from '~/data-provider';
 import ProjectCreateDialog from './ProjectCreateDialog';
 import ProjectDeleteDialog from './ProjectDeleteDialog';
+import { podColor } from '~/components/Kmh/podColors';
 import ProjectEditDialog from './ProjectEditDialog';
 import ProjectsNavBar from './ProjectsNavBar';
 import { useLocalize } from '~/hooks';
@@ -105,9 +106,15 @@ function ProjectCard({
     >
       <button
         type="button"
-        className="flex min-h-[9.5rem] flex-1 flex-col rounded-2xl p-4 pr-12 text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-text-primary"
+        className="relative flex min-h-[9.5rem] flex-1 flex-col overflow-hidden rounded-2xl p-4 pr-12 text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-text-primary"
         onClick={() => onOpen(project._id)}
       >
+        {podColor(project.color).rail ? (
+          <span
+            aria-hidden="true"
+            className={`absolute left-0 top-0 h-full w-1 rounded-l-2xl ${podColor(project.color).rail}`}
+          />
+        ) : null}
         <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-surface-tertiary text-text-secondary transition-colors group-hover/project:text-text-primary">
           <Folder className="h-5 w-5" aria-hidden="true" />
         </span>

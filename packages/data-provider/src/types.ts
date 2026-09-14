@@ -411,11 +411,14 @@ export type TChatProject = {
   lastConversationId?: string | null;
   createdAt: string;
   updatedAt: string;
+  /** KMH: pod colour key from the fixed palette in ~/components/Kmh/podColors. */
+  color?: string;
 };
 
 export type TCreateChatProjectRequest = {
   name: string;
   description?: string;
+  color?: string;
 };
 
 export type TUpdateChatProjectRequest = Partial<TCreateChatProjectRequest> & {

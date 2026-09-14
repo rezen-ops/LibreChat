@@ -11,6 +11,8 @@ export interface IChatProject {
   createdAt?: Date;
   updatedAt?: Date;
   tenantId?: string;
+  /** KMH: pod colour key from the fixed palette. */
+  color?: string;
 }
 
 export interface IChatProjectDocument extends Omit<IChatProject, '_id'>, Document {}

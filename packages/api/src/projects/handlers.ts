@@ -65,6 +65,7 @@ const createProjectInput = (req: ProjectRequest): CreateChatProjectInput | null 
   return {
     name,
     description: typeof req.body?.description === 'string' ? req.body.description : '',
+    color: typeof req.body?.color === 'string' ? req.body.color : '',
   };
 };
 
@@ -168,6 +169,9 @@ export function createProjectHandlers(deps: ProjectHandlerDependencies): {
         return res.status(400).json({ error: 'name is required' });
       }
       input.name = name;
+    }
+    if (req.body?.color !== undefined) {
+      input.color = typeof req.body.color === 'string' ? req.body.color : '';
     }
     if (req.body?.description !== undefined) {
       input.description = typeof req.body.description === 'string' ? req.body.description : '';
