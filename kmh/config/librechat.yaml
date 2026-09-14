@@ -1,0 +1,1345 @@
+# ════════════════════════════════════════════════════════════════════════════
+# LibreChat — KMH pilot (iteration 1)
+#
+# Scope: one client, three agents, cost measured against TypingMind.
+# Deliberately NOT here: Redis, Meilisearch, Vertex, multi-client, semantic cache.
+#
+# NOTE: USE_REDIS is false in the pilot, so edits here take effect on restart.
+# The moment Redis arrives in iteration 2, a cache flush MUST go into the deploy
+# script or config changes will silently stop applying.
+# ════════════════════════════════════════════════════════════════════════════
+
+version: 1.3.1
+cache: true
+
+# ── Per-user token budgets ──────────────────────────────────────────────────
+# 1000 credits = $0.001. 20M credits ≈ $20/month per person.
+# Checked against prompt tokens pre-flight; completion may run a small deficit.
+balance:
+  # Disabled by decision: cost is tracked and reported, never enforced. Nobody
+  # gets cut off mid-sentence. Re-enable only if spend actually becomes a problem.
+  enabled: false
+
+# ── Agents ──────────────────────────────────────────────────────────────────
+endpoints:
+  agents:
+    recursionLimit: 25
+    maxRecursionLimit: 50
+    disableBuilder: false
+    allowedProviders: ['anthropic', 'openAI']
+    maxSubagents: 10
+
+    capabilities:
+      - file_search      # RAG retrieval — always prefer over file context
+      - artifacts
+      - skills
+      - tools
+      - web_search
+
+    # Each citation is billed context. 20/5 is deliberate, not a default.
+    maxCitations: 20
+    maxCitationsPerFile: 5
+    minRelevanceScore: 0.45
+
+    # Durable across restarts. 'memory' loses paused runs on every deploy.
+    checkpointer:
+      type: mongo
+
+    # Read-only pilot. kmh-data exposes no mutating tools at all, so this is
+    # belt-and-braces against a future tool being added carelessly.
+    toolApproval:
+      deny:
+        - 'mcp:klaviyo:*create*'
+        - 'mcp:klaviyo:*update*'
+        - 'mcp:klaviyo:*delete*'
+        - 'mcp:klaviyo:*send*'
+      allow:
+        - 'mcp:kmh-data:*'
+        - 'mcp:klaviyo:*'
+
+    maxToolCallArgBytes: 65536
+
+# ── Skills: the fleet-update mechanism ──────────────────────────────────────
+# Agents store skill NAMES, not copies. Edit a SKILL.md in the repo and every
+# agent referencing it moves on the next sync. This is the whole reason we left
+# TypingMind.
+#
+# In the pilot, ./skills is also mounted read-only at /app/skill so the bundled
+# copies work before the GitHub repo exists. Remove the mount once sync is live.
+skillSync:
+  github:
+    enabled: false          # flip true once kmh-agency/librechat-skills exists
+    intervalMinutes: 30
+    runOnStartup: true
+    sources:
+      - id: kmh-skills
+        owner: kmh-agency
+        repo: librechat-skills
+        ref: main
+        paths: ['skills']
+        skillDiscoveryDepth: 2
+        token: '${GITHUB_SKILLS_TOKEN}'
+
+# ── MCP servers ─────────────────────────────────────────────────────────────
+# Configured centrally. Agents reference these by name, so changing an endpoint
+# or rotating a key lands for every agent at once.
+memory:
+  disabled: false
+  personalize: true
+  tokenLimit: 2000
+  maxInputTokens: 8000
+  messageWindowSize: 4
+  validKeys: ['client_context', 'reporting_preferences', 'working_style']
+  agent:
+    enabled: true
+    provider: 'anthropic'
+    model: 'claude-haiku-4-5-20251001'
+
+# ── Web search: three paid vendors stack here. Reranker off by default. ─────
+webSearch:
+  searchProvider: 'serper'
+  serperApiKey: '${SERPER_API_KEY}'
+  scraperType: 'firecrawl'
+  firecrawlApiKey: '${FIRECRAWL_API_KEY}'
+  rerankerType: 'none'
+
+# ── Interface ───────────────────────────────────────────────────────────────
+interface:
+  modelSelect: true         # free model choice — cost is shown, not capped
+  parameters: true
+  contextUsage: true
+  contextCost: true         # people spend less when they can see the meter
+  marketplace:
+    use: true
+  agents:
+    use: true
+    create: true
+    share: true
+    public: false
+  skills:
+    use: true
+    create: false           # skills come from the repo, not the UI
+    share: true
+  mcpServers:
+    use: true
+    create: false           # admin-managed only
+  remoteAgents:
+    # use = can call agents over the API. create = can mint an API key in
+    # Settings. Without create, the API Keys panel never appears in the UI.
+    use: true
+    create: true
+  temporaryChatRetention: 720
+  retentionMode: 'all'
+  retainAgentFiles: true    # purge chats, keep agent knowledge
+
+# ── Model tiers, enforced ───────────────────────────────────────────────────
+# Haiku is the default on purpose. Most agency questions are summarise, draft,
+# reformat — Sonnet-grade work is the exception, Opus is an explicit decision.
+modelSpecs:
+  # enforce:false — the tiers are presets people can pick, not a cage.
+  enforce: false
+  prioritize: true
+  list:
+    - name: kmh-fast
+      label: 'KMH Fast'
+      default: true
+      description: 'Haiku. Drafting, summarising, reformatting, quick lookups.'
+      preset:
+        endpoint: 'anthropic'
+        model: 'claude-haiku-4-5-20251001'
+        modelLabel: 'KMH Fast'
+        promptCache: true
+        maxContextTokens: 100000
+
+    - name: kmh-standard
+      label: 'KMH Standard'
+      description: 'Sonnet. Analysis, multi-step reporting, anything with judgement.'
+      preset:
+        endpoint: 'anthropic'
+        model: 'claude-sonnet-5'
+        modelLabel: 'KMH Standard'
+        promptCache: true
+        maxContextTokens: 200000
+
+    - name: kmh-deep
+      label: 'KMH Deep'
+      description: 'Opus. Reserve for genuinely hard analysis — costs several times Standard.'
+      preset:
+        endpoint: 'anthropic'
+        model: 'claude-opus-5'
+        modelLabel: 'KMH Deep'
+        promptCache: true
+
+
+# ── Per-client Klaviyo servers ───────────────────────────────────────────────
+# GENERATED by `npm run generate` from clients/clients.json.
+# Do not hand-edit — re-run the generator. Tokens live in Railway env vars.
+mcpServers:
+  klaviyo-8sheep:
+    title: '8Sheep'
+    description: 'Live Klaviyo data for 8Sheep. Read-only.'
+    type: streamable-http
+    url: 'https://kmh-klaviyo-mcp-production.up.railway.app/mcp'
+    headers:
+      Authorization: 'Bearer ${KLAVIYO_TOKEN_8SHEEP}'
+    serverInstructions: |
+      This connection is locked to 8Sheep. Never pass a brand name —
+      the token already selects the account and any brand argument is ignored.
+      Read-only: you cannot send, schedule, edit or delete.
+      Timeframes are fixed: last_7_days, last_30_days, last_90_days, last_365_days.
+    timeout: 60000
+    initTimeout: 15000
+    startup: false
+    chatMenu: false
+  klaviyo-arrowhead:
+    title: 'Arrowhead'
+    description: 'Live Klaviyo data for Arrowhead. Read-only.'
+    type: streamable-http
+    url: 'https://kmh-klaviyo-mcp-production.up.railway.app/mcp'
+    headers:
+      Authorization: 'Bearer ${KLAVIYO_TOKEN_ARROWHEAD}'
+    serverInstructions: |
+      This connection is locked to Arrowhead. Never pass a brand name —
+      the token already selects the account and any brand argument is ignored.
+      Read-only: you cannot send, schedule, edit or delete.
+      Timeframes are fixed: last_7_days, last_30_days, last_90_days, last_365_days.
+    timeout: 60000
+    initTimeout: 15000
+    startup: false
+    chatMenu: false
+  klaviyo-billion-dollar-beauty:
+    title: 'Billion Dollar Beauty'
+    description: 'Live Klaviyo data for Billion Dollar Beauty. Read-only.'
+    type: streamable-http
+    url: 'https://kmh-klaviyo-mcp-production.up.railway.app/mcp'
+    headers:
+      Authorization: 'Bearer ${KLAVIYO_TOKEN_BILLION_DOLLAR_BEAUTY}'
+    serverInstructions: |
+      This connection is locked to Billion Dollar Beauty. Never pass a brand name —
+      the token already selects the account and any brand argument is ignored.
+      Read-only: you cannot send, schedule, edit or delete.
+      Timeframes are fixed: last_7_days, last_30_days, last_90_days, last_365_days.
+    timeout: 60000
+    initTimeout: 15000
+    startup: false
+    chatMenu: false
+  klaviyo-filter-flair-uk:
+    title: 'Filter Flair UK'
+    description: 'Live Klaviyo data for Filter Flair UK. Read-only.'
+    type: streamable-http
+    url: 'https://kmh-klaviyo-mcp-production.up.railway.app/mcp'
+    headers:
+      Authorization: 'Bearer ${KLAVIYO_TOKEN_FILTER_FLAIR_UK}'
+    serverInstructions: |
+      This connection is locked to Filter Flair UK. Never pass a brand name —
+      the token already selects the account and any brand argument is ignored.
+      Read-only: you cannot send, schedule, edit or delete.
+      Timeframes are fixed: last_7_days, last_30_days, last_90_days, last_365_days.
+    timeout: 60000
+    initTimeout: 15000
+    startup: false
+    chatMenu: false
+  klaviyo-garden-tower-project:
+    title: 'Garden Tower Project'
+    description: 'Live Klaviyo data for Garden Tower Project. Read-only.'
+    type: streamable-http
+    url: 'https://kmh-klaviyo-mcp-production.up.railway.app/mcp'
+    headers:
+      Authorization: 'Bearer ${KLAVIYO_TOKEN_GARDEN_TOWER_PROJECT}'
+    serverInstructions: |
+      This connection is locked to Garden Tower Project. Never pass a brand name —
+      the token already selects the account and any brand argument is ignored.
+      Read-only: you cannot send, schedule, edit or delete.
+      Timeframes are fixed: last_7_days, last_30_days, last_90_days, last_365_days.
+    timeout: 60000
+    initTimeout: 15000
+    startup: false
+    chatMenu: false
+  klaviyo-icu-eyewear:
+    title: 'ICU Eyewear'
+    description: 'Live Klaviyo data for ICU Eyewear. Read-only.'
+    type: streamable-http
+    url: 'https://kmh-klaviyo-mcp-production.up.railway.app/mcp'
+    headers:
+      Authorization: 'Bearer ${KLAVIYO_TOKEN_ICU_EYEWEAR}'
+    serverInstructions: |
+      This connection is locked to ICU Eyewear. Never pass a brand name —
+      the token already selects the account and any brand argument is ignored.
+      Read-only: you cannot send, schedule, edit or delete.
+      Timeframes are fixed: last_7_days, last_30_days, last_90_days, last_365_days.
+    timeout: 60000
+    initTimeout: 15000
+    startup: false
+    chatMenu: false
+  klaviyo-kineon:
+    title: 'Kineon'
+    description: 'Live Klaviyo data for Kineon. Read-only.'
+    type: streamable-http
+    url: 'https://kmh-klaviyo-mcp-production.up.railway.app/mcp'
+    headers:
+      Authorization: 'Bearer ${KLAVIYO_TOKEN_KINEON}'
+    serverInstructions: |
+      This connection is locked to Kineon. Never pass a brand name —
+      the token already selects the account and any brand argument is ignored.
+      Read-only: you cannot send, schedule, edit or delete.
+      Timeframes are fixed: last_7_days, last_30_days, last_90_days, last_365_days.
+    timeout: 60000
+    initTimeout: 15000
+    startup: false
+    chatMenu: false
+  klaviyo-larissa-loden:
+    title: 'Larissa Loden'
+    description: 'Live Klaviyo data for Larissa Loden. Read-only.'
+    type: streamable-http
+    url: 'https://kmh-klaviyo-mcp-production.up.railway.app/mcp'
+    headers:
+      Authorization: 'Bearer ${KLAVIYO_TOKEN_LARISSA_LODEN}'
+    serverInstructions: |
+      This connection is locked to Larissa Loden. Never pass a brand name —
+      the token already selects the account and any brand argument is ignored.
+      Read-only: you cannot send, schedule, edit or delete.
+      Timeframes are fixed: last_7_days, last_30_days, last_90_days, last_365_days.
+    timeout: 60000
+    initTimeout: 15000
+    startup: false
+    chatMenu: false
+  klaviyo-malie:
+    title: 'Malie'
+    description: 'Live Klaviyo data for Malie. Read-only.'
+    type: streamable-http
+    url: 'https://kmh-klaviyo-mcp-production.up.railway.app/mcp'
+    headers:
+      Authorization: 'Bearer ${KLAVIYO_TOKEN_MALIE}'
+    serverInstructions: |
+      This connection is locked to Malie. Never pass a brand name —
+      the token already selects the account and any brand argument is ignored.
+      Read-only: you cannot send, schedule, edit or delete.
+      Timeframes are fixed: last_7_days, last_30_days, last_90_days, last_365_days.
+    timeout: 60000
+    initTimeout: 15000
+    startup: false
+    chatMenu: false
+  klaviyo-newport:
+    title: 'Newport'
+    description: 'Live Klaviyo data for Newport. Read-only.'
+    type: streamable-http
+    url: 'https://kmh-klaviyo-mcp-production.up.railway.app/mcp'
+    headers:
+      Authorization: 'Bearer ${KLAVIYO_TOKEN_NEWPORT}'
+    serverInstructions: |
+      This connection is locked to Newport. Never pass a brand name —
+      the token already selects the account and any brand argument is ignored.
+      Read-only: you cannot send, schedule, edit or delete.
+      Timeframes are fixed: last_7_days, last_30_days, last_90_days, last_365_days.
+    timeout: 60000
+    initTimeout: 15000
+    startup: false
+    chatMenu: false
+  klaviyo-nip-fab-uk:
+    title: 'Nip Fab UK'
+    description: 'Live Klaviyo data for Nip Fab UK. Read-only.'
+    type: streamable-http
+    url: 'https://kmh-klaviyo-mcp-production.up.railway.app/mcp'
+    headers:
+      Authorization: 'Bearer ${KLAVIYO_TOKEN_NIP_FAB_UK}'
+    serverInstructions: |
+      This connection is locked to Nip Fab UK. Never pass a brand name —
+      the token already selects the account and any brand argument is ignored.
+      Read-only: you cannot send, schedule, edit or delete.
+      Timeframes are fixed: last_7_days, last_30_days, last_90_days, last_365_days.
+    timeout: 60000
+    initTimeout: 15000
+    startup: false
+    chatMenu: false
+  klaviyo-outdoor-edge-cutlery:
+    title: 'Outdoor Edge Cutlery'
+    description: 'Live Klaviyo data for Outdoor Edge Cutlery. Read-only.'
+    type: streamable-http
+    url: 'https://kmh-klaviyo-mcp-production.up.railway.app/mcp'
+    headers:
+      Authorization: 'Bearer ${KLAVIYO_TOKEN_OUTDOOR_EDGE_CUTLERY}'
+    serverInstructions: |
+      This connection is locked to Outdoor Edge Cutlery. Never pass a brand name —
+      the token already selects the account and any brand argument is ignored.
+      Read-only: you cannot send, schedule, edit or delete.
+      Timeframes are fixed: last_7_days, last_30_days, last_90_days, last_365_days.
+    timeout: 60000
+    initTimeout: 15000
+    startup: false
+    chatMenu: false
+  klaviyo-stirling-timepieces:
+    title: 'Stirling Timepieces'
+    description: 'Live Klaviyo data for Stirling Timepieces. Read-only.'
+    type: streamable-http
+    url: 'https://kmh-klaviyo-mcp-production.up.railway.app/mcp'
+    headers:
+      Authorization: 'Bearer ${KLAVIYO_TOKEN_STIRLING_TIMEPIECES}'
+    serverInstructions: |
+      This connection is locked to Stirling Timepieces. Never pass a brand name —
+      the token already selects the account and any brand argument is ignored.
+      Read-only: you cannot send, schedule, edit or delete.
+      Timeframes are fixed: last_7_days, last_30_days, last_90_days, last_365_days.
+    timeout: 60000
+    initTimeout: 15000
+    startup: false
+    chatMenu: false
+  klaviyo-tattoo-numbing-cream:
+    title: 'Tattoo Numbing Cream'
+    description: 'Live Klaviyo data for Tattoo Numbing Cream. Read-only.'
+    type: streamable-http
+    url: 'https://kmh-klaviyo-mcp-production.up.railway.app/mcp'
+    headers:
+      Authorization: 'Bearer ${KLAVIYO_TOKEN_TATTOO_NUMBING_CREAM}'
+    serverInstructions: |
+      This connection is locked to Tattoo Numbing Cream. Never pass a brand name —
+      the token already selects the account and any brand argument is ignored.
+      Read-only: you cannot send, schedule, edit or delete.
+      Timeframes are fixed: last_7_days, last_30_days, last_90_days, last_365_days.
+    timeout: 60000
+    initTimeout: 15000
+    startup: false
+    chatMenu: false
+  klaviyo-tsp:
+    title: 'TSP'
+    description: 'Live Klaviyo data for TSP. Read-only.'
+    type: streamable-http
+    url: 'https://kmh-klaviyo-mcp-production.up.railway.app/mcp'
+    headers:
+      Authorization: 'Bearer ${KLAVIYO_TOKEN_TSP}'
+    serverInstructions: |
+      This connection is locked to TSP. Never pass a brand name —
+      the token already selects the account and any brand argument is ignored.
+      Read-only: you cannot send, schedule, edit or delete.
+      Timeframes are fixed: last_7_days, last_30_days, last_90_days, last_365_days.
+    timeout: 60000
+    initTimeout: 15000
+    startup: false
+    chatMenu: false
+  klaviyo-uk-radiators:
+    title: 'UK Radiators'
+    description: 'Live Klaviyo data for UK Radiators. Read-only.'
+    type: streamable-http
+    url: 'https://kmh-klaviyo-mcp-production.up.railway.app/mcp'
+    headers:
+      Authorization: 'Bearer ${KLAVIYO_TOKEN_UK_RADIATORS}'
+    serverInstructions: |
+      This connection is locked to UK Radiators. Never pass a brand name —
+      the token already selects the account and any brand argument is ignored.
+      Read-only: you cannot send, schedule, edit or delete.
+      Timeframes are fixed: last_7_days, last_30_days, last_90_days, last_365_days.
+    timeout: 60000
+    initTimeout: 15000
+    startup: false
+    chatMenu: false
+  klaviyo-windy-nation:
+    title: 'Windy Nation'
+    description: 'Live Klaviyo data for Windy Nation. Read-only.'
+    type: streamable-http
+    url: 'https://kmh-klaviyo-mcp-production.up.railway.app/mcp'
+    headers:
+      Authorization: 'Bearer ${KLAVIYO_TOKEN_WINDY_NATION}'
+    serverInstructions: |
+      This connection is locked to Windy Nation. Never pass a brand name —
+      the token already selects the account and any brand argument is ignored.
+      Read-only: you cannot send, schedule, edit or delete.
+      Timeframes are fixed: last_7_days, last_30_days, last_90_days, last_365_days.
+    timeout: 60000
+    initTimeout: 15000
+    startup: false
+    chatMenu: false
+  klaviyo-my-garage-supplies:
+    title: 'My Garage Supplies'
+    description: 'Live Klaviyo data for My Garage Supplies. Read-only.'
+    type: streamable-http
+    url: 'https://kmh-klaviyo-mcp-production.up.railway.app/mcp'
+    headers:
+      Authorization: 'Bearer ${KLAVIYO_TOKEN_MY_GARAGE_SUPPLIES}'
+    serverInstructions: |
+      This connection is locked to My Garage Supplies. Never pass a brand name —
+      the token already selects the account and any brand argument is ignored.
+      Read-only: you cannot send, schedule, edit or delete.
+      Timeframes are fixed: last_7_days, last_30_days, last_90_days, last_365_days.
+    timeout: 60000
+    initTimeout: 15000
+    startup: false
+    chatMenu: false
+  klaviyo-jazzupco:
+    title: 'JazzUpCo'
+    description: 'Live Klaviyo data for JazzUpCo. Read-only.'
+    type: streamable-http
+    url: 'https://kmh-klaviyo-mcp-production.up.railway.app/mcp'
+    headers:
+      Authorization: 'Bearer ${KLAVIYO_TOKEN_JAZZUPCO}'
+    serverInstructions: |
+      This connection is locked to JazzUpCo. Never pass a brand name —
+      the token already selects the account and any brand argument is ignored.
+      Read-only: you cannot send, schedule, edit or delete.
+      Timeframes are fixed: last_7_days, last_30_days, last_90_days, last_365_days.
+    timeout: 60000
+    initTimeout: 15000
+    startup: false
+    chatMenu: false
+  klaviyo-sofa-club-ltd:
+    title: 'Sofa Club Ltd'
+    description: 'Live Klaviyo data for Sofa Club Ltd. Read-only.'
+    type: streamable-http
+    url: 'https://kmh-klaviyo-mcp-production.up.railway.app/mcp'
+    headers:
+      Authorization: 'Bearer ${KLAVIYO_TOKEN_SOFA_CLUB_LTD}'
+    serverInstructions: |
+      This connection is locked to Sofa Club Ltd. Never pass a brand name —
+      the token already selects the account and any brand argument is ignored.
+      Read-only: you cannot send, schedule, edit or delete.
+      Timeframes are fixed: last_7_days, last_30_days, last_90_days, last_365_days.
+    timeout: 60000
+    initTimeout: 15000
+    startup: false
+    chatMenu: false
+  klaviyo-bdb-pro:
+    title: 'BDB Pro'
+    description: 'Live Klaviyo data for BDB Pro. Read-only.'
+    type: streamable-http
+    url: 'https://kmh-klaviyo-mcp-production.up.railway.app/mcp'
+    headers:
+      Authorization: 'Bearer ${KLAVIYO_TOKEN_BDB_PRO}'
+    serverInstructions: |
+      This connection is locked to BDB Pro. Never pass a brand name —
+      the token already selects the account and any brand argument is ignored.
+      Read-only: you cannot send, schedule, edit or delete.
+      Timeframes are fixed: last_7_days, last_30_days, last_90_days, last_365_days.
+    timeout: 60000
+    initTimeout: 15000
+    startup: false
+    chatMenu: false
+  klaviyo-onsen:
+    title: 'Onsen'
+    description: 'Live Klaviyo data for Onsen. Read-only.'
+    type: streamable-http
+    url: 'https://kmh-klaviyo-mcp-production.up.railway.app/mcp'
+    headers:
+      Authorization: 'Bearer ${KLAVIYO_TOKEN_ONSEN}'
+    serverInstructions: |
+      This connection is locked to Onsen. Never pass a brand name —
+      the token already selects the account and any brand argument is ignored.
+      Read-only: you cannot send, schedule, edit or delete.
+      Timeframes are fixed: last_7_days, last_30_days, last_90_days, last_365_days.
+    timeout: 60000
+    initTimeout: 15000
+    startup: false
+    chatMenu: false
+  klaviyo-gir:
+    title: 'GIR'
+    description: 'Live Klaviyo data for GIR. Read-only.'
+    type: streamable-http
+    url: 'https://kmh-klaviyo-mcp-production.up.railway.app/mcp'
+    headers:
+      Authorization: 'Bearer ${KLAVIYO_TOKEN_GIR}'
+    serverInstructions: |
+      This connection is locked to GIR. Never pass a brand name —
+      the token already selects the account and any brand argument is ignored.
+      Read-only: you cannot send, schedule, edit or delete.
+      Timeframes are fixed: last_7_days, last_30_days, last_90_days, last_365_days.
+    timeout: 60000
+    initTimeout: 15000
+    startup: false
+    chatMenu: false
+  klaviyo-miracle-made:
+    title: 'Miracle Made'
+    description: 'Live Klaviyo data for Miracle Made. Read-only.'
+    type: streamable-http
+    url: 'https://kmh-klaviyo-mcp-production.up.railway.app/mcp'
+    headers:
+      Authorization: 'Bearer ${KLAVIYO_TOKEN_MIRACLE_MADE}'
+    serverInstructions: |
+      This connection is locked to Miracle Made. Never pass a brand name —
+      the token already selects the account and any brand argument is ignored.
+      Read-only: you cannot send, schedule, edit or delete.
+      Timeframes are fixed: last_7_days, last_30_days, last_90_days, last_365_days.
+    timeout: 60000
+    initTimeout: 15000
+    startup: false
+    chatMenu: false
+  klaviyo-off-grid-source:
+    title: 'Off-Grid Source'
+    description: 'Live Klaviyo data for Off-Grid Source. Read-only.'
+    type: streamable-http
+    url: 'https://kmh-klaviyo-mcp-production.up.railway.app/mcp'
+    headers:
+      Authorization: 'Bearer ${KLAVIYO_TOKEN_OFF_GRID_SOURCE}'
+    serverInstructions: |
+      This connection is locked to Off-Grid Source. Never pass a brand name —
+      the token already selects the account and any brand argument is ignored.
+      Read-only: you cannot send, schedule, edit or delete.
+      Timeframes are fixed: last_7_days, last_30_days, last_90_days, last_365_days.
+    timeout: 60000
+    initTimeout: 15000
+    startup: false
+    chatMenu: false
+  klaviyo-batch-cbd:
+    title: 'Batch CBD'
+    description: 'Live Klaviyo data for Batch CBD. Read-only.'
+    type: streamable-http
+    url: 'https://kmh-klaviyo-mcp-production.up.railway.app/mcp'
+    headers:
+      Authorization: 'Bearer ${KLAVIYO_TOKEN_BATCH_CBD}'
+    serverInstructions: |
+      This connection is locked to Batch CBD. Never pass a brand name —
+      the token already selects the account and any brand argument is ignored.
+      Read-only: you cannot send, schedule, edit or delete.
+      Timeframes are fixed: last_7_days, last_30_days, last_90_days, last_365_days.
+    timeout: 60000
+    initTimeout: 15000
+    startup: false
+    chatMenu: false
+  klaviyo-local-revival:
+    title: 'Local Revival'
+    description: 'Live Klaviyo data for Local Revival. Read-only.'
+    type: streamable-http
+    url: 'https://kmh-klaviyo-mcp-production.up.railway.app/mcp'
+    headers:
+      Authorization: 'Bearer ${KLAVIYO_TOKEN_LOCAL_REVIVAL}'
+    serverInstructions: |
+      This connection is locked to Local Revival. Never pass a brand name —
+      the token already selects the account and any brand argument is ignored.
+      Read-only: you cannot send, schedule, edit or delete.
+      Timeframes are fixed: last_7_days, last_30_days, last_90_days, last_365_days.
+    timeout: 60000
+    initTimeout: 15000
+    startup: false
+    chatMenu: false
+  klaviyo-kitchen-art-letters:
+    title: 'Kitchen Art Letters'
+    description: 'Live Klaviyo data for Kitchen Art Letters. Read-only.'
+    type: streamable-http
+    url: 'https://kmh-klaviyo-mcp-production.up.railway.app/mcp'
+    headers:
+      Authorization: 'Bearer ${KLAVIYO_TOKEN_KITCHEN_ART_LETTERS}'
+    serverInstructions: |
+      This connection is locked to Kitchen Art Letters. Never pass a brand name —
+      the token already selects the account and any brand argument is ignored.
+      Read-only: you cannot send, schedule, edit or delete.
+      Timeframes are fixed: last_7_days, last_30_days, last_90_days, last_365_days.
+    timeout: 60000
+    initTimeout: 15000
+    startup: false
+    chatMenu: false
+  klaviyo-aktiiv:
+    title: 'Aktiiv'
+    description: 'Live Klaviyo data for Aktiiv. Read-only.'
+    type: streamable-http
+    url: 'https://kmh-klaviyo-mcp-production.up.railway.app/mcp'
+    headers:
+      Authorization: 'Bearer ${KLAVIYO_TOKEN_AKTIIV}'
+    serverInstructions: |
+      This connection is locked to Aktiiv. Never pass a brand name —
+      the token already selects the account and any brand argument is ignored.
+      Read-only: you cannot send, schedule, edit or delete.
+      Timeframes are fixed: last_7_days, last_30_days, last_90_days, last_365_days.
+    timeout: 60000
+    initTimeout: 15000
+    startup: false
+    chatMenu: false
+  klaviyo-ocoa:
+    title: 'Ocoa'
+    description: 'Live Klaviyo data for Ocoa. Read-only.'
+    type: streamable-http
+    url: 'https://kmh-klaviyo-mcp-production.up.railway.app/mcp'
+    headers:
+      Authorization: 'Bearer ${KLAVIYO_TOKEN_OCOA}'
+    serverInstructions: |
+      This connection is locked to Ocoa. Never pass a brand name —
+      the token already selects the account and any brand argument is ignored.
+      Read-only: you cannot send, schedule, edit or delete.
+      Timeframes are fixed: last_7_days, last_30_days, last_90_days, last_365_days.
+    timeout: 60000
+    initTimeout: 15000
+    startup: false
+    chatMenu: false
+  klaviyo-future-society:
+    title: 'Future Society'
+    description: 'Live Klaviyo data for Future Society. Read-only.'
+    type: streamable-http
+    url: 'https://kmh-klaviyo-mcp-production.up.railway.app/mcp'
+    headers:
+      Authorization: 'Bearer ${KLAVIYO_TOKEN_FUTURE_SOCIETY}'
+    serverInstructions: |
+      This connection is locked to Future Society. Never pass a brand name —
+      the token already selects the account and any brand argument is ignored.
+      Read-only: you cannot send, schedule, edit or delete.
+      Timeframes are fixed: last_7_days, last_30_days, last_90_days, last_365_days.
+    timeout: 60000
+    initTimeout: 15000
+    startup: false
+    chatMenu: false
+  klaviyo-refyne:
+    title: 'Refyne'
+    description: 'Live Klaviyo data for Refyne. Read-only.'
+    type: streamable-http
+    url: 'https://kmh-klaviyo-mcp-production.up.railway.app/mcp'
+    headers:
+      Authorization: 'Bearer ${KLAVIYO_TOKEN_REFYNE}'
+    serverInstructions: |
+      This connection is locked to Refyne. Never pass a brand name —
+      the token already selects the account and any brand argument is ignored.
+      Read-only: you cannot send, schedule, edit or delete.
+      Timeframes are fixed: last_7_days, last_30_days, last_90_days, last_365_days.
+    timeout: 60000
+    initTimeout: 15000
+    startup: false
+    chatMenu: false
+  klaviyo-activation-products-north-america:
+    title: 'Activation Products North America'
+    description: 'Live Klaviyo data for Activation Products North America. Read-only.'
+    type: streamable-http
+    url: 'https://kmh-klaviyo-mcp-production.up.railway.app/mcp'
+    headers:
+      Authorization: 'Bearer ${KLAVIYO_TOKEN_ACTIVATION_PRODUCTS_NORTH_AMERICA}'
+    serverInstructions: |
+      This connection is locked to Activation Products North America. Never pass a brand name —
+      the token already selects the account and any brand argument is ignored.
+      Read-only: you cannot send, schedule, edit or delete.
+      Timeframes are fixed: last_7_days, last_30_days, last_90_days, last_365_days.
+    timeout: 60000
+    initTimeout: 15000
+    startup: false
+    chatMenu: false
+  klaviyo-activation-products-uk:
+    title: 'Activation Products UK'
+    description: 'Live Klaviyo data for Activation Products UK. Read-only.'
+    type: streamable-http
+    url: 'https://kmh-klaviyo-mcp-production.up.railway.app/mcp'
+    headers:
+      Authorization: 'Bearer ${KLAVIYO_TOKEN_ACTIVATION_PRODUCTS_UK}'
+    serverInstructions: |
+      This connection is locked to Activation Products UK. Never pass a brand name —
+      the token already selects the account and any brand argument is ignored.
+      Read-only: you cannot send, schedule, edit or delete.
+      Timeframes are fixed: last_7_days, last_30_days, last_90_days, last_365_days.
+    timeout: 60000
+    initTimeout: 15000
+    startup: false
+    chatMenu: false
+  klaviyo-activation-products-aus:
+    title: 'Activation Products AUS'
+    description: 'Live Klaviyo data for Activation Products AUS. Read-only.'
+    type: streamable-http
+    url: 'https://kmh-klaviyo-mcp-production.up.railway.app/mcp'
+    headers:
+      Authorization: 'Bearer ${KLAVIYO_TOKEN_ACTIVATION_PRODUCTS_AUS}'
+    serverInstructions: |
+      This connection is locked to Activation Products AUS. Never pass a brand name —
+      the token already selects the account and any brand argument is ignored.
+      Read-only: you cannot send, schedule, edit or delete.
+      Timeframes are fixed: last_7_days, last_30_days, last_90_days, last_365_days.
+    timeout: 60000
+    initTimeout: 15000
+    startup: false
+    chatMenu: false
+  klaviyo-stono-outdoors:
+    title: 'Stono Outdoors'
+    description: 'Live Klaviyo data for Stono Outdoors. Read-only.'
+    type: streamable-http
+    url: 'https://kmh-klaviyo-mcp-production.up.railway.app/mcp'
+    headers:
+      Authorization: 'Bearer ${KLAVIYO_TOKEN_STONO_OUTDOORS}'
+    serverInstructions: |
+      This connection is locked to Stono Outdoors. Never pass a brand name —
+      the token already selects the account and any brand argument is ignored.
+      Read-only: you cannot send, schedule, edit or delete.
+      Timeframes are fixed: last_7_days, last_30_days, last_90_days, last_365_days.
+    timeout: 60000
+    initTimeout: 15000
+    startup: false
+    chatMenu: false
+  klaviyo-simplify-living-australia:
+    title: 'Simplify Living Australia'
+    description: 'Live Klaviyo data for Simplify Living Australia. Read-only.'
+    type: streamable-http
+    url: 'https://kmh-klaviyo-mcp-production.up.railway.app/mcp'
+    headers:
+      Authorization: 'Bearer ${KLAVIYO_TOKEN_SIMPLIFY_LIVING_AUSTRALIA}'
+    serverInstructions: |
+      This connection is locked to Simplify Living Australia. Never pass a brand name —
+      the token already selects the account and any brand argument is ignored.
+      Read-only: you cannot send, schedule, edit or delete.
+      Timeframes are fixed: last_7_days, last_30_days, last_90_days, last_365_days.
+    timeout: 60000
+    initTimeout: 15000
+    startup: false
+    chatMenu: false
+  klaviyo-the-nova-bottle:
+    title: 'The Nova Bottle'
+    description: 'Live Klaviyo data for The Nova Bottle. Read-only.'
+    type: streamable-http
+    url: 'https://kmh-klaviyo-mcp-production.up.railway.app/mcp'
+    headers:
+      Authorization: 'Bearer ${KLAVIYO_TOKEN_THE_NOVA_BOTTLE}'
+    serverInstructions: |
+      This connection is locked to The Nova Bottle. Never pass a brand name —
+      the token already selects the account and any brand argument is ignored.
+      Read-only: you cannot send, schedule, edit or delete.
+      Timeframes are fixed: last_7_days, last_30_days, last_90_days, last_365_days.
+    timeout: 60000
+    initTimeout: 15000
+    startup: false
+    chatMenu: false
+  klaviyo-pulsio-uk:
+    title: 'Pulsio UK'
+    description: 'Live Klaviyo data for Pulsio UK. Read-only.'
+    type: streamable-http
+    url: 'https://kmh-klaviyo-mcp-production.up.railway.app/mcp'
+    headers:
+      Authorization: 'Bearer ${KLAVIYO_TOKEN_PULSIO_UK}'
+    serverInstructions: |
+      This connection is locked to Pulsio UK. Never pass a brand name —
+      the token already selects the account and any brand argument is ignored.
+      Read-only: you cannot send, schedule, edit or delete.
+      Timeframes are fixed: last_7_days, last_30_days, last_90_days, last_365_days.
+    timeout: 60000
+    initTimeout: 15000
+    startup: false
+    chatMenu: false
+  klaviyo-pulsio-eu:
+    title: 'Pulsio EU'
+    description: 'Live Klaviyo data for Pulsio EU. Read-only.'
+    type: streamable-http
+    url: 'https://kmh-klaviyo-mcp-production.up.railway.app/mcp'
+    headers:
+      Authorization: 'Bearer ${KLAVIYO_TOKEN_PULSIO_EU}'
+    serverInstructions: |
+      This connection is locked to Pulsio EU. Never pass a brand name —
+      the token already selects the account and any brand argument is ignored.
+      Read-only: you cannot send, schedule, edit or delete.
+      Timeframes are fixed: last_7_days, last_30_days, last_90_days, last_365_days.
+    timeout: 60000
+    initTimeout: 15000
+    startup: false
+    chatMenu: false
+  klaviyo-foreign-waters:
+    title: 'Foreign Waters'
+    description: 'Live Klaviyo data for Foreign Waters. Read-only.'
+    type: streamable-http
+    url: 'https://kmh-klaviyo-mcp-production.up.railway.app/mcp'
+    headers:
+      Authorization: 'Bearer ${KLAVIYO_TOKEN_FOREIGN_WATERS}'
+    serverInstructions: |
+      This connection is locked to Foreign Waters. Never pass a brand name —
+      the token already selects the account and any brand argument is ignored.
+      Read-only: you cannot send, schedule, edit or delete.
+      Timeframes are fixed: last_7_days, last_30_days, last_90_days, last_365_days.
+    timeout: 60000
+    initTimeout: 15000
+    startup: false
+    chatMenu: false
+  klaviyo-collars-co:
+    title: 'Collars Co'
+    description: 'Live Klaviyo data for Collars Co. Read-only.'
+    type: streamable-http
+    url: 'https://kmh-klaviyo-mcp-production.up.railway.app/mcp'
+    headers:
+      Authorization: 'Bearer ${KLAVIYO_TOKEN_COLLARS_CO}'
+    serverInstructions: |
+      This connection is locked to Collars Co. Never pass a brand name —
+      the token already selects the account and any brand argument is ignored.
+      Read-only: you cannot send, schedule, edit or delete.
+      Timeframes are fixed: last_7_days, last_30_days, last_90_days, last_365_days.
+    timeout: 60000
+    initTimeout: 15000
+    startup: false
+    chatMenu: false
+  klaviyo-newport-vessels:
+    title: 'Newport Vessels'
+    description: 'Live Klaviyo data for Newport Vessels. Read-only.'
+    type: streamable-http
+    url: 'https://kmh-klaviyo-mcp-production.up.railway.app/mcp'
+    headers:
+      Authorization: 'Bearer ${KLAVIYO_TOKEN_NEWPORT_VESSELS}'
+    serverInstructions: |
+      This connection is locked to Newport Vessels. Never pass a brand name —
+      the token already selects the account and any brand argument is ignored.
+      Read-only: you cannot send, schedule, edit or delete.
+      Timeframes are fixed: last_7_days, last_30_days, last_90_days, last_365_days.
+    timeout: 60000
+    initTimeout: 15000
+    startup: false
+    chatMenu: false
+  klaviyo-hemp-collect:
+    title: 'Hemp Collect'
+    description: 'Live Klaviyo data for Hemp Collect. Read-only.'
+    type: streamable-http
+    url: 'https://kmh-klaviyo-mcp-production.up.railway.app/mcp'
+    headers:
+      Authorization: 'Bearer ${KLAVIYO_TOKEN_HEMP_COLLECT}'
+    serverInstructions: |
+      This connection is locked to Hemp Collect. Never pass a brand name —
+      the token already selects the account and any brand argument is ignored.
+      Read-only: you cannot send, schedule, edit or delete.
+      Timeframes are fixed: last_7_days, last_30_days, last_90_days, last_365_days.
+    timeout: 60000
+    initTimeout: 15000
+    startup: false
+    chatMenu: false
+  klaviyo-built-different:
+    title: 'Built Different'
+    description: 'Live Klaviyo data for Built Different. Read-only.'
+    type: streamable-http
+    url: 'https://kmh-klaviyo-mcp-production.up.railway.app/mcp'
+    headers:
+      Authorization: 'Bearer ${KLAVIYO_TOKEN_BUILT_DIFFERENT}'
+    serverInstructions: |
+      This connection is locked to Built Different. Never pass a brand name —
+      the token already selects the account and any brand argument is ignored.
+      Read-only: you cannot send, schedule, edit or delete.
+      Timeframes are fixed: last_7_days, last_30_days, last_90_days, last_365_days.
+    timeout: 60000
+    initTimeout: 15000
+    startup: false
+    chatMenu: false
+  klaviyo-kin-apparel:
+    title: 'KIN Apparel'
+    description: 'Live Klaviyo data for KIN Apparel. Read-only.'
+    type: streamable-http
+    url: 'https://kmh-klaviyo-mcp-production.up.railway.app/mcp'
+    headers:
+      Authorization: 'Bearer ${KLAVIYO_TOKEN_KIN_APPAREL}'
+    serverInstructions: |
+      This connection is locked to KIN Apparel. Never pass a brand name —
+      the token already selects the account and any brand argument is ignored.
+      Read-only: you cannot send, schedule, edit or delete.
+      Timeframes are fixed: last_7_days, last_30_days, last_90_days, last_365_days.
+    timeout: 60000
+    initTimeout: 15000
+    startup: false
+    chatMenu: false
+  klaviyo-the-great-fire-company:
+    title: 'The Great Fire Company'
+    description: 'Live Klaviyo data for The Great Fire Company. Read-only.'
+    type: streamable-http
+    url: 'https://kmh-klaviyo-mcp-production.up.railway.app/mcp'
+    headers:
+      Authorization: 'Bearer ${KLAVIYO_TOKEN_THE_GREAT_FIRE_COMPANY}'
+    serverInstructions: |
+      This connection is locked to The Great Fire Company. Never pass a brand name —
+      the token already selects the account and any brand argument is ignored.
+      Read-only: you cannot send, schedule, edit or delete.
+      Timeframes are fixed: last_7_days, last_30_days, last_90_days, last_365_days.
+    timeout: 60000
+    initTimeout: 15000
+    startup: false
+    chatMenu: false
+  klaviyo-apollo-neuroscience:
+    title: 'Apollo Neuroscience'
+    description: 'Live Klaviyo data for Apollo Neuroscience. Read-only.'
+    type: streamable-http
+    url: 'https://kmh-klaviyo-mcp-production.up.railway.app/mcp'
+    headers:
+      Authorization: 'Bearer ${KLAVIYO_TOKEN_APOLLO_NEUROSCIENCE}'
+    serverInstructions: |
+      This connection is locked to Apollo Neuroscience. Never pass a brand name —
+      the token already selects the account and any brand argument is ignored.
+      Read-only: you cannot send, schedule, edit or delete.
+      Timeframes are fixed: last_7_days, last_30_days, last_90_days, last_365_days.
+    timeout: 60000
+    initTimeout: 15000
+    startup: false
+    chatMenu: false
+  klaviyo-pipi-tea:
+    title: 'PiPi Tea'
+    description: 'Live Klaviyo data for PiPi Tea. Read-only.'
+    type: streamable-http
+    url: 'https://kmh-klaviyo-mcp-production.up.railway.app/mcp'
+    headers:
+      Authorization: 'Bearer ${KLAVIYO_TOKEN_PIPI_TEA}'
+    serverInstructions: |
+      This connection is locked to PiPi Tea. Never pass a brand name —
+      the token already selects the account and any brand argument is ignored.
+      Read-only: you cannot send, schedule, edit or delete.
+      Timeframes are fixed: last_7_days, last_30_days, last_90_days, last_365_days.
+    timeout: 60000
+    initTimeout: 15000
+    startup: false
+    chatMenu: false
+  klaviyo-motive-health:
+    title: 'Motive Health'
+    description: 'Live Klaviyo data for Motive Health. Read-only.'
+    type: streamable-http
+    url: 'https://kmh-klaviyo-mcp-production.up.railway.app/mcp'
+    headers:
+      Authorization: 'Bearer ${KLAVIYO_TOKEN_MOTIVE_HEALTH}'
+    serverInstructions: |
+      This connection is locked to Motive Health. Never pass a brand name —
+      the token already selects the account and any brand argument is ignored.
+      Read-only: you cannot send, schedule, edit or delete.
+      Timeframes are fixed: last_7_days, last_30_days, last_90_days, last_365_days.
+    timeout: 60000
+    initTimeout: 15000
+    startup: false
+    chatMenu: false
+  klaviyo-mcsport:
+    title: 'McSport'
+    description: 'Live Klaviyo data for McSport. Read-only.'
+    type: streamable-http
+    url: 'https://kmh-klaviyo-mcp-production.up.railway.app/mcp'
+    headers:
+      Authorization: 'Bearer ${KLAVIYO_TOKEN_MCSPORT}'
+    serverInstructions: |
+      This connection is locked to McSport. Never pass a brand name —
+      the token already selects the account and any brand argument is ignored.
+      Read-only: you cannot send, schedule, edit or delete.
+      Timeframes are fixed: last_7_days, last_30_days, last_90_days, last_365_days.
+    timeout: 60000
+    initTimeout: 15000
+    startup: false
+    chatMenu: false
+  klaviyo-cooks-professional:
+    title: 'Cooks Professional'
+    description: 'Live Klaviyo data for Cooks Professional. Read-only.'
+    type: streamable-http
+    url: 'https://kmh-klaviyo-mcp-production.up.railway.app/mcp'
+    headers:
+      Authorization: 'Bearer ${KLAVIYO_TOKEN_COOKS_PROFESSIONAL}'
+    serverInstructions: |
+      This connection is locked to Cooks Professional. Never pass a brand name —
+      the token already selects the account and any brand argument is ignored.
+      Read-only: you cannot send, schedule, edit or delete.
+      Timeframes are fixed: last_7_days, last_30_days, last_90_days, last_365_days.
+    timeout: 60000
+    initTimeout: 15000
+    startup: false
+    chatMenu: false
+  klaviyo-moocha-kombucha:
+    title: 'Moocha Kombucha'
+    description: 'Live Klaviyo data for Moocha Kombucha. Read-only.'
+    type: streamable-http
+    url: 'https://kmh-klaviyo-mcp-production.up.railway.app/mcp'
+    headers:
+      Authorization: 'Bearer ${KLAVIYO_TOKEN_MOOCHA_KOMBUCHA}'
+    serverInstructions: |
+      This connection is locked to Moocha Kombucha. Never pass a brand name —
+      the token already selects the account and any brand argument is ignored.
+      Read-only: you cannot send, schedule, edit or delete.
+      Timeframes are fixed: last_7_days, last_30_days, last_90_days, last_365_days.
+    timeout: 60000
+    initTimeout: 15000
+    startup: false
+    chatMenu: false
+  klaviyo-the-landmark-kids:
+    title: 'The Landmark Kids'
+    description: 'Live Klaviyo data for The Landmark Kids. Read-only.'
+    type: streamable-http
+    url: 'https://kmh-klaviyo-mcp-production.up.railway.app/mcp'
+    headers:
+      Authorization: 'Bearer ${KLAVIYO_TOKEN_THE_LANDMARK_KIDS}'
+    serverInstructions: |
+      This connection is locked to The Landmark Kids. Never pass a brand name —
+      the token already selects the account and any brand argument is ignored.
+      Read-only: you cannot send, schedule, edit or delete.
+      Timeframes are fixed: last_7_days, last_30_days, last_90_days, last_365_days.
+    timeout: 60000
+    initTimeout: 15000
+    startup: false
+    chatMenu: false
+  klaviyo-maclir:
+    title: 'MacLir'
+    description: 'Live Klaviyo data for MacLir. Read-only.'
+    type: streamable-http
+    url: 'https://kmh-klaviyo-mcp-production.up.railway.app/mcp'
+    headers:
+      Authorization: 'Bearer ${KLAVIYO_TOKEN_MACLIR}'
+    serverInstructions: |
+      This connection is locked to MacLir. Never pass a brand name —
+      the token already selects the account and any brand argument is ignored.
+      Read-only: you cannot send, schedule, edit or delete.
+      Timeframes are fixed: last_7_days, last_30_days, last_90_days, last_365_days.
+    timeout: 60000
+    initTimeout: 15000
+    startup: false
+    chatMenu: false
+  klaviyo-audry-rose:
+    title: 'Audry Rose'
+    description: 'Live Klaviyo data for Audry Rose. Read-only.'
+    type: streamable-http
+    url: 'https://kmh-klaviyo-mcp-production.up.railway.app/mcp'
+    headers:
+      Authorization: 'Bearer ${KLAVIYO_TOKEN_AUDRY_ROSE}'
+    serverInstructions: |
+      This connection is locked to Audry Rose. Never pass a brand name —
+      the token already selects the account and any brand argument is ignored.
+      Read-only: you cannot send, schedule, edit or delete.
+      Timeframes are fixed: last_7_days, last_30_days, last_90_days, last_365_days.
+    timeout: 60000
+    initTimeout: 15000
+    startup: false
+    chatMenu: false
+  klaviyo-tattoo-zoo:
+    title: 'Tattoo Zoo'
+    description: 'Live Klaviyo data for Tattoo Zoo. Read-only.'
+    type: streamable-http
+    url: 'https://kmh-klaviyo-mcp-production.up.railway.app/mcp'
+    headers:
+      Authorization: 'Bearer ${KLAVIYO_TOKEN_TATTOO_ZOO}'
+    serverInstructions: |
+      This connection is locked to Tattoo Zoo. Never pass a brand name —
+      the token already selects the account and any brand argument is ignored.
+      Read-only: you cannot send, schedule, edit or delete.
+      Timeframes are fixed: last_7_days, last_30_days, last_90_days, last_365_days.
+    timeout: 60000
+    initTimeout: 15000
+    startup: false
+    chatMenu: false
+  klaviyo-siq-basketball:
+    title: 'SIQ Basketball'
+    description: 'Live Klaviyo data for SIQ Basketball. Read-only.'
+    type: streamable-http
+    url: 'https://kmh-klaviyo-mcp-production.up.railway.app/mcp'
+    headers:
+      Authorization: 'Bearer ${KLAVIYO_TOKEN_SIQ_BASKETBALL}'
+    serverInstructions: |
+      This connection is locked to SIQ Basketball. Never pass a brand name —
+      the token already selects the account and any brand argument is ignored.
+      Read-only: you cannot send, schedule, edit or delete.
+      Timeframes are fixed: last_7_days, last_30_days, last_90_days, last_365_days.
+    timeout: 60000
+    initTimeout: 15000
+    startup: false
+    chatMenu: false
+  klaviyo-fellow:
+    title: 'Fellow'
+    description: 'Live Klaviyo data for Fellow. Read-only.'
+    type: streamable-http
+    url: 'https://kmh-klaviyo-mcp-production.up.railway.app/mcp'
+    headers:
+      Authorization: 'Bearer ${KLAVIYO_TOKEN_FELLOW}'
+    serverInstructions: |
+      This connection is locked to Fellow. Never pass a brand name —
+      the token already selects the account and any brand argument is ignored.
+      Read-only: you cannot send, schedule, edit or delete.
+      Timeframes are fixed: last_7_days, last_30_days, last_90_days, last_365_days.
+    timeout: 60000
+    initTimeout: 15000
+    startup: false
+    chatMenu: false
+  klaviyo-chez-rien:
+    title: 'Chez Rien'
+    description: 'Live Klaviyo data for Chez Rien. Read-only.'
+    type: streamable-http
+    url: 'https://kmh-klaviyo-mcp-production.up.railway.app/mcp'
+    headers:
+      Authorization: 'Bearer ${KLAVIYO_TOKEN_CHEZ_RIEN}'
+    serverInstructions: |
+      This connection is locked to Chez Rien. Never pass a brand name —
+      the token already selects the account and any brand argument is ignored.
+      Read-only: you cannot send, schedule, edit or delete.
+      Timeframes are fixed: last_7_days, last_30_days, last_90_days, last_365_days.
+    timeout: 60000
+    initTimeout: 15000
+    startup: false
+    chatMenu: false
+  klaviyo-lagos:
+    title: 'Lagos'
+    description: 'Live Klaviyo data for Lagos. Read-only.'
+    type: streamable-http
+    url: 'https://kmh-klaviyo-mcp-production.up.railway.app/mcp'
+    headers:
+      Authorization: 'Bearer ${KLAVIYO_TOKEN_LAGOS}'
+    serverInstructions: |
+      This connection is locked to Lagos. Never pass a brand name —
+      the token already selects the account and any brand argument is ignored.
+      Read-only: you cannot send, schedule, edit or delete.
+      Timeframes are fixed: last_7_days, last_30_days, last_90_days, last_365_days.
+    timeout: 60000
+    initTimeout: 15000
+    startup: false
+    chatMenu: false
+  klaviyo-redu-sculpt:
+    title: 'Redu Sculpt'
+    description: 'Live Klaviyo data for Redu Sculpt. Read-only.'
+    type: streamable-http
+    url: 'https://kmh-klaviyo-mcp-production.up.railway.app/mcp'
+    headers:
+      Authorization: 'Bearer ${KLAVIYO_TOKEN_REDU_SCULPT}'
+    serverInstructions: |
+      This connection is locked to Redu Sculpt. Never pass a brand name —
+      the token already selects the account and any brand argument is ignored.
+      Read-only: you cannot send, schedule, edit or delete.
+      Timeframes are fixed: last_7_days, last_30_days, last_90_days, last_365_days.
+    timeout: 60000
+    initTimeout: 15000
+    startup: false
+    chatMenu: false
+  klaviyo-vibro-sculpt:
+    title: 'Vibro Sculpt'
+    description: 'Live Klaviyo data for Vibro Sculpt. Read-only.'
+    type: streamable-http
+    url: 'https://kmh-klaviyo-mcp-production.up.railway.app/mcp'
+    headers:
+      Authorization: 'Bearer ${KLAVIYO_TOKEN_VIBRO_SCULPT}'
+    serverInstructions: |
+      This connection is locked to Vibro Sculpt. Never pass a brand name —
+      the token already selects the account and any brand argument is ignored.
+      Read-only: you cannot send, schedule, edit or delete.
+      Timeframes are fixed: last_7_days, last_30_days, last_90_days, last_365_days.
+    timeout: 60000
+    initTimeout: 15000
+    startup: false
+    chatMenu: false
+  klaviyo-cooper-slim:
+    title: 'Cooper Slim'
+    description: 'Live Klaviyo data for Cooper Slim. Read-only.'
+    type: streamable-http
+    url: 'https://kmh-klaviyo-mcp-production.up.railway.app/mcp'
+    headers:
+      Authorization: 'Bearer ${KLAVIYO_TOKEN_COOPER_SLIM}'
+    serverInstructions: |
+      This connection is locked to Cooper Slim. Never pass a brand name —
+      the token already selects the account and any brand argument is ignored.
+      Read-only: you cannot send, schedule, edit or delete.
+      Timeframes are fixed: last_7_days, last_30_days, last_90_days, last_365_days.
+    timeout: 60000
+    initTimeout: 15000
+    startup: false
+    chatMenu: false
+  klaviyo-hot-shapers:
+    title: 'Hot Shapers'
+    description: 'Live Klaviyo data for Hot Shapers. Read-only.'
+    type: streamable-http
+    url: 'https://kmh-klaviyo-mcp-production.up.railway.app/mcp'
+    headers:
+      Authorization: 'Bearer ${KLAVIYO_TOKEN_HOT_SHAPERS}'
+    serverInstructions: |
+      This connection is locked to Hot Shapers. Never pass a brand name —
+      the token already selects the account and any brand argument is ignored.
+      Read-only: you cannot send, schedule, edit or delete.
+      Timeframes are fixed: last_7_days, last_30_days, last_90_days, last_365_days.
+    timeout: 60000
+    initTimeout: 15000
+    startup: false
+    chatMenu: false
+  klaviyo-drift-games:
+    title: 'Drift Games'
+    description: 'Live Klaviyo data for Drift Games. Read-only.'
+    type: streamable-http
+    url: 'https://kmh-klaviyo-mcp-production.up.railway.app/mcp'
+    headers:
+      Authorization: 'Bearer ${KLAVIYO_TOKEN_DRIFT_GAMES}'
+    serverInstructions: |
+      This connection is locked to Drift Games. Never pass a brand name —
+      the token already selects the account and any brand argument is ignored.
+      Read-only: you cannot send, schedule, edit or delete.
+      Timeframes are fixed: last_7_days, last_30_days, last_90_days, last_365_days.
+    timeout: 60000
+    initTimeout: 15000
+    startup: false
+    chatMenu: false
+  klaviyo-get-soul:
+    title: 'Get Soul'
+    description: 'Live Klaviyo data for Get Soul. Read-only.'
+    type: streamable-http
+    url: 'https://kmh-klaviyo-mcp-production.up.railway.app/mcp'
+    headers:
+      Authorization: 'Bearer ${KLAVIYO_TOKEN_GET_SOUL}'
+    serverInstructions: |
+      This connection is locked to Get Soul. Never pass a brand name —
+      the token already selects the account and any brand argument is ignored.
+      Read-only: you cannot send, schedule, edit or delete.
+      Timeframes are fixed: last_7_days, last_30_days, last_90_days, last_365_days.
+    timeout: 60000
+    initTimeout: 15000
+    startup: false
+    chatMenu: false
+  klaviyo-out-of-office:
+    title: 'Out of Office'
+    description: 'Live Klaviyo data for Out of Office. Read-only.'
+    type: streamable-http
+    url: 'https://kmh-klaviyo-mcp-production.up.railway.app/mcp'
+    headers:
+      Authorization: 'Bearer ${KLAVIYO_TOKEN_OUT_OF_OFFICE}'
+    serverInstructions: |
+      This connection is locked to Out of Office. Never pass a brand name —
+      the token already selects the account and any brand argument is ignored.
+      Read-only: you cannot send, schedule, edit or delete.
+      Timeframes are fixed: last_7_days, last_30_days, last_90_days, last_365_days.
+    timeout: 60000
+    initTimeout: 15000
+    startup: false
+    chatMenu: false
+  klaviyo-rescube:
+    title: 'Rescube'
+    description: 'Live Klaviyo data for Rescube. Read-only.'
+    type: streamable-http
+    url: 'https://kmh-klaviyo-mcp-production.up.railway.app/mcp'
+    headers:
+      Authorization: 'Bearer ${KLAVIYO_TOKEN_RESCUBE}'
+    serverInstructions: |
+      This connection is locked to Rescube. Never pass a brand name —
+      the token already selects the account and any brand argument is ignored.
+      Read-only: you cannot send, schedule, edit or delete.
+      Timeframes are fixed: last_7_days, last_30_days, last_90_days, last_365_days.
+    timeout: 60000
+    initTimeout: 15000
+    startup: false
+    chatMenu: false
+  klaviyo-formula-369:
+    title: 'Formula 369'
+    description: 'Live Klaviyo data for Formula 369. Read-only.'
+    type: streamable-http
+    url: 'https://kmh-klaviyo-mcp-production.up.railway.app/mcp'
+    headers:
+      Authorization: 'Bearer ${KLAVIYO_TOKEN_FORMULA_369}'
+    serverInstructions: |
+      This connection is locked to Formula 369. Never pass a brand name —
+      the token already selects the account and any brand argument is ignored.
+      Read-only: you cannot send, schedule, edit or delete.
+      Timeframes are fixed: last_7_days, last_30_days, last_90_days, last_365_days.
+    timeout: 60000
+    initTimeout: 15000
+    startup: false
+    chatMenu: false
+  klaviyo-ascent-bicycle:
+    title: 'Ascent Bicycle'
+    description: 'Live Klaviyo data for Ascent Bicycle. Read-only.'
+    type: streamable-http
+    url: 'https://kmh-klaviyo-mcp-production.up.railway.app/mcp'
+    headers:
+      Authorization: 'Bearer ${KLAVIYO_TOKEN_ASCENT_BICYCLE}'
+    serverInstructions: |
+      This connection is locked to Ascent Bicycle. Never pass a brand name —
+      the token already selects the account and any brand argument is ignored.
+      Read-only: you cannot send, schedule, edit or delete.
+      Timeframes are fixed: last_7_days, last_30_days, last_90_days, last_365_days.
+    timeout: 60000
+    initTimeout: 15000
+    startup: false
+    chatMenu: false
+  klaviyo-rodial:
+    title: 'Rodial'
+    description: 'Live Klaviyo data for Rodial. Read-only.'
+    type: streamable-http
+    url: 'https://kmh-klaviyo-mcp-production.up.railway.app/mcp'
+    headers:
+      Authorization: 'Bearer ${KLAVIYO_TOKEN_RODIAL}'
+    serverInstructions: |
+      This connection is locked to Rodial. Never pass a brand name —
+      the token already selects the account and any brand argument is ignored.
+      Read-only: you cannot send, schedule, edit or delete.
+      Timeframes are fixed: last_7_days, last_30_days, last_90_days, last_365_days.
+    timeout: 60000
+    initTimeout: 15000
+    startup: false
+    chatMenu: false
+  klaviyo-bioroot-labs:
+    title: 'Bioroot Labs'
+    description: 'Live Klaviyo data for Bioroot Labs. Read-only.'
+    type: streamable-http
+    url: 'https://kmh-klaviyo-mcp-production.up.railway.app/mcp'
+    headers:
+      Authorization: 'Bearer ${KLAVIYO_TOKEN_BIOROOT_LABS}'
+    serverInstructions: |
+      This connection is locked to Bioroot Labs. Never pass a brand name —
+      the token already selects the account and any brand argument is ignored.
+      Read-only: you cannot send, schedule, edit or delete.
+      Timeframes are fixed: last_7_days, last_30_days, last_90_days, last_365_days.
+    timeout: 60000
+    initTimeout: 15000
+    startup: false
+    chatMenu: false
