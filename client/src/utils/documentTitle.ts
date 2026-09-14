@@ -6,7 +6,10 @@ export const DEFAULT_APP_TITLE = 'LibreChat';
 export const hasRealTitle = (title?: string | null): title is string =>
   title != null && title !== '' && title !== 'New Chat';
 
-const getAppTitle = (): string => {
+/** KMH: exported. Two views built their tab title from a hardcoded
+ *  "| LibreChat" instead of the configured one, so `APP_TITLE` never reached
+ *  them. */
+export const getAppTitle = (): string => {
   try {
     return localStorage.getItem(LocalStorageKeys.APP_TITLE) || DEFAULT_APP_TITLE;
   } catch {

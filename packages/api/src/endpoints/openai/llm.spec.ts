@@ -852,7 +852,12 @@ describe('getOpenAILLMConfig', () => {
       },
     );
 
-    it('should NOT default to Responses API without reasoning params', () => {
+    /** KMH: this asserted the opposite, and that is what broke tool calls for
+     *  every GPT-5.6 agent whose reasoning effort had never been set. Sending no
+     *  `reasoning_effort` leaves the model on its own non-none default, and the
+     *  live API rejects function tools on Chat Completions for exactly that
+     *  case. Routing to Responses is the only thing that works. */
+    it('defaults to the Responses API without reasoning params, since the model still reasons', () => {
       const result = getOpenAILLMConfig({
         apiKey: 'test-api-key',
         streaming: true,
@@ -862,7 +867,7 @@ describe('getOpenAILLMConfig', () => {
         },
       });
 
-      expect(result.llmConfig).not.toHaveProperty('useResponsesApi');
+      expect(result.llmConfig).toHaveProperty('useResponsesApi', true);
       expect(result.llmConfig).not.toHaveProperty('reasoning');
     });
 

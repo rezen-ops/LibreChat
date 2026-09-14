@@ -2705,20 +2705,32 @@ html[data-input-modality='keyboard']
  */
 :root {
   --kmh-accent: 99 102 241;        /* #6366f1 indigo */
+  --kmh-accent-hover: 79 70 229;   /* #4f46e5 */
   --kmh-surface-950: 6 6 15;       /* #06060f */
   --kmh-surface-900: 13 13 26;     /* #0d0d1a */
   --kmh-surface-800: 18 18 31;     /* #12121f */
   --kmh-surface-700: 26 26 46;     /* #1a1a2e */
 }
 
+/* Every colour variable here holds bare `r g b` channels, never a colour
+ * function: Tailwind composes them as `rgb(var(--x) / <alpha-value>)`, so an
+ * `rgb(...)` value nests into `rgb(rgb(...) / 1)` and the whole declaration is
+ * dropped. That is silent for a background — the class simply does nothing —
+ * but it also took out every `ring-*` in the app, because a ring's offset
+ * colour is built from `--surface-primary`. Pass the triplet through. */
 .dark {
-  --surface-primary: rgb(var(--kmh-surface-950));
-  --surface-secondary: rgb(var(--kmh-surface-900));
-  --surface-tertiary: rgb(var(--kmh-surface-800));
-  --surface-hover: rgb(var(--kmh-surface-700));
-  --surface-active: rgb(var(--kmh-surface-700));
-  --presentation: rgb(var(--kmh-surface-950));
-  --header-primary: rgb(var(--kmh-surface-950));
+  --surface-primary: var(--kmh-surface-950);
+  --surface-secondary: var(--kmh-surface-900);
+  --surface-tertiary: var(--kmh-surface-800);
+  --surface-hover: var(--kmh-surface-700);
+  --surface-active: var(--kmh-surface-700);
+  --presentation: var(--kmh-surface-950);
+  --header-primary: var(--kmh-surface-950);
+
+  /* Stratos leads with indigo, so the primary action follows it rather than
+   * staying LibreChat's green. */
+  --surface-submit: var(--kmh-accent);
+  --surface-submit-hover: var(--kmh-accent-hover);
 }
 
 /* The KMH wordmark is a transitional serif; everything else stays on the

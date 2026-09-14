@@ -164,6 +164,16 @@ function isOpenAIEndpoint(endpoint?: EModelEndpoint | string | null): boolean {
  * set reasoning_effort to 'none'"). Reasoning without tools still works on
  * Chat Completions, but tools are bound after config time, so GPT-5.6
  * reasoning requests default to the Responses API to avoid tool failures.
+ *
+ * KMH: "reasoning request" has to include the requests that send no
+ * `reasoning_effort` at all. Sending nothing does not mean no reasoning — the
+ * model applies its own non-none default, and the rejection is about the effort
+ * the request actually runs at, not about the field being present. Verified
+ * against the live API: gpt-5.6-terra with tools and no `reasoning_effort`
+ * returns exactly that 400, and the same call succeeds on `/v1/responses`.
+ * An agent on a GPT-5.6 model that had never had its reasoning effort set —
+ * the default for a newly created one — therefore failed on every tool-using
+ * turn, surfacing only as "The model provider could not complete this request".
  */
 const responsesApiRequiredPattern = /\bgpt-5\.6\b/;
 
@@ -195,11 +205,9 @@ function requiresResponsesApiForReasoning({
   if (typeof model !== 'string' || !responsesApiRequiredPattern.test(model)) {
     return false;
   }
-  return (
-    reasoningEffort != null &&
-    reasoningEffort !== ReasoningEffort.unset &&
-    reasoningEffort !== ReasoningEffort.none
-  );
+  /** Only an explicit `none` is safe on Chat Completions; unset runs at the
+   *  model's default effort and is not. */
+  return reasoningEffort !== ReasoningEffort.none;
 }
 
 /**
