@@ -12,6 +12,8 @@ export type AgentCategory = {
   /** Whether the category is active and should be displayed */
   isActive: boolean;
   /** Whether this is a custom user-created category */
+  /** KMH: pod colour key. */
+  color?: string;
   custom?: boolean;
   tenantId?: string;
 };

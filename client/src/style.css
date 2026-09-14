@@ -2694,3 +2694,36 @@ html[data-input-modality='keyboard']
 ::view-transition-group(chat-form) {
   z-index: 2;
 }
+
+
+/* ── KMH Stratos palette ──────────────────────────────────────────────────
+ * Overrides LibreChat's surface and accent variables to match the Stratos
+ * system (deep blue-black surfaces, indigo accent). Appended as variable
+ * overrides rather than edits to upstream rules, so upstream restyles merge
+ * without conflict and we only ever own these few lines.
+ * Source: kmh-stratos/tailwind.config.ts + app/globals.css
+ */
+:root {
+  --kmh-accent: 99 102 241;        /* #6366f1 indigo */
+  --kmh-surface-950: 6 6 15;       /* #06060f */
+  --kmh-surface-900: 13 13 26;     /* #0d0d1a */
+  --kmh-surface-800: 18 18 31;     /* #12121f */
+  --kmh-surface-700: 26 26 46;     /* #1a1a2e */
+}
+
+.dark {
+  --surface-primary: rgb(var(--kmh-surface-950));
+  --surface-secondary: rgb(var(--kmh-surface-900));
+  --surface-tertiary: rgb(var(--kmh-surface-800));
+  --surface-hover: rgb(var(--kmh-surface-700));
+  --surface-active: rgb(var(--kmh-surface-700));
+  --presentation: rgb(var(--kmh-surface-950));
+  --header-primary: rgb(var(--kmh-surface-950));
+}
+
+/* The KMH wordmark is a transitional serif; everything else stays on the
+ * product's own type stack. */
+.kmh-wordmark {
+  font-family: 'EB Garamond', 'Cormorant Garamond', Garamond, 'Times New Roman', serif;
+  letter-spacing: 0.06em;
+}

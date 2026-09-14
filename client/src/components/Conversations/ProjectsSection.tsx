@@ -43,6 +43,7 @@ import ProjectCreateDialog from '~/components/Projects/ProjectCreateDialog';
 import ProjectDeleteDialog from '~/components/Projects/ProjectDeleteDialog';
 import ProjectEditDialog from '~/components/Projects/ProjectEditDialog';
 import { useLocalize, useLocalStorage, useNewConvo } from '~/hooks';
+import { podColor } from '~/components/Kmh/podColors';
 import { clearMessagesCache, cn } from '~/utils';
 import { Collapse } from '~/components/ui';
 import Convo from './Convo';
@@ -303,7 +304,10 @@ const ProjectItem = memo(
               )}
               aria-hidden="true"
             />
-            <Folder className="h-4 w-4 shrink-0 text-text-secondary" aria-hidden="true" />
+            <Folder
+              className={`h-4 w-4 shrink-0 ${podColor(project.color).text}`}
+              aria-hidden="true"
+            />
             <span className="min-w-0 truncate">{project.name}</span>
           </button>
           <div
@@ -371,6 +375,7 @@ const ProjectItem = memo(
   (prevProps, nextProps) =>
     prevProps.project._id === nextProps.project._id &&
     prevProps.project.name === nextProps.project.name &&
+    prevProps.project.color === nextProps.project.color &&
     prevProps.project.description === nextProps.project.description &&
     prevProps.project.conversationCount === nextProps.project.conversationCount &&
     prevProps.project.updatedAt === nextProps.project.updatedAt &&

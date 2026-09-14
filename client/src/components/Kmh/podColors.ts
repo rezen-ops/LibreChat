@@ -18,15 +18,23 @@ export type PodColorKey =
   | 'green'
   | 'blue';
 
-export const POD_COLORS: Record<PodColorKey, { label: string; dot: string; rail: string }> = {
-  none: { label: 'No colour', dot: 'bg-transparent border border-border-medium', rail: '' },
-  slate: { label: 'Slate', dot: 'bg-slate-400', rail: 'bg-slate-400' },
-  teal: { label: 'Teal', dot: 'bg-teal-500', rail: 'bg-teal-500' },
-  amber: { label: 'Amber', dot: 'bg-amber-500', rail: 'bg-amber-500' },
-  rose: { label: 'Rose', dot: 'bg-rose-500', rail: 'bg-rose-500' },
-  violet: { label: 'Violet', dot: 'bg-violet-500', rail: 'bg-violet-500' },
-  green: { label: 'Green', dot: 'bg-green-500', rail: 'bg-green-500' },
-  blue: { label: 'Blue', dot: 'bg-blue-500', rail: 'bg-blue-500' },
+export const POD_COLORS: Record<
+  PodColorKey,
+  { label: string; dot: string; rail: string; text: string }
+> = {
+  none: {
+    label: 'No colour',
+    dot: 'bg-transparent border border-border-medium',
+    rail: '',
+    text: 'text-text-secondary',
+  },
+  slate: { label: 'Slate', dot: 'bg-slate-400', rail: 'bg-slate-400', text: 'text-slate-400' },
+  teal: { label: 'Teal', dot: 'bg-teal-500', rail: 'bg-teal-500', text: 'text-teal-500' },
+  amber: { label: 'Amber', dot: 'bg-amber-500', rail: 'bg-amber-500', text: 'text-amber-500' },
+  rose: { label: 'Rose', dot: 'bg-rose-500', rail: 'bg-rose-500', text: 'text-rose-500' },
+  violet: { label: 'Violet', dot: 'bg-violet-500', rail: 'bg-violet-500', text: 'text-violet-500' },
+  green: { label: 'Green', dot: 'bg-green-500', rail: 'bg-green-500', text: 'text-green-500' },
+  blue: { label: 'Blue', dot: 'bg-blue-500', rail: 'bg-blue-500', text: 'text-blue-500' },
 };
 
 export const POD_COLOR_KEYS = Object.keys(POD_COLORS) as PodColorKey[];

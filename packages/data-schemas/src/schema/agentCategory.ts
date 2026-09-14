@@ -30,6 +30,12 @@ const agentCategorySchema: Schema<IAgentCategory> = new Schema<IAgentCategory>(
       default: true,
       index: true,
     },
+    /** KMH: pod colour key, matching client/src/components/Kmh/podColors.ts. */
+    color: {
+      type: String,
+      default: '',
+      trim: true,
+    },
     custom: {
       type: Boolean,
       default: false,

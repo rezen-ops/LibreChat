@@ -179,50 +179,31 @@ export function createAgentCategoryMethods(mongoose: typeof import('mongoose')):
   async function ensureDefaultCategories(): Promise<boolean> {
     const AgentCategory = mongoose.models.AgentCategory as Model<IAgentCategory>;
 
-    const defaultCategories = [
-      {
-        value: 'general',
-        label: 'com_agents_category_general',
-        description: 'com_agents_category_general_description',
-        order: 0,
-      },
-      {
-        value: 'hr',
-        label: 'com_agents_category_hr',
-        description: 'com_agents_category_hr_description',
-        order: 1,
-      },
-      {
-        value: 'rd',
-        label: 'com_agents_category_rd',
-        description: 'com_agents_category_rd_description',
-        order: 2,
-      },
-      {
-        value: 'finance',
-        label: 'com_agents_category_finance',
-        description: 'com_agents_category_finance_description',
-        order: 3,
-      },
-      {
-        value: 'it',
-        label: 'com_agents_category_it',
-        description: 'com_agents_category_it_description',
-        order: 4,
-      },
-      {
-        value: 'sales',
-        label: 'com_agents_category_sales',
-        description: 'com_agents_category_sales_description',
-        order: 5,
-      },
-      {
-        value: 'aftersales',
-        label: 'com_agents_category_aftersales',
-        description: 'com_agents_category_aftersales_description',
-        order: 6,
-      },
-    ];
+    /**
+     * KMH pods. These replace LibreChat's generic business categories
+     * (General, HR, R&D, Finance, IT, Sales, After Sales), which mean nothing
+     * here — agents are grouped by the pod that owns the client.
+     *
+     * EDIT THIS LIST to match your real pods. `value` is stored on each agent,
+     * so renaming a value orphans the agents using it; change `label` freely.
+     * `color` must be a key from client/src/components/Kmh/podColors.ts.
+     */
+    const defaultCategories = (
+      [
+        { value: 'pod-one', label: 'Pod One', color: 'teal', order: 0 },
+        { value: 'pod-two', label: 'Pod Two', color: 'amber', order: 1 },
+        { value: 'pod-three', label: 'Pod Three', color: 'violet', order: 2 },
+        { value: 'pod-four', label: 'Pod Four', color: 'rose', order: 3 },
+        { value: 'unassigned', label: 'Unassigned', color: 'slate', order: 99 },
+      ] as Array<{ value: string; label: string; color: string; order: number }>
+    ).map((c) => ({ ...c, description: '' }));
+
+    /** KMH: retire categories that are no longer pods (General, HR, R&D…). */
+    const podValues = new Set(defaultCategories.map((c) => c.value));
+    await AgentCategory.updateMany(
+      { value: { $nin: Array.from(podValues) }, isActive: true },
+      { $set: { isActive: false } },
+    );
 
     const existingCategories = await getAllCategories();
     const existingCategoryMap = new Map(existingCategories.map((cat) => [cat.value, cat]));
