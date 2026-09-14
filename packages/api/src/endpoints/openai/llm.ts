@@ -20,6 +20,43 @@ type OpenAILLMConfig = Omit<Partial<t.OAIClientOptions>, 'verbosity'> &
     verbosity?: string | null;
   };
 
+/**
+ * KMH: OpenAI models that reject `temperature` and the other sampling params.
+ *
+ * Two rules, both checked against the live API rather than assumed:
+ *  - version-numbered GPT models from 5.5 upward (gpt-5.5, gpt-5.6, gpt-6…),
+ *    plus the classic reasoning families (o1/o3, bare gpt-5);
+ *  - `chat-latest`, which points at whatever the newest model is.
+ *
+ * `-chat` suffixed models (gpt-5-chat-latest) keep sampling support, matching
+ * upstream's exception.
+ */
+export function omitsSamplingParams(model: string): boolean {
+  const name = model.replace(/^~/, '').toLowerCase();
+
+  /** Rolling alias: always the newest model, so assume the newest rules. */
+  if (/(^|\/)chat-latest$/.test(name)) {
+    return true;
+  }
+  if (/-chat(-|$)/.test(name)) {
+    return false;
+  }
+  /** The whole o-series and bare `gpt-5`. Upstream tests `o[13]`, which misses
+   * o4-mini — that model rejects `temperature` exactly like o1 and o3 do. */
+  if (/\b(o[1-9]|gpt-5)(?!\.|-chat)(?:-|$)/.test(name)) {
+    return true;
+  }
+
+  const versioned = /\bgpt-(\d+)(?:\.(\d+))?\b/.exec(name);
+  if (!versioned) {
+    return false;
+  }
+  const major = Number(versioned[1]);
+  const minor = versioned[2] == null ? 0 : Number(versioned[2]);
+  /** 5.5 is the first release to drop sampling support; 6+ never had it. */
+  return major > 5 || (major === 5 && minor >= 5);
+}
+
 export const knownOpenAIParams: Set<string> = new Set([
   // Constructor/Instance Parameters
   'model',
@@ -943,11 +980,16 @@ export function getOpenAILLMConfig({
   /**
    * Note: OpenAI reasoning models (o1/o3/gpt-5) do not support temperature and other sampling parameters
    * Exception: gpt-5-chat and versioned models like gpt-5.1 DO support these parameters
+   *
+   * KMH: the version test above is stale for the GPT-5.5+ generation. Verified
+   * against the live /v1/chat/completions API: gpt-5.1, gpt-5.2 and gpt-5.4
+   * accept `temperature`, while gpt-5.5, every gpt-5.6 codename (sol/terra/luna),
+   * gpt-6-astra and `chat-latest` reject any value but the default, returning a
+   * 400 that surfaces as "The model provider could not complete this request".
+   * `omitsSamplingParams` compares the version numerically so the next release
+   * is covered without another patch.
    */
-  if (
-    modelOptions.model &&
-    /\b(o[13]|gpt-5)(?!\.|-chat)(?:-|$)/.test(modelOptions.model as string)
-  ) {
+  if (modelOptions.model && omitsSamplingParams(modelOptions.model as string)) {
     const reasoningExcludeParams = [
       'frequencyPenalty',
       'presencePenalty',

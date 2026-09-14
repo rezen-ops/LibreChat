@@ -13,6 +13,7 @@ import AgentMarketplace from '~/components/Agents/Marketplace';
 import { OAuthSuccess, OAuthError } from '~/components/OAuth';
 import { AuthContextProvider } from '~/hooks/AuthContext';
 import RouteErrorBoundary from './RouteErrorBoundary';
+import KmhAdmin from '~/components/Kmh/KmhAdmin';
 import StartupLayout from './Layouts/Startup';
 import LoginLayout from './Layouts/Login';
 import dashboardRoutes from './Dashboard';
@@ -179,6 +180,11 @@ export const router = createBrowserRouter(
             {
               path: 'projects/:projectId',
               lazy: loadProjectWorkspace,
+            },
+            {
+              /** KMH: pods and fleet assignment, inside the app rather than a second site. */
+              path: 'kmh-admin',
+              element: <KmhAdmin />,
             },
             {
               path: 'agents',

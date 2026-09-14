@@ -1,9 +1,9 @@
 import { useMemo } from 'react';
 import { useRecoilValue } from 'recoil';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { BarChart3, BookOpen, MessagesSquare } from 'lucide-react';
 import { useUserKeyQuery } from 'librechat-data-provider/react-query';
-import { getConfigDefaults, getEndpointField } from 'librechat-data-provider';
+import { BarChart3, BookOpen, MessagesSquare, SlidersHorizontal } from 'lucide-react';
+import { getConfigDefaults, getEndpointField, SystemRoles } from 'librechat-data-provider';
 import type { TEndpointsConfig } from 'librechat-data-provider';
 import type { NavLink } from '~/common';
 import { useGetEndpointsQuery, useGetStartupConfig, useInsightsAccessQuery } from '~/data-provider';
@@ -64,8 +64,21 @@ export default function useUnifiedSidebarLinks() {
     includeHidePanel: false,
   });
 
+  const isAdmin = user?.role === SystemRoles.ADMIN;
+
   const links = useMemo(() => {
     /** KMH: appended last so upstream tabs keep their positions. */
+    const adminLink: NavLink = {
+      title: 'com_kmh_admin',
+      label: '',
+      icon: SlidersHorizontal,
+      id: 'kmh-admin',
+      onClick: () => {
+        if (!location.pathname.startsWith('/kmh-admin')) {
+          navigate('/kmh-admin');
+        }
+      },
+    };
     const docsLink: NavLink = {
       title: 'com_kmh_docs',
       label: '',
@@ -85,7 +98,7 @@ export default function useUnifiedSidebarLinks() {
       !insightsFeatureEnabled ||
       (!isInsightsRoute && !isInsightsAccessLoading && insightsAccess?.access !== true)
     ) {
-      return [conversationLink, ...sideNavLinks, docsLink];
+      return [conversationLink, ...sideNavLinks, docsLink, ...(isAdmin ? [adminLink] : [])];
     }
 
     const insightsLink: NavLink = {
@@ -104,8 +117,9 @@ export default function useUnifiedSidebarLinks() {
     const nextLinks = [...sideNavLinks];
     nextLinks.splice(mcpIndex >= 0 ? mcpIndex + 1 : nextLinks.length, 0, insightsLink);
 
-    return [conversationLink, ...nextLinks, docsLink];
+    return [conversationLink, ...nextLinks, docsLink, ...(isAdmin ? [adminLink] : [])];
   }, [
+    isAdmin,
     insightsAccess?.access,
     insightsFeatureEnabled,
     isInsightsAccessLoading,

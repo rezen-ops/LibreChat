@@ -8,7 +8,12 @@ import {
   ReasoningParameterFormat,
 } from 'librechat-data-provider';
 import type * as t from '~/types';
-import { getOpenAILLMConfig, extractDefaultParams, applyDefaultParams } from './llm';
+import {
+  getOpenAILLMConfig,
+  extractDefaultParams,
+  applyDefaultParams,
+  omitsSamplingParams,
+} from './llm';
 
 describe('getOpenAILLMConfig', () => {
   describe('Basic Configuration', () => {
@@ -262,7 +267,9 @@ describe('getOpenAILLMConfig', () => {
     });
 
     it('should NOT exclude parameters for gpt-5.x versioned models (they support sampling params)', () => {
-      const versionedModels = ['gpt-5.1', 'gpt-5.1-turbo', 'gpt-5.2', 'gpt-5.5-preview'];
+      /** KMH: `gpt-5.5-preview` was in this list and has moved out. The live API
+       *  rejects `temperature` from 5.5 onward — see the omitsSamplingParams suite. */
+      const versionedModels = ['gpt-5.1', 'gpt-5.1-turbo', 'gpt-5.2', 'gpt-5.4'];
 
       versionedModels.forEach((model) => {
         const result = getOpenAILLMConfig({
@@ -1837,5 +1844,35 @@ describe('applyDefaultParams', () => {
       maxTokens: 4096,
       topP: 0.9,
     });
+  });
+});
+
+describe('omitsSamplingParams (KMH)', () => {
+  /** Each expectation was checked against the live /v1/chat/completions API:
+   *  `true` means the model returns a 400 for `temperature: 0.7`. */
+  it.each([
+    ['gpt-4o', false],
+    ['gpt-4.1', false],
+    ['gpt-5', true],
+    ['gpt-5-mini', true],
+    ['gpt-5-chat-latest', false],
+    ['gpt-5.1', false],
+    ['gpt-5.1-chat-latest', false],
+    ['gpt-5.2', false],
+    ['gpt-5.4', false],
+    ['gpt-5.4-mini', false],
+    ['gpt-5.5', true],
+    ['gpt-5.6-sol', true],
+    ['gpt-5.6-terra', true],
+    ['gpt-5.6-luna', true],
+    ['gpt-6-astra', true],
+    ['chat-latest', true],
+    ['o1', true],
+    ['o3', true],
+    ['o3-mini', true],
+    /** Upstream's `o[13]` test missed o4, which rejects temperature too. */
+    ['o4-mini', true],
+  ])('%s -> %s', (model, expected) => {
+    expect(omitsSamplingParams(model)).toBe(expected);
   });
 });

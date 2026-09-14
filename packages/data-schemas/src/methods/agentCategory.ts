@@ -198,10 +198,12 @@ export function createAgentCategoryMethods(mongoose: typeof import('mongoose')):
       ] as Array<{ value: string; label: string; color: string; order: number }>
     ).map((c) => ({ ...c, description: '' }));
 
-    /** KMH: retire categories that are no longer pods (General, HR, R&D…). */
-    const podValues = new Set(defaultCategories.map((c) => c.value));
+    /** KMH: retire LibreChat's generic business categories. Named explicitly
+     *  rather than "anything not a pod" — pods created later from the admin
+     *  panel are `custom` and must survive every restart. */
+    const retiredDefaults = ['general', 'hr', 'rd', 'finance', 'it', 'sales', 'aftersales'];
     await AgentCategory.updateMany(
-      { value: { $nin: Array.from(podValues) }, isActive: true },
+      { value: { $in: retiredDefaults }, isActive: true, custom: { $ne: true } },
       { $set: { isActive: false } },
     );
 

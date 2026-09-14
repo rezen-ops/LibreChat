@@ -1,8 +1,7 @@
 import { useMemo } from 'react';
-
-import useLocalize from '~/hooks/useLocalize';
 import { useGetAgentCategoriesQuery } from '~/data-provider/Agents';
 import { EMPTY_AGENT_CATEGORY } from '~/constants/agentCategories';
+import useLocalize from '~/hooks/useLocalize';
 
 // This interface matches the structure used by the ControlCombobox component
 export interface ProcessedAgentCategory {
@@ -10,6 +9,8 @@ export interface ProcessedAgentCategory {
   value: string; // Category value
   className?: string;
   icon?: string;
+  /** KMH: pod colour key — see client/src/components/Kmh/podColors.ts. */
+  color?: string;
 }
 
 /**
@@ -35,6 +36,7 @@ const useAgentCategories = () => {
         label: category.label || category.value,
         value: category.value,
         className: 'w-full',
+        color: category.color,
       }));
   }, [categoriesQuery.data]);
 

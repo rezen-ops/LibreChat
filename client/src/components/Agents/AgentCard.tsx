@@ -2,6 +2,7 @@ import React, { useMemo, useState } from 'react';
 import { Label, OGDialog, OGDialogTrigger } from '@librechat/client';
 import type t from 'librechat-data-provider';
 import { useLocalize, TranslationKeys, useAgentCategories } from '~/hooks';
+import { podColor } from '~/components/Kmh/podColors';
 import AgentDetailContent from './AgentDetailContent';
 import { cn, renderAgentAvatar } from '~/utils';
 import AgentContact from './AgentContact';
@@ -20,10 +21,14 @@ const AgentCard: React.FC<AgentCardProps> = ({ agent, onSelect, className = '' }
   const { categories } = useAgentCategories();
   const [isOpen, setIsOpen] = useState(false);
 
+  const category = useMemo(
+    () => categories.find((cat) => cat.value === agent.category),
+    [agent.category, categories],
+  );
+
   const categoryLabel = useMemo(() => {
     if (!agent.category) return '';
 
-    const category = categories.find((cat) => cat.value === agent.category);
     if (category) {
       if (category.label && category.label.startsWith('com_')) {
         return localize(category.label as TranslationKeys);
@@ -32,7 +37,7 @@ const AgentCard: React.FC<AgentCardProps> = ({ agent, onSelect, className = '' }
     }
 
     return agent.category.charAt(0).toUpperCase() + agent.category.slice(1);
-  }, [agent.category, categories, localize]);
+  }, [agent.category, category, localize]);
 
   const handleOpenChange = (open: boolean) => {
     setIsOpen(open);
@@ -67,9 +72,15 @@ const AgentCard: React.FC<AgentCardProps> = ({ agent, onSelect, className = '' }
             }
           }}
         >
-          {/* Category badge - top right */}
+          {/* Category badge - top right. KMH: carries the pod's colour. */}
           {categoryLabel && (
-            <span className="absolute right-4 top-3 rounded-md bg-surface-hover px-2 py-0.5 text-xs text-text-secondary">
+            <span className="absolute right-4 top-3 inline-flex items-center gap-1.5 rounded-md bg-surface-hover px-2 py-0.5 text-xs text-text-secondary">
+              {category?.color ? (
+                <span
+                  className={cn('h-2 w-2 shrink-0 rounded-full', podColor(category.color).dot)}
+                  aria-hidden="true"
+                />
+              ) : null}
               {categoryLabel}
             </span>
           )}

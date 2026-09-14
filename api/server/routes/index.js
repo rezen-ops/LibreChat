@@ -12,6 +12,8 @@ const adminRoles = require('./admin/roles');
 const adminSkills = require('./admin/skills');
 const adminUsers = require('./admin/users');
 const adminAuditLog = require('./admin/audit');
+/** KMH: pod (agent-category) management. */
+const adminPods = require('./admin/pods');
 const endpoints = require('./endpoints');
 const staticRoute = require('./static');
 const messages = require('./messages');
@@ -58,6 +60,7 @@ module.exports = {
   adminRoles,
   adminSkills,
   adminUsers,
+  adminPods,
   adminAuditLog,
   keys,
   apiKeys,

@@ -286,6 +286,8 @@ export type TCategory = {
   label: string;
   description?: string;
   custom?: boolean;
+  /** KMH: pod colour key — see client/src/components/Kmh/podColors.ts. */
+  color?: string;
 };
 
 export type TMarketplaceCategory = TCategory & {
