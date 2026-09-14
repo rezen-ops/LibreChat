@@ -1,0 +1,4 @@
+segment_id,name,definition
+seg_001,Engaged 30d,opened or clicked in last 30 days
+seg_002,Lapsed 90d,no open in 90 days
+seg_003,VIP,lifetime value > 500

@@ -1,0 +1,52 @@
+# syntax=docker/dockerfile:1
+#
+# KMH build of LibreChat.
+#
+# Deliberately a SEPARATE file from upstream's Dockerfile so that pulling new
+# LibreChat releases never conflicts here. If upstream changes its build steps,
+# we sync them across on purpose rather than resolving a merge.
+#
+# Everything KMH-specific lives under kmh/ for the same reason: our files sit
+# beside upstream's rather than inside them, so `git merge upstream/main` only
+# ever touches files we actually modified.
+
+FROM node:24.16.0-alpine AS builder
+RUN apk add --no-cache python3 py3-pip
+WORKDIR /app
+
+# Manifests first so `npm ci` is cached and only re-runs when deps change.
+# Without this every UI tweak would reinstall the whole dependency tree.
+COPY package.json package-lock.json ./
+COPY api/package.json ./api/package.json
+COPY client/package.json ./client/package.json
+COPY packages/data-provider/package.json ./packages/data-provider/package.json
+COPY packages/data-schemas/package.json ./packages/data-schemas/package.json
+COPY packages/api/package.json ./packages/api/package.json
+RUN npm ci --no-audit --no-fund
+
+COPY . .
+RUN npm run frontend
+
+# ── runtime ─────────────────────────────────────────────────────────────────
+FROM node:24.16.0-alpine AS runtime
+RUN apk upgrade --no-cache && apk add --no-cache jemalloc python3 py3-pip
+ENV LD_PRELOAD=/usr/lib/libjemalloc.so.2
+RUN mkdir -p /app && chown node:node /app
+WORKDIR /app
+USER node
+
+COPY --from=builder --chown=node:node /app ./
+
+# KMH config and skills. Baked in, so a deploy is a reproducible artifact and a
+# skill edit is a git push that reaches every agent.
+COPY --chown=node:node kmh/config/librechat.yaml /app/librechat.yaml
+COPY --chown=node:node kmh/skills/ /app/skill/
+
+ENV CONFIG_PATH=/app/librechat.yaml \
+    DEPLOYMENT_SKILLS_DIR=/app/skill \
+    HOST=0.0.0.0 \
+    PORT=3080 \
+    NODE_ENV=production
+
+EXPOSE 3080
+CMD ["npm", "run", "backend"]
