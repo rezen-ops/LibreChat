@@ -15,3 +15,6 @@ docs
 
 # Ignore all hidden files
 .*
+# KMH: our baked config is a build input and must reach the image.
+!kmh/config/librechat.yaml
+!kmh/
