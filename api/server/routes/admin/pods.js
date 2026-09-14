@@ -71,10 +71,13 @@ const shape = (pod, counts) => ({
 
 router.use(requireJwtAuth, requireAdminAccess);
 
-/** Every pod, active or not — the admin view needs to show retired ones. */
+/** Live pods only. Retiring a pod deactivates it rather than deleting the row,
+ *  so the collection still holds LibreChat's original categories and every pod
+ *  ever removed — listing those would put rows in the panel that mean nothing
+ *  to anyone and that no control here can act on. */
 router.get('/', async (_req, res) => {
   try {
-    const [pods, counts] = await Promise.all([db.getAllCategories(), countsByCategory()]);
+    const [pods, counts] = await Promise.all([db.getActiveCategories(), countsByCategory()]);
     res.status(200).json(pods.map((pod) => shape(pod, counts)));
   } catch (error) {
     logger.error('[/api/admin/pods] list failed:', error);
@@ -92,8 +95,21 @@ router.post('/', async (req, res) => {
     if (!value || RESERVED_VALUES.has(value)) {
       return res.status(400).json({ error: `"${label}" is not a usable pod name` });
     }
-    if (await db.findCategoryByValue(value)) {
+    /** A retired pod keeps its row, so re-adding that name revives it — with
+     *  the agents that were moved to Unassigned staying where they are. A 409
+     *  here would refuse a name the panel shows as free. */
+    const existing = await db.findCategoryByValue(value);
+    if (existing && existing.isActive !== false) {
       return res.status(409).json({ error: `A pod named "${label}" already exists` });
+    }
+    if (existing) {
+      const revived = await db.updateCategory(value, {
+        label,
+        color: sanitizeColor(req.body?.color),
+        isActive: true,
+        custom: true,
+      });
+      return res.status(200).json(shape(revived, await countsByCategory()));
     }
 
     const pods = await db.getAllCategories();
