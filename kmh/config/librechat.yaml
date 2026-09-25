@@ -1349,3 +1349,1028 @@ mcpServers:
     initTimeout: 15000
     startup: false
     chatMenu: false
+
+  # ── Stratos planner (WRITE-capable) ──────────────────────────────────────
+  # These tokens create draft campaigns. Treat them as more sensitive than the
+  # read-only Klaviyo tokens above. There is no update or delete tool; a
+  # mistake is fixed in the Stratos UI.
+  stratos-miracle-made:
+    title: 'Miracle Made Planner'
+    description: 'Stratos campaign planner for Miracle Made. Creates DRAFT campaigns only.'
+    type: streamable-http
+    url: 'https://kmh-stratos-mcp-production.up.railway.app/mcp'
+    headers:
+      Authorization: 'Bearer ${STRATOS_TOKEN_MIRACLE_MADE}'
+    serverInstructions: |
+      This connection is locked to Miracle Made. Never pass a brand name —
+      the token already selects the brand and any brand argument is ignored.
+      Call stratos_list_brands first to confirm the brand, then
+      stratos_list_campaigns for the target window before creating anything.
+      stratos_create_campaigns only creates DRAFTS for the team to review. It
+      cannot send, schedule, approve, edit or delete. Batch a whole month in one
+      call (max 100). Duplicates (same name + same send_date) are rejected, so
+      retrying after an error is safe. Dates are YYYY-MM-DD, times HH:MM 24h.
+    timeout: 60000
+    initTimeout: 15000
+    startup: false
+    chatMenu: false
+  stratos-pipi-tea:
+    title: 'PiPi Tea Planner'
+    description: 'Stratos campaign planner for PiPi Tea. Creates DRAFT campaigns only.'
+    type: streamable-http
+    url: 'https://kmh-stratos-mcp-production.up.railway.app/mcp'
+    headers:
+      Authorization: 'Bearer ${STRATOS_TOKEN_PIPI_TEA}'
+    serverInstructions: |
+      This connection is locked to PiPi Tea. Never pass a brand name —
+      the token already selects the brand and any brand argument is ignored.
+      Call stratos_list_brands first to confirm the brand, then
+      stratos_list_campaigns for the target window before creating anything.
+      stratos_create_campaigns only creates DRAFTS for the team to review. It
+      cannot send, schedule, approve, edit or delete. Batch a whole month in one
+      call (max 100). Duplicates (same name + same send_date) are rejected, so
+      retrying after an error is safe. Dates are YYYY-MM-DD, times HH:MM 24h.
+    timeout: 60000
+    initTimeout: 15000
+    startup: false
+    chatMenu: false
+  stratos-billion-dollar-beauty:
+    title: 'Billion Dollar Beauty Planner'
+    description: 'Stratos campaign planner for Billion Dollar Beauty. Creates DRAFT campaigns only.'
+    type: streamable-http
+    url: 'https://kmh-stratos-mcp-production.up.railway.app/mcp'
+    headers:
+      Authorization: 'Bearer ${STRATOS_TOKEN_BILLION_DOLLAR_BEAUTY}'
+    serverInstructions: |
+      This connection is locked to Billion Dollar Beauty. Never pass a brand name —
+      the token already selects the brand and any brand argument is ignored.
+      Call stratos_list_brands first to confirm the brand, then
+      stratos_list_campaigns for the target window before creating anything.
+      stratos_create_campaigns only creates DRAFTS for the team to review. It
+      cannot send, schedule, approve, edit or delete. Batch a whole month in one
+      call (max 100). Duplicates (same name + same send_date) are rejected, so
+      retrying after an error is safe. Dates are YYYY-MM-DD, times HH:MM 24h.
+    timeout: 60000
+    initTimeout: 15000
+    startup: false
+    chatMenu: false
+  stratos-bdb-pro:
+    title: 'Billion Dollar Beauty Pro Planner'
+    description: 'Stratos campaign planner for Billion Dollar Beauty Pro. Creates DRAFT campaigns only.'
+    type: streamable-http
+    url: 'https://kmh-stratos-mcp-production.up.railway.app/mcp'
+    headers:
+      Authorization: 'Bearer ${STRATOS_TOKEN_BDB_PRO}'
+    serverInstructions: |
+      This connection is locked to Billion Dollar Beauty Pro. Never pass a brand name —
+      the token already selects the brand and any brand argument is ignored.
+      Call stratos_list_brands first to confirm the brand, then
+      stratos_list_campaigns for the target window before creating anything.
+      stratos_create_campaigns only creates DRAFTS for the team to review. It
+      cannot send, schedule, approve, edit or delete. Batch a whole month in one
+      call (max 100). Duplicates (same name + same send_date) are rejected, so
+      retrying after an error is safe. Dates are YYYY-MM-DD, times HH:MM 24h.
+    timeout: 60000
+    initTimeout: 15000
+    startup: false
+    chatMenu: false
+  stratos-tattoo-zoo:
+    title: 'Tattoo Zoo Planner'
+    description: 'Stratos campaign planner for Tattoo Zoo. Creates DRAFT campaigns only.'
+    type: streamable-http
+    url: 'https://kmh-stratos-mcp-production.up.railway.app/mcp'
+    headers:
+      Authorization: 'Bearer ${STRATOS_TOKEN_TATTOO_ZOO}'
+    serverInstructions: |
+      This connection is locked to Tattoo Zoo. Never pass a brand name —
+      the token already selects the brand and any brand argument is ignored.
+      Call stratos_list_brands first to confirm the brand, then
+      stratos_list_campaigns for the target window before creating anything.
+      stratos_create_campaigns only creates DRAFTS for the team to review. It
+      cannot send, schedule, approve, edit or delete. Batch a whole month in one
+      call (max 100). Duplicates (same name + same send_date) are rejected, so
+      retrying after an error is safe. Dates are YYYY-MM-DD, times HH:MM 24h.
+    timeout: 60000
+    initTimeout: 15000
+    startup: false
+    chatMenu: false
+  stratos-ocoa:
+    title: 'Ocoa Planner'
+    description: 'Stratos campaign planner for Ocoa. Creates DRAFT campaigns only.'
+    type: streamable-http
+    url: 'https://kmh-stratos-mcp-production.up.railway.app/mcp'
+    headers:
+      Authorization: 'Bearer ${STRATOS_TOKEN_OCOA}'
+    serverInstructions: |
+      This connection is locked to Ocoa. Never pass a brand name —
+      the token already selects the brand and any brand argument is ignored.
+      Call stratos_list_brands first to confirm the brand, then
+      stratos_list_campaigns for the target window before creating anything.
+      stratos_create_campaigns only creates DRAFTS for the team to review. It
+      cannot send, schedule, approve, edit or delete. Batch a whole month in one
+      call (max 100). Duplicates (same name + same send_date) are rejected, so
+      retrying after an error is safe. Dates are YYYY-MM-DD, times HH:MM 24h.
+    timeout: 60000
+    initTimeout: 15000
+    startup: false
+    chatMenu: false
+  stratos-sofa-club-ltd:
+    title: 'Sofa Club Ltd Planner'
+    description: 'Stratos campaign planner for Sofa Club Ltd. Creates DRAFT campaigns only.'
+    type: streamable-http
+    url: 'https://kmh-stratos-mcp-production.up.railway.app/mcp'
+    headers:
+      Authorization: 'Bearer ${STRATOS_TOKEN_SOFA_CLUB_LTD}'
+    serverInstructions: |
+      This connection is locked to Sofa Club Ltd. Never pass a brand name —
+      the token already selects the brand and any brand argument is ignored.
+      Call stratos_list_brands first to confirm the brand, then
+      stratos_list_campaigns for the target window before creating anything.
+      stratos_create_campaigns only creates DRAFTS for the team to review. It
+      cannot send, schedule, approve, edit or delete. Batch a whole month in one
+      call (max 100). Duplicates (same name + same send_date) are rejected, so
+      retrying after an error is safe. Dates are YYYY-MM-DD, times HH:MM 24h.
+    timeout: 60000
+    initTimeout: 15000
+    startup: false
+    chatMenu: false
+  stratos-outdoor-edge-cutlery:
+    title: 'Outdoor Edge Cutlery Planner'
+    description: 'Stratos campaign planner for Outdoor Edge Cutlery. Creates DRAFT campaigns only.'
+    type: streamable-http
+    url: 'https://kmh-stratos-mcp-production.up.railway.app/mcp'
+    headers:
+      Authorization: 'Bearer ${STRATOS_TOKEN_OUTDOOR_EDGE_CUTLERY}'
+    serverInstructions: |
+      This connection is locked to Outdoor Edge Cutlery. Never pass a brand name —
+      the token already selects the brand and any brand argument is ignored.
+      Call stratos_list_brands first to confirm the brand, then
+      stratos_list_campaigns for the target window before creating anything.
+      stratos_create_campaigns only creates DRAFTS for the team to review. It
+      cannot send, schedule, approve, edit or delete. Batch a whole month in one
+      call (max 100). Duplicates (same name + same send_date) are rejected, so
+      retrying after an error is safe. Dates are YYYY-MM-DD, times HH:MM 24h.
+    timeout: 60000
+    initTimeout: 15000
+    startup: false
+    chatMenu: false
+  stratos-newport:
+    title: 'Newport Planner'
+    description: 'Stratos campaign planner for Newport. Creates DRAFT campaigns only.'
+    type: streamable-http
+    url: 'https://kmh-stratos-mcp-production.up.railway.app/mcp'
+    headers:
+      Authorization: 'Bearer ${STRATOS_TOKEN_NEWPORT}'
+    serverInstructions: |
+      This connection is locked to Newport. Never pass a brand name —
+      the token already selects the brand and any brand argument is ignored.
+      Call stratos_list_brands first to confirm the brand, then
+      stratos_list_campaigns for the target window before creating anything.
+      stratos_create_campaigns only creates DRAFTS for the team to review. It
+      cannot send, schedule, approve, edit or delete. Batch a whole month in one
+      call (max 100). Duplicates (same name + same send_date) are rejected, so
+      retrying after an error is safe. Dates are YYYY-MM-DD, times HH:MM 24h.
+    timeout: 60000
+    initTimeout: 15000
+    startup: false
+    chatMenu: false
+  stratos-get-soul:
+    title: 'Get Soul Planner'
+    description: 'Stratos campaign planner for Get Soul. Creates DRAFT campaigns only.'
+    type: streamable-http
+    url: 'https://kmh-stratos-mcp-production.up.railway.app/mcp'
+    headers:
+      Authorization: 'Bearer ${STRATOS_TOKEN_GET_SOUL}'
+    serverInstructions: |
+      This connection is locked to Get Soul. Never pass a brand name —
+      the token already selects the brand and any brand argument is ignored.
+      Call stratos_list_brands first to confirm the brand, then
+      stratos_list_campaigns for the target window before creating anything.
+      stratos_create_campaigns only creates DRAFTS for the team to review. It
+      cannot send, schedule, approve, edit or delete. Batch a whole month in one
+      call (max 100). Duplicates (same name + same send_date) are rejected, so
+      retrying after an error is safe. Dates are YYYY-MM-DD, times HH:MM 24h.
+    timeout: 60000
+    initTimeout: 15000
+    startup: false
+    chatMenu: false
+  stratos-gir:
+    title: 'GIR Planner'
+    description: 'Stratos campaign planner for GIR. Creates DRAFT campaigns only.'
+    type: streamable-http
+    url: 'https://kmh-stratos-mcp-production.up.railway.app/mcp'
+    headers:
+      Authorization: 'Bearer ${STRATOS_TOKEN_GIR}'
+    serverInstructions: |
+      This connection is locked to GIR. Never pass a brand name —
+      the token already selects the brand and any brand argument is ignored.
+      Call stratos_list_brands first to confirm the brand, then
+      stratos_list_campaigns for the target window before creating anything.
+      stratos_create_campaigns only creates DRAFTS for the team to review. It
+      cannot send, schedule, approve, edit or delete. Batch a whole month in one
+      call (max 100). Duplicates (same name + same send_date) are rejected, so
+      retrying after an error is safe. Dates are YYYY-MM-DD, times HH:MM 24h.
+    timeout: 60000
+    initTimeout: 15000
+    startup: false
+    chatMenu: false
+  stratos-onsen:
+    title: 'Onsen Planner'
+    description: 'Stratos campaign planner for Onsen. Creates DRAFT campaigns only.'
+    type: streamable-http
+    url: 'https://kmh-stratos-mcp-production.up.railway.app/mcp'
+    headers:
+      Authorization: 'Bearer ${STRATOS_TOKEN_ONSEN}'
+    serverInstructions: |
+      This connection is locked to Onsen. Never pass a brand name —
+      the token already selects the brand and any brand argument is ignored.
+      Call stratos_list_brands first to confirm the brand, then
+      stratos_list_campaigns for the target window before creating anything.
+      stratos_create_campaigns only creates DRAFTS for the team to review. It
+      cannot send, schedule, approve, edit or delete. Batch a whole month in one
+      call (max 100). Duplicates (same name + same send_date) are rejected, so
+      retrying after an error is safe. Dates are YYYY-MM-DD, times HH:MM 24h.
+    timeout: 60000
+    initTimeout: 15000
+    startup: false
+    chatMenu: false
+  stratos-aktiiv:
+    title: 'Aktiiv Planner'
+    description: 'Stratos campaign planner for Aktiiv. Creates DRAFT campaigns only.'
+    type: streamable-http
+    url: 'https://kmh-stratos-mcp-production.up.railway.app/mcp'
+    headers:
+      Authorization: 'Bearer ${STRATOS_TOKEN_AKTIIV}'
+    serverInstructions: |
+      This connection is locked to Aktiiv. Never pass a brand name —
+      the token already selects the brand and any brand argument is ignored.
+      Call stratos_list_brands first to confirm the brand, then
+      stratos_list_campaigns for the target window before creating anything.
+      stratos_create_campaigns only creates DRAFTS for the team to review. It
+      cannot send, schedule, approve, edit or delete. Batch a whole month in one
+      call (max 100). Duplicates (same name + same send_date) are rejected, so
+      retrying after an error is safe. Dates are YYYY-MM-DD, times HH:MM 24h.
+    timeout: 60000
+    initTimeout: 15000
+    startup: false
+    chatMenu: false
+  stratos-arrowhead:
+    title: 'Arrowhead Tactical Apparel Planner'
+    description: 'Stratos campaign planner for Arrowhead Tactical Apparel. Creates DRAFT campaigns only.'
+    type: streamable-http
+    url: 'https://kmh-stratos-mcp-production.up.railway.app/mcp'
+    headers:
+      Authorization: 'Bearer ${STRATOS_TOKEN_ARROWHEAD}'
+    serverInstructions: |
+      This connection is locked to Arrowhead Tactical Apparel. Never pass a brand name —
+      the token already selects the brand and any brand argument is ignored.
+      Call stratos_list_brands first to confirm the brand, then
+      stratos_list_campaigns for the target window before creating anything.
+      stratos_create_campaigns only creates DRAFTS for the team to review. It
+      cannot send, schedule, approve, edit or delete. Batch a whole month in one
+      call (max 100). Duplicates (same name + same send_date) are rejected, so
+      retrying after an error is safe. Dates are YYYY-MM-DD, times HH:MM 24h.
+    timeout: 60000
+    initTimeout: 15000
+    startup: false
+    chatMenu: false
+  stratos-collars-co:
+    title: 'Collars Co Planner'
+    description: 'Stratos campaign planner for Collars Co. Creates DRAFT campaigns only.'
+    type: streamable-http
+    url: 'https://kmh-stratos-mcp-production.up.railway.app/mcp'
+    headers:
+      Authorization: 'Bearer ${STRATOS_TOKEN_COLLARS_CO}'
+    serverInstructions: |
+      This connection is locked to Collars Co. Never pass a brand name —
+      the token already selects the brand and any brand argument is ignored.
+      Call stratos_list_brands first to confirm the brand, then
+      stratos_list_campaigns for the target window before creating anything.
+      stratos_create_campaigns only creates DRAFTS for the team to review. It
+      cannot send, schedule, approve, edit or delete. Batch a whole month in one
+      call (max 100). Duplicates (same name + same send_date) are rejected, so
+      retrying after an error is safe. Dates are YYYY-MM-DD, times HH:MM 24h.
+    timeout: 60000
+    initTimeout: 15000
+    startup: false
+    chatMenu: false
+  stratos-fellow:
+    title: 'Fellow Planner'
+    description: 'Stratos campaign planner for Fellow. Creates DRAFT campaigns only.'
+    type: streamable-http
+    url: 'https://kmh-stratos-mcp-production.up.railway.app/mcp'
+    headers:
+      Authorization: 'Bearer ${STRATOS_TOKEN_FELLOW}'
+    serverInstructions: |
+      This connection is locked to Fellow. Never pass a brand name —
+      the token already selects the brand and any brand argument is ignored.
+      Call stratos_list_brands first to confirm the brand, then
+      stratos_list_campaigns for the target window before creating anything.
+      stratos_create_campaigns only creates DRAFTS for the team to review. It
+      cannot send, schedule, approve, edit or delete. Batch a whole month in one
+      call (max 100). Duplicates (same name + same send_date) are rejected, so
+      retrying after an error is safe. Dates are YYYY-MM-DD, times HH:MM 24h.
+    timeout: 60000
+    initTimeout: 15000
+    startup: false
+    chatMenu: false
+  stratos-foreign-waters:
+    title: 'Foreign Waters Planner'
+    description: 'Stratos campaign planner for Foreign Waters. Creates DRAFT campaigns only.'
+    type: streamable-http
+    url: 'https://kmh-stratos-mcp-production.up.railway.app/mcp'
+    headers:
+      Authorization: 'Bearer ${STRATOS_TOKEN_FOREIGN_WATERS}'
+    serverInstructions: |
+      This connection is locked to Foreign Waters. Never pass a brand name —
+      the token already selects the brand and any brand argument is ignored.
+      Call stratos_list_brands first to confirm the brand, then
+      stratos_list_campaigns for the target window before creating anything.
+      stratos_create_campaigns only creates DRAFTS for the team to review. It
+      cannot send, schedule, approve, edit or delete. Batch a whole month in one
+      call (max 100). Duplicates (same name + same send_date) are rejected, so
+      retrying after an error is safe. Dates are YYYY-MM-DD, times HH:MM 24h.
+    timeout: 60000
+    initTimeout: 15000
+    startup: false
+    chatMenu: false
+  stratos-kitchen-art-letters:
+    title: 'Kitchen Art Letters Planner'
+    description: 'Stratos campaign planner for Kitchen Art Letters. Creates DRAFT campaigns only.'
+    type: streamable-http
+    url: 'https://kmh-stratos-mcp-production.up.railway.app/mcp'
+    headers:
+      Authorization: 'Bearer ${STRATOS_TOKEN_KITCHEN_ART_LETTERS}'
+    serverInstructions: |
+      This connection is locked to Kitchen Art Letters. Never pass a brand name —
+      the token already selects the brand and any brand argument is ignored.
+      Call stratos_list_brands first to confirm the brand, then
+      stratos_list_campaigns for the target window before creating anything.
+      stratos_create_campaigns only creates DRAFTS for the team to review. It
+      cannot send, schedule, approve, edit or delete. Batch a whole month in one
+      call (max 100). Duplicates (same name + same send_date) are rejected, so
+      retrying after an error is safe. Dates are YYYY-MM-DD, times HH:MM 24h.
+    timeout: 60000
+    initTimeout: 15000
+    startup: false
+    chatMenu: false
+  stratos-malie:
+    title: 'Malie Planner'
+    description: 'Stratos campaign planner for Malie. Creates DRAFT campaigns only.'
+    type: streamable-http
+    url: 'https://kmh-stratos-mcp-production.up.railway.app/mcp'
+    headers:
+      Authorization: 'Bearer ${STRATOS_TOKEN_MALIE}'
+    serverInstructions: |
+      This connection is locked to Malie. Never pass a brand name —
+      the token already selects the brand and any brand argument is ignored.
+      Call stratos_list_brands first to confirm the brand, then
+      stratos_list_campaigns for the target window before creating anything.
+      stratos_create_campaigns only creates DRAFTS for the team to review. It
+      cannot send, schedule, approve, edit or delete. Batch a whole month in one
+      call (max 100). Duplicates (same name + same send_date) are rejected, so
+      retrying after an error is safe. Dates are YYYY-MM-DD, times HH:MM 24h.
+    timeout: 60000
+    initTimeout: 15000
+    startup: false
+    chatMenu: false
+  stratos-off-grid-source:
+    title: 'Off-Grid Source Planner'
+    description: 'Stratos campaign planner for Off-Grid Source. Creates DRAFT campaigns only.'
+    type: streamable-http
+    url: 'https://kmh-stratos-mcp-production.up.railway.app/mcp'
+    headers:
+      Authorization: 'Bearer ${STRATOS_TOKEN_OFF_GRID_SOURCE}'
+    serverInstructions: |
+      This connection is locked to Off-Grid Source. Never pass a brand name —
+      the token already selects the brand and any brand argument is ignored.
+      Call stratos_list_brands first to confirm the brand, then
+      stratos_list_campaigns for the target window before creating anything.
+      stratos_create_campaigns only creates DRAFTS for the team to review. It
+      cannot send, schedule, approve, edit or delete. Batch a whole month in one
+      call (max 100). Duplicates (same name + same send_date) are rejected, so
+      retrying after an error is safe. Dates are YYYY-MM-DD, times HH:MM 24h.
+    timeout: 60000
+    initTimeout: 15000
+    startup: false
+    chatMenu: false
+  stratos-hemp-collect:
+    title: 'Hemp Collect Planner'
+    description: 'Stratos campaign planner for Hemp Collect. Creates DRAFT campaigns only.'
+    type: streamable-http
+    url: 'https://kmh-stratos-mcp-production.up.railway.app/mcp'
+    headers:
+      Authorization: 'Bearer ${STRATOS_TOKEN_HEMP_COLLECT}'
+    serverInstructions: |
+      This connection is locked to Hemp Collect. Never pass a brand name —
+      the token already selects the brand and any brand argument is ignored.
+      Call stratos_list_brands first to confirm the brand, then
+      stratos_list_campaigns for the target window before creating anything.
+      stratos_create_campaigns only creates DRAFTS for the team to review. It
+      cannot send, schedule, approve, edit or delete. Batch a whole month in one
+      call (max 100). Duplicates (same name + same send_date) are rejected, so
+      retrying after an error is safe. Dates are YYYY-MM-DD, times HH:MM 24h.
+    timeout: 60000
+    initTimeout: 15000
+    startup: false
+    chatMenu: false
+  stratos-windy-nation:
+    title: 'Windy Nation Planner'
+    description: 'Stratos campaign planner for Windy Nation. Creates DRAFT campaigns only.'
+    type: streamable-http
+    url: 'https://kmh-stratos-mcp-production.up.railway.app/mcp'
+    headers:
+      Authorization: 'Bearer ${STRATOS_TOKEN_WINDY_NATION}'
+    serverInstructions: |
+      This connection is locked to Windy Nation. Never pass a brand name —
+      the token already selects the brand and any brand argument is ignored.
+      Call stratos_list_brands first to confirm the brand, then
+      stratos_list_campaigns for the target window before creating anything.
+      stratos_create_campaigns only creates DRAFTS for the team to review. It
+      cannot send, schedule, approve, edit or delete. Batch a whole month in one
+      call (max 100). Duplicates (same name + same send_date) are rejected, so
+      retrying after an error is safe. Dates are YYYY-MM-DD, times HH:MM 24h.
+    timeout: 60000
+    initTimeout: 15000
+    startup: false
+    chatMenu: false
+  stratos-cooks-professional:
+    title: 'Cooks Professional Planner'
+    description: 'Stratos campaign planner for Cooks Professional. Creates DRAFT campaigns only.'
+    type: streamable-http
+    url: 'https://kmh-stratos-mcp-production.up.railway.app/mcp'
+    headers:
+      Authorization: 'Bearer ${STRATOS_TOKEN_COOKS_PROFESSIONAL}'
+    serverInstructions: |
+      This connection is locked to Cooks Professional. Never pass a brand name —
+      the token already selects the brand and any brand argument is ignored.
+      Call stratos_list_brands first to confirm the brand, then
+      stratos_list_campaigns for the target window before creating anything.
+      stratos_create_campaigns only creates DRAFTS for the team to review. It
+      cannot send, schedule, approve, edit or delete. Batch a whole month in one
+      call (max 100). Duplicates (same name + same send_date) are rejected, so
+      retrying after an error is safe. Dates are YYYY-MM-DD, times HH:MM 24h.
+    timeout: 60000
+    initTimeout: 15000
+    startup: false
+    chatMenu: false
+  stratos-future-society:
+    title: 'Future Society Planner'
+    description: 'Stratos campaign planner for Future Society. Creates DRAFT campaigns only.'
+    type: streamable-http
+    url: 'https://kmh-stratos-mcp-production.up.railway.app/mcp'
+    headers:
+      Authorization: 'Bearer ${STRATOS_TOKEN_FUTURE_SOCIETY}'
+    serverInstructions: |
+      This connection is locked to Future Society. Never pass a brand name —
+      the token already selects the brand and any brand argument is ignored.
+      Call stratos_list_brands first to confirm the brand, then
+      stratos_list_campaigns for the target window before creating anything.
+      stratos_create_campaigns only creates DRAFTS for the team to review. It
+      cannot send, schedule, approve, edit or delete. Batch a whole month in one
+      call (max 100). Duplicates (same name + same send_date) are rejected, so
+      retrying after an error is safe. Dates are YYYY-MM-DD, times HH:MM 24h.
+    timeout: 60000
+    initTimeout: 15000
+    startup: false
+    chatMenu: false
+  stratos-garden-tower-project:
+    title: 'Garden Tower Project Planner'
+    description: 'Stratos campaign planner for Garden Tower Project. Creates DRAFT campaigns only.'
+    type: streamable-http
+    url: 'https://kmh-stratos-mcp-production.up.railway.app/mcp'
+    headers:
+      Authorization: 'Bearer ${STRATOS_TOKEN_GARDEN_TOWER_PROJECT}'
+    serverInstructions: |
+      This connection is locked to Garden Tower Project. Never pass a brand name —
+      the token already selects the brand and any brand argument is ignored.
+      Call stratos_list_brands first to confirm the brand, then
+      stratos_list_campaigns for the target window before creating anything.
+      stratos_create_campaigns only creates DRAFTS for the team to review. It
+      cannot send, schedule, approve, edit or delete. Batch a whole month in one
+      call (max 100). Duplicates (same name + same send_date) are rejected, so
+      retrying after an error is safe. Dates are YYYY-MM-DD, times HH:MM 24h.
+    timeout: 60000
+    initTimeout: 15000
+    startup: false
+    chatMenu: false
+  stratos-rescube:
+    title: 'Rescube Planner'
+    description: 'Stratos campaign planner for Rescube. Creates DRAFT campaigns only.'
+    type: streamable-http
+    url: 'https://kmh-stratos-mcp-production.up.railway.app/mcp'
+    headers:
+      Authorization: 'Bearer ${STRATOS_TOKEN_RESCUBE}'
+    serverInstructions: |
+      This connection is locked to Rescube. Never pass a brand name —
+      the token already selects the brand and any brand argument is ignored.
+      Call stratos_list_brands first to confirm the brand, then
+      stratos_list_campaigns for the target window before creating anything.
+      stratos_create_campaigns only creates DRAFTS for the team to review. It
+      cannot send, schedule, approve, edit or delete. Batch a whole month in one
+      call (max 100). Duplicates (same name + same send_date) are rejected, so
+      retrying after an error is safe. Dates are YYYY-MM-DD, times HH:MM 24h.
+    timeout: 60000
+    initTimeout: 15000
+    startup: false
+    chatMenu: false
+  stratos-tattoo-numbing-cream:
+    title: 'Tattoo Numbing Cream Planner'
+    description: 'Stratos campaign planner for Tattoo Numbing Cream. Creates DRAFT campaigns only.'
+    type: streamable-http
+    url: 'https://kmh-stratos-mcp-production.up.railway.app/mcp'
+    headers:
+      Authorization: 'Bearer ${STRATOS_TOKEN_TATTOO_NUMBING_CREAM}'
+    serverInstructions: |
+      This connection is locked to Tattoo Numbing Cream. Never pass a brand name —
+      the token already selects the brand and any brand argument is ignored.
+      Call stratos_list_brands first to confirm the brand, then
+      stratos_list_campaigns for the target window before creating anything.
+      stratos_create_campaigns only creates DRAFTS for the team to review. It
+      cannot send, schedule, approve, edit or delete. Batch a whole month in one
+      call (max 100). Duplicates (same name + same send_date) are rejected, so
+      retrying after an error is safe. Dates are YYYY-MM-DD, times HH:MM 24h.
+    timeout: 60000
+    initTimeout: 15000
+    startup: false
+    chatMenu: false
+  stratos-jazzupco:
+    title: 'JazzUpCo Planner'
+    description: 'Stratos campaign planner for JazzUpCo. Creates DRAFT campaigns only.'
+    type: streamable-http
+    url: 'https://kmh-stratos-mcp-production.up.railway.app/mcp'
+    headers:
+      Authorization: 'Bearer ${STRATOS_TOKEN_JAZZUPCO}'
+    serverInstructions: |
+      This connection is locked to JazzUpCo. Never pass a brand name —
+      the token already selects the brand and any brand argument is ignored.
+      Call stratos_list_brands first to confirm the brand, then
+      stratos_list_campaigns for the target window before creating anything.
+      stratos_create_campaigns only creates DRAFTS for the team to review. It
+      cannot send, schedule, approve, edit or delete. Batch a whole month in one
+      call (max 100). Duplicates (same name + same send_date) are rejected, so
+      retrying after an error is safe. Dates are YYYY-MM-DD, times HH:MM 24h.
+    timeout: 60000
+    initTimeout: 15000
+    startup: false
+    chatMenu: false
+  stratos-larissa-loden:
+    title: 'Larissa Loden Planner'
+    description: 'Stratos campaign planner for Larissa Loden. Creates DRAFT campaigns only.'
+    type: streamable-http
+    url: 'https://kmh-stratos-mcp-production.up.railway.app/mcp'
+    headers:
+      Authorization: 'Bearer ${STRATOS_TOKEN_LARISSA_LODEN}'
+    serverInstructions: |
+      This connection is locked to Larissa Loden. Never pass a brand name —
+      the token already selects the brand and any brand argument is ignored.
+      Call stratos_list_brands first to confirm the brand, then
+      stratos_list_campaigns for the target window before creating anything.
+      stratos_create_campaigns only creates DRAFTS for the team to review. It
+      cannot send, schedule, approve, edit or delete. Batch a whole month in one
+      call (max 100). Duplicates (same name + same send_date) are rejected, so
+      retrying after an error is safe. Dates are YYYY-MM-DD, times HH:MM 24h.
+    timeout: 60000
+    initTimeout: 15000
+    startup: false
+    chatMenu: false
+  stratos-nip-fab-uk:
+    title: 'Nip Fab UK Planner'
+    description: 'Stratos campaign planner for Nip Fab UK. Creates DRAFT campaigns only.'
+    type: streamable-http
+    url: 'https://kmh-stratos-mcp-production.up.railway.app/mcp'
+    headers:
+      Authorization: 'Bearer ${STRATOS_TOKEN_NIP_FAB_UK}'
+    serverInstructions: |
+      This connection is locked to Nip Fab UK. Never pass a brand name —
+      the token already selects the brand and any brand argument is ignored.
+      Call stratos_list_brands first to confirm the brand, then
+      stratos_list_campaigns for the target window before creating anything.
+      stratos_create_campaigns only creates DRAFTS for the team to review. It
+      cannot send, schedule, approve, edit or delete. Batch a whole month in one
+      call (max 100). Duplicates (same name + same send_date) are rejected, so
+      retrying after an error is safe. Dates are YYYY-MM-DD, times HH:MM 24h.
+    timeout: 60000
+    initTimeout: 15000
+    startup: false
+    chatMenu: false
+  stratos-8sheep:
+    title: '8 Sheep Planner'
+    description: 'Stratos campaign planner for 8 Sheep. Creates DRAFT campaigns only.'
+    type: streamable-http
+    url: 'https://kmh-stratos-mcp-production.up.railway.app/mcp'
+    headers:
+      Authorization: 'Bearer ${STRATOS_TOKEN_8SHEEP}'
+    serverInstructions: |
+      This connection is locked to 8 Sheep. Never pass a brand name —
+      the token already selects the brand and any brand argument is ignored.
+      Call stratos_list_brands first to confirm the brand, then
+      stratos_list_campaigns for the target window before creating anything.
+      stratos_create_campaigns only creates DRAFTS for the team to review. It
+      cannot send, schedule, approve, edit or delete. Batch a whole month in one
+      call (max 100). Duplicates (same name + same send_date) are rejected, so
+      retrying after an error is safe. Dates are YYYY-MM-DD, times HH:MM 24h.
+    timeout: 60000
+    initTimeout: 15000
+    startup: false
+    chatMenu: false
+  stratos-activation-products-north-america:
+    title: 'Activation Products North America Planner'
+    description: 'Stratos campaign planner for Activation Products North America. Creates DRAFT campaigns only.'
+    type: streamable-http
+    url: 'https://kmh-stratos-mcp-production.up.railway.app/mcp'
+    headers:
+      Authorization: 'Bearer ${STRATOS_TOKEN_ACTIVATION_PRODUCTS_NORTH_AMERICA}'
+    serverInstructions: |
+      This connection is locked to Activation Products North America. Never pass a brand name —
+      the token already selects the brand and any brand argument is ignored.
+      Call stratos_list_brands first to confirm the brand, then
+      stratos_list_campaigns for the target window before creating anything.
+      stratos_create_campaigns only creates DRAFTS for the team to review. It
+      cannot send, schedule, approve, edit or delete. Batch a whole month in one
+      call (max 100). Duplicates (same name + same send_date) are rejected, so
+      retrying after an error is safe. Dates are YYYY-MM-DD, times HH:MM 24h.
+    timeout: 60000
+    initTimeout: 15000
+    startup: false
+    chatMenu: false
+  stratos-ascent-bicycle:
+    title: 'Ascent Bicycle Planner'
+    description: 'Stratos campaign planner for Ascent Bicycle. Creates DRAFT campaigns only.'
+    type: streamable-http
+    url: 'https://kmh-stratos-mcp-production.up.railway.app/mcp'
+    headers:
+      Authorization: 'Bearer ${STRATOS_TOKEN_ASCENT_BICYCLE}'
+    serverInstructions: |
+      This connection is locked to Ascent Bicycle. Never pass a brand name —
+      the token already selects the brand and any brand argument is ignored.
+      Call stratos_list_brands first to confirm the brand, then
+      stratos_list_campaigns for the target window before creating anything.
+      stratos_create_campaigns only creates DRAFTS for the team to review. It
+      cannot send, schedule, approve, edit or delete. Batch a whole month in one
+      call (max 100). Duplicates (same name + same send_date) are rejected, so
+      retrying after an error is safe. Dates are YYYY-MM-DD, times HH:MM 24h.
+    timeout: 60000
+    initTimeout: 15000
+    startup: false
+    chatMenu: false
+  stratos-audry-rose:
+    title: 'Audry Rose Planner'
+    description: 'Stratos campaign planner for Audry Rose. Creates DRAFT campaigns only.'
+    type: streamable-http
+    url: 'https://kmh-stratos-mcp-production.up.railway.app/mcp'
+    headers:
+      Authorization: 'Bearer ${STRATOS_TOKEN_AUDRY_ROSE}'
+    serverInstructions: |
+      This connection is locked to Audry Rose. Never pass a brand name —
+      the token already selects the brand and any brand argument is ignored.
+      Call stratos_list_brands first to confirm the brand, then
+      stratos_list_campaigns for the target window before creating anything.
+      stratos_create_campaigns only creates DRAFTS for the team to review. It
+      cannot send, schedule, approve, edit or delete. Batch a whole month in one
+      call (max 100). Duplicates (same name + same send_date) are rejected, so
+      retrying after an error is safe. Dates are YYYY-MM-DD, times HH:MM 24h.
+    timeout: 60000
+    initTimeout: 15000
+    startup: false
+    chatMenu: false
+  stratos-built-different:
+    title: 'UK Built Different Planner'
+    description: 'Stratos campaign planner for UK Built Different. Creates DRAFT campaigns only.'
+    type: streamable-http
+    url: 'https://kmh-stratos-mcp-production.up.railway.app/mcp'
+    headers:
+      Authorization: 'Bearer ${STRATOS_TOKEN_BUILT_DIFFERENT}'
+    serverInstructions: |
+      This connection is locked to UK Built Different. Never pass a brand name —
+      the token already selects the brand and any brand argument is ignored.
+      Call stratos_list_brands first to confirm the brand, then
+      stratos_list_campaigns for the target window before creating anything.
+      stratos_create_campaigns only creates DRAFTS for the team to review. It
+      cannot send, schedule, approve, edit or delete. Batch a whole month in one
+      call (max 100). Duplicates (same name + same send_date) are rejected, so
+      retrying after an error is safe. Dates are YYYY-MM-DD, times HH:MM 24h.
+    timeout: 60000
+    initTimeout: 15000
+    startup: false
+    chatMenu: false
+  stratos-formula-369:
+    title: 'Formula 369 Planner'
+    description: 'Stratos campaign planner for Formula 369. Creates DRAFT campaigns only.'
+    type: streamable-http
+    url: 'https://kmh-stratos-mcp-production.up.railway.app/mcp'
+    headers:
+      Authorization: 'Bearer ${STRATOS_TOKEN_FORMULA_369}'
+    serverInstructions: |
+      This connection is locked to Formula 369. Never pass a brand name —
+      the token already selects the brand and any brand argument is ignored.
+      Call stratos_list_brands first to confirm the brand, then
+      stratos_list_campaigns for the target window before creating anything.
+      stratos_create_campaigns only creates DRAFTS for the team to review. It
+      cannot send, schedule, approve, edit or delete. Batch a whole month in one
+      call (max 100). Duplicates (same name + same send_date) are rejected, so
+      retrying after an error is safe. Dates are YYYY-MM-DD, times HH:MM 24h.
+    timeout: 60000
+    initTimeout: 15000
+    startup: false
+    chatMenu: false
+  stratos-hot-shapers:
+    title: 'Hot Shapers Planner'
+    description: 'Stratos campaign planner for Hot Shapers. Creates DRAFT campaigns only.'
+    type: streamable-http
+    url: 'https://kmh-stratos-mcp-production.up.railway.app/mcp'
+    headers:
+      Authorization: 'Bearer ${STRATOS_TOKEN_HOT_SHAPERS}'
+    serverInstructions: |
+      This connection is locked to Hot Shapers. Never pass a brand name —
+      the token already selects the brand and any brand argument is ignored.
+      Call stratos_list_brands first to confirm the brand, then
+      stratos_list_campaigns for the target window before creating anything.
+      stratos_create_campaigns only creates DRAFTS for the team to review. It
+      cannot send, schedule, approve, edit or delete. Batch a whole month in one
+      call (max 100). Duplicates (same name + same send_date) are rejected, so
+      retrying after an error is safe. Dates are YYYY-MM-DD, times HH:MM 24h.
+    timeout: 60000
+    initTimeout: 15000
+    startup: false
+    chatMenu: false
+  stratos-icu-eyewear:
+    title: 'ICU Eyewear Planner'
+    description: 'Stratos campaign planner for ICU Eyewear. Creates DRAFT campaigns only.'
+    type: streamable-http
+    url: 'https://kmh-stratos-mcp-production.up.railway.app/mcp'
+    headers:
+      Authorization: 'Bearer ${STRATOS_TOKEN_ICU_EYEWEAR}'
+    serverInstructions: |
+      This connection is locked to ICU Eyewear. Never pass a brand name —
+      the token already selects the brand and any brand argument is ignored.
+      Call stratos_list_brands first to confirm the brand, then
+      stratos_list_campaigns for the target window before creating anything.
+      stratos_create_campaigns only creates DRAFTS for the team to review. It
+      cannot send, schedule, approve, edit or delete. Batch a whole month in one
+      call (max 100). Duplicates (same name + same send_date) are rejected, so
+      retrying after an error is safe. Dates are YYYY-MM-DD, times HH:MM 24h.
+    timeout: 60000
+    initTimeout: 15000
+    startup: false
+    chatMenu: false
+  stratos-kineon:
+    title: 'Kineon Planner'
+    description: 'Stratos campaign planner for Kineon. Creates DRAFT campaigns only.'
+    type: streamable-http
+    url: 'https://kmh-stratos-mcp-production.up.railway.app/mcp'
+    headers:
+      Authorization: 'Bearer ${STRATOS_TOKEN_KINEON}'
+    serverInstructions: |
+      This connection is locked to Kineon. Never pass a brand name —
+      the token already selects the brand and any brand argument is ignored.
+      Call stratos_list_brands first to confirm the brand, then
+      stratos_list_campaigns for the target window before creating anything.
+      stratos_create_campaigns only creates DRAFTS for the team to review. It
+      cannot send, schedule, approve, edit or delete. Batch a whole month in one
+      call (max 100). Duplicates (same name + same send_date) are rejected, so
+      retrying after an error is safe. Dates are YYYY-MM-DD, times HH:MM 24h.
+    timeout: 60000
+    initTimeout: 15000
+    startup: false
+    chatMenu: false
+  stratos-tsp:
+    title: 'Look Our Way Planner'
+    description: 'Stratos campaign planner for Look Our Way. Creates DRAFT campaigns only.'
+    type: streamable-http
+    url: 'https://kmh-stratos-mcp-production.up.railway.app/mcp'
+    headers:
+      Authorization: 'Bearer ${STRATOS_TOKEN_TSP}'
+    serverInstructions: |
+      This connection is locked to Look Our Way. Never pass a brand name —
+      the token already selects the brand and any brand argument is ignored.
+      Call stratos_list_brands first to confirm the brand, then
+      stratos_list_campaigns for the target window before creating anything.
+      stratos_create_campaigns only creates DRAFTS for the team to review. It
+      cannot send, schedule, approve, edit or delete. Batch a whole month in one
+      call (max 100). Duplicates (same name + same send_date) are rejected, so
+      retrying after an error is safe. Dates are YYYY-MM-DD, times HH:MM 24h.
+    timeout: 60000
+    initTimeout: 15000
+    startup: false
+    chatMenu: false
+  stratos-motive-health:
+    title: 'Motive Health Planner'
+    description: 'Stratos campaign planner for Motive Health. Creates DRAFT campaigns only.'
+    type: streamable-http
+    url: 'https://kmh-stratos-mcp-production.up.railway.app/mcp'
+    headers:
+      Authorization: 'Bearer ${STRATOS_TOKEN_MOTIVE_HEALTH}'
+    serverInstructions: |
+      This connection is locked to Motive Health. Never pass a brand name —
+      the token already selects the brand and any brand argument is ignored.
+      Call stratos_list_brands first to confirm the brand, then
+      stratos_list_campaigns for the target window before creating anything.
+      stratos_create_campaigns only creates DRAFTS for the team to review. It
+      cannot send, schedule, approve, edit or delete. Batch a whole month in one
+      call (max 100). Duplicates (same name + same send_date) are rejected, so
+      retrying after an error is safe. Dates are YYYY-MM-DD, times HH:MM 24h.
+    timeout: 60000
+    initTimeout: 15000
+    startup: false
+    chatMenu: false
+  stratos-redu-sculpt:
+    title: 'Redu Sculpt Planner'
+    description: 'Stratos campaign planner for Redu Sculpt. Creates DRAFT campaigns only.'
+    type: streamable-http
+    url: 'https://kmh-stratos-mcp-production.up.railway.app/mcp'
+    headers:
+      Authorization: 'Bearer ${STRATOS_TOKEN_REDU_SCULPT}'
+    serverInstructions: |
+      This connection is locked to Redu Sculpt. Never pass a brand name —
+      the token already selects the brand and any brand argument is ignored.
+      Call stratos_list_brands first to confirm the brand, then
+      stratos_list_campaigns for the target window before creating anything.
+      stratos_create_campaigns only creates DRAFTS for the team to review. It
+      cannot send, schedule, approve, edit or delete. Batch a whole month in one
+      call (max 100). Duplicates (same name + same send_date) are rejected, so
+      retrying after an error is safe. Dates are YYYY-MM-DD, times HH:MM 24h.
+    timeout: 60000
+    initTimeout: 15000
+    startup: false
+    chatMenu: false
+  stratos-refyne:
+    title: 'Refyne Planner'
+    description: 'Stratos campaign planner for Refyne. Creates DRAFT campaigns only.'
+    type: streamable-http
+    url: 'https://kmh-stratos-mcp-production.up.railway.app/mcp'
+    headers:
+      Authorization: 'Bearer ${STRATOS_TOKEN_REFYNE}'
+    serverInstructions: |
+      This connection is locked to Refyne. Never pass a brand name —
+      the token already selects the brand and any brand argument is ignored.
+      Call stratos_list_brands first to confirm the brand, then
+      stratos_list_campaigns for the target window before creating anything.
+      stratos_create_campaigns only creates DRAFTS for the team to review. It
+      cannot send, schedule, approve, edit or delete. Batch a whole month in one
+      call (max 100). Duplicates (same name + same send_date) are rejected, so
+      retrying after an error is safe. Dates are YYYY-MM-DD, times HH:MM 24h.
+    timeout: 60000
+    initTimeout: 15000
+    startup: false
+    chatMenu: false
+  stratos-rodial:
+    title: 'Rodial Planner'
+    description: 'Stratos campaign planner for Rodial. Creates DRAFT campaigns only.'
+    type: streamable-http
+    url: 'https://kmh-stratos-mcp-production.up.railway.app/mcp'
+    headers:
+      Authorization: 'Bearer ${STRATOS_TOKEN_RODIAL}'
+    serverInstructions: |
+      This connection is locked to Rodial. Never pass a brand name —
+      the token already selects the brand and any brand argument is ignored.
+      Call stratos_list_brands first to confirm the brand, then
+      stratos_list_campaigns for the target window before creating anything.
+      stratos_create_campaigns only creates DRAFTS for the team to review. It
+      cannot send, schedule, approve, edit or delete. Batch a whole month in one
+      call (max 100). Duplicates (same name + same send_date) are rejected, so
+      retrying after an error is safe. Dates are YYYY-MM-DD, times HH:MM 24h.
+    timeout: 60000
+    initTimeout: 15000
+    startup: false
+    chatMenu: false
+  stratos-stirling-timepieces:
+    title: 'Stirling Timepieces Planner'
+    description: 'Stratos campaign planner for Stirling Timepieces. Creates DRAFT campaigns only.'
+    type: streamable-http
+    url: 'https://kmh-stratos-mcp-production.up.railway.app/mcp'
+    headers:
+      Authorization: 'Bearer ${STRATOS_TOKEN_STIRLING_TIMEPIECES}'
+    serverInstructions: |
+      This connection is locked to Stirling Timepieces. Never pass a brand name —
+      the token already selects the brand and any brand argument is ignored.
+      Call stratos_list_brands first to confirm the brand, then
+      stratos_list_campaigns for the target window before creating anything.
+      stratos_create_campaigns only creates DRAFTS for the team to review. It
+      cannot send, schedule, approve, edit or delete. Batch a whole month in one
+      call (max 100). Duplicates (same name + same send_date) are rejected, so
+      retrying after an error is safe. Dates are YYYY-MM-DD, times HH:MM 24h.
+    timeout: 60000
+    initTimeout: 15000
+    startup: false
+    chatMenu: false
+  stratos-stono-outdoors:
+    title: 'Stono Outdoors Planner'
+    description: 'Stratos campaign planner for Stono Outdoors. Creates DRAFT campaigns only.'
+    type: streamable-http
+    url: 'https://kmh-stratos-mcp-production.up.railway.app/mcp'
+    headers:
+      Authorization: 'Bearer ${STRATOS_TOKEN_STONO_OUTDOORS}'
+    serverInstructions: |
+      This connection is locked to Stono Outdoors. Never pass a brand name —
+      the token already selects the brand and any brand argument is ignored.
+      Call stratos_list_brands first to confirm the brand, then
+      stratos_list_campaigns for the target window before creating anything.
+      stratos_create_campaigns only creates DRAFTS for the team to review. It
+      cannot send, schedule, approve, edit or delete. Batch a whole month in one
+      call (max 100). Duplicates (same name + same send_date) are rejected, so
+      retrying after an error is safe. Dates are YYYY-MM-DD, times HH:MM 24h.
+    timeout: 60000
+    initTimeout: 15000
+    startup: false
+    chatMenu: false
+  stratos-the-great-fire-company:
+    title: 'The Great Fire Company Planner'
+    description: 'Stratos campaign planner for The Great Fire Company. Creates DRAFT campaigns only.'
+    type: streamable-http
+    url: 'https://kmh-stratos-mcp-production.up.railway.app/mcp'
+    headers:
+      Authorization: 'Bearer ${STRATOS_TOKEN_THE_GREAT_FIRE_COMPANY}'
+    serverInstructions: |
+      This connection is locked to The Great Fire Company. Never pass a brand name —
+      the token already selects the brand and any brand argument is ignored.
+      Call stratos_list_brands first to confirm the brand, then
+      stratos_list_campaigns for the target window before creating anything.
+      stratos_create_campaigns only creates DRAFTS for the team to review. It
+      cannot send, schedule, approve, edit or delete. Batch a whole month in one
+      call (max 100). Duplicates (same name + same send_date) are rejected, so
+      retrying after an error is safe. Dates are YYYY-MM-DD, times HH:MM 24h.
+    timeout: 60000
+    initTimeout: 15000
+    startup: false
+    chatMenu: false
+  stratos-the-landmark-kids:
+    title: 'The Landmark Kids Planner'
+    description: 'Stratos campaign planner for The Landmark Kids. Creates DRAFT campaigns only.'
+    type: streamable-http
+    url: 'https://kmh-stratos-mcp-production.up.railway.app/mcp'
+    headers:
+      Authorization: 'Bearer ${STRATOS_TOKEN_THE_LANDMARK_KIDS}'
+    serverInstructions: |
+      This connection is locked to The Landmark Kids. Never pass a brand name —
+      the token already selects the brand and any brand argument is ignored.
+      Call stratos_list_brands first to confirm the brand, then
+      stratos_list_campaigns for the target window before creating anything.
+      stratos_create_campaigns only creates DRAFTS for the team to review. It
+      cannot send, schedule, approve, edit or delete. Batch a whole month in one
+      call (max 100). Duplicates (same name + same send_date) are rejected, so
+      retrying after an error is safe. Dates are YYYY-MM-DD, times HH:MM 24h.
+    timeout: 60000
+    initTimeout: 15000
+    startup: false
+    chatMenu: false
+  stratos-kin-apparel:
+    title: 'KIN Apparel Planner'
+    description: 'Stratos campaign planner for KIN Apparel. Creates DRAFT campaigns only.'
+    type: streamable-http
+    url: 'https://kmh-stratos-mcp-production.up.railway.app/mcp'
+    headers:
+      Authorization: 'Bearer ${STRATOS_TOKEN_KIN_APPAREL}'
+    serverInstructions: |
+      This connection is locked to KIN Apparel. Never pass a brand name —
+      the token already selects the brand and any brand argument is ignored.
+      Call stratos_list_brands first to confirm the brand, then
+      stratos_list_campaigns for the target window before creating anything.
+      stratos_create_campaigns only creates DRAFTS for the team to review. It
+      cannot send, schedule, approve, edit or delete. Batch a whole month in one
+      call (max 100). Duplicates (same name + same send_date) are rejected, so
+      retrying after an error is safe. Dates are YYYY-MM-DD, times HH:MM 24h.
+    timeout: 60000
+    initTimeout: 15000
+    startup: false
+    chatMenu: false
+  stratos-local-revival:
+    title: 'Local Revival Planner'
+    description: 'Stratos campaign planner for Local Revival. Creates DRAFT campaigns only.'
+    type: streamable-http
+    url: 'https://kmh-stratos-mcp-production.up.railway.app/mcp'
+    headers:
+      Authorization: 'Bearer ${STRATOS_TOKEN_LOCAL_REVIVAL}'
+    serverInstructions: |
+      This connection is locked to Local Revival. Never pass a brand name —
+      the token already selects the brand and any brand argument is ignored.
+      Call stratos_list_brands first to confirm the brand, then
+      stratos_list_campaigns for the target window before creating anything.
+      stratos_create_campaigns only creates DRAFTS for the team to review. It
+      cannot send, schedule, approve, edit or delete. Batch a whole month in one
+      call (max 100). Duplicates (same name + same send_date) are rejected, so
+      retrying after an error is safe. Dates are YYYY-MM-DD, times HH:MM 24h.
+    timeout: 60000
+    initTimeout: 15000
+    startup: false
+    chatMenu: false
+  stratos-the-nova-bottle:
+    title: 'The Nova Bottle Planner'
+    description: 'Stratos campaign planner for The Nova Bottle. Creates DRAFT campaigns only.'
+    type: streamable-http
+    url: 'https://kmh-stratos-mcp-production.up.railway.app/mcp'
+    headers:
+      Authorization: 'Bearer ${STRATOS_TOKEN_THE_NOVA_BOTTLE}'
+    serverInstructions: |
+      This connection is locked to The Nova Bottle. Never pass a brand name —
+      the token already selects the brand and any brand argument is ignored.
+      Call stratos_list_brands first to confirm the brand, then
+      stratos_list_campaigns for the target window before creating anything.
+      stratos_create_campaigns only creates DRAFTS for the team to review. It
+      cannot send, schedule, approve, edit or delete. Batch a whole month in one
+      call (max 100). Duplicates (same name + same send_date) are rejected, so
+      retrying after an error is safe. Dates are YYYY-MM-DD, times HH:MM 24h.
+    timeout: 60000
+    initTimeout: 15000
+    startup: false
+    chatMenu: false
