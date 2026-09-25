@@ -1,5 +1,13 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 56" role="img" aria-label="KMH">
+  <!-- Rendered through <img>, so `currentColor` resolves against this document,
+       not the page — it came out near-black on the dark login surface. The fill
+       is declared here instead, dark-theme first to match the app's default,
+       with a light-scheme override so the wordmark survives a theme switch. -->
+  <style>
+    text { fill: #ececec; }
+    @media (prefers-color-scheme: light) { text { fill: #0d0d0d; } }
+  </style>
   <text x="80" y="40" text-anchor="middle"
         font-family="'EB Garamond','Cormorant Garamond',Garamond,'Times New Roman',serif"
-        font-size="40" letter-spacing="2" fill="currentColor">KMH</text>
+        font-size="40" letter-spacing="2">KMH</text>
 </svg>
