@@ -9,7 +9,7 @@ export interface ProcessedAgentCategory {
   value: string; // Category value
   className?: string;
   icon?: string;
-  /** KMH: pod colour key — see client/src/components/Kmh/podColors.ts. */
+  /** KMH: crew colour key — see client/src/components/Kmh/crewColors.ts. */
   color?: string;
 }
 

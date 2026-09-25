@@ -1,8 +1,8 @@
 import React from 'react';
 import { useMediaQuery } from '@librechat/client';
 import type t from 'librechat-data-provider';
+import { crewColor } from '~/components/Kmh/crewColors';
 import { useLocalize, TranslationKeys } from '~/hooks';
-import { podColor } from '~/components/Kmh/podColors';
 import { SmartLoader } from './SmartLoader';
 import { cn } from '~/utils';
 
@@ -168,11 +168,11 @@ const CategoryTabs: React.FC<CategoryTabsProps> = ({
               total: categories.length,
             })}
           >
-            {/* KMH: the pod's colour, so a tab is recognisable before it is read. */}
+            {/* KMH: the crew's colour, so a tab is recognisable before it is read. */}
             <span className="inline-flex items-center gap-1.5">
               {category.color ? (
                 <span
-                  className={cn('h-2 w-2 shrink-0 rounded-full', podColor(category.color).dot)}
+                  className={cn('h-2 w-2 shrink-0 rounded-full', crewColor(category.color).dot)}
                   aria-hidden="true"
                 />
               ) : null}
@@ -183,7 +183,7 @@ const CategoryTabs: React.FC<CategoryTabsProps> = ({
               <div
                 className={cn(
                   'absolute bottom-0 left-0 right-0 h-0.5',
-                  category.color ? podColor(category.color).rail : 'bg-text-primary',
+                  category.color ? crewColor(category.color).rail : 'bg-text-primary',
                 )}
                 aria-hidden="true"
               />

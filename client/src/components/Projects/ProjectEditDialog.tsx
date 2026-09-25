@@ -14,7 +14,7 @@ import {
   useToastContext,
 } from '@librechat/client';
 import type { TChatProject } from 'librechat-data-provider';
-import PodColorPicker from '~/components/Kmh/PodColorPicker';
+import CrewColorPicker from '~/components/Kmh/CrewColorPicker';
 import { useUpdateProjectMutation } from '~/data-provider';
 import { NotificationSeverity } from '~/common';
 import { useLocalize } from '~/hooks';
@@ -110,7 +110,7 @@ export default function ProjectEditDialog({ open, onOpenChange, project }: Proje
               <Label className="text-sm font-medium text-text-primary">
                 {localize('com_kmh_pod_colour')}
               </Label>
-              <PodColorPicker value={color} onChange={setColor} />
+              <CrewColorPicker value={color} onChange={setColor} />
             </div>
             <div className="space-y-2">
               <Label

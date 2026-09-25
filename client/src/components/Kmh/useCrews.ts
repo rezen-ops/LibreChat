@@ -4,13 +4,13 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 /**
  * Data layer for the KMH admin panel.
  *
- * Kept in its own file — and talking to `/api/admin/pods` directly rather than
+ * Kept in its own file — and talking to `/api/admin/crews` directly rather than
  * going through librechat-data-provider's dataService — so none of it lands in
  * upstream's shared modules. The whole feature is two client files plus one
  * server route, which is what keeps merging upstream cheap.
  */
 
-export interface Pod {
+export interface Crew {
   value: string;
   label: string;
   color: string;
@@ -19,7 +19,7 @@ export interface Pod {
   agentCount: number;
 }
 
-export interface PodAgent {
+export interface CrewAgent {
   id: string;
   name: string;
   category: string;
@@ -28,31 +28,31 @@ export interface PodAgent {
   updatedAt?: string;
 }
 
-const PODS_KEY = ['kmh', 'pods'];
-const AGENTS_KEY = ['kmh', 'pods', 'agents'];
+const PODS_KEY = ['kmh', 'crews'];
+const AGENTS_KEY = ['kmh', 'crews', 'agents'];
 
-export function usePodsQuery(enabled: boolean) {
-  return useQuery<Pod[]>({
+export function useCrewsQuery(enabled: boolean) {
+  return useQuery<Crew[]>({
     queryKey: PODS_KEY,
-    queryFn: () => request.get('/api/admin/pods'),
+    queryFn: () => request.get('/api/admin/crews'),
     enabled,
     staleTime: 30_000,
   });
 }
 
-export function usePodAgentsQuery(enabled: boolean) {
-  return useQuery<PodAgent[]>({
+export function useCrewAgentsQuery(enabled: boolean) {
+  return useQuery<CrewAgent[]>({
     queryKey: AGENTS_KEY,
-    queryFn: () => request.get('/api/admin/pods/agents'),
+    queryFn: () => request.get('/api/admin/crews/agents'),
     enabled,
     staleTime: 30_000,
   });
 }
 
-/** Anything that changes a pod or an assignment invalidates the same three
+/** Anything that changes a crew or an assignment invalidates the same three
  *  caches: the admin lists, and the marketplace's own category query so the
  *  agent list repaints without a reload. */
-function useInvalidatePods() {
+function useInvalidateCrews() {
   const queryClient = useQueryClient();
   return () => {
     queryClient.invalidateQueries({ queryKey: PODS_KEY });
@@ -62,29 +62,29 @@ function useInvalidatePods() {
   };
 }
 
-export function useCreatePod() {
-  const invalidate = useInvalidatePods();
+export function useCreateCrew() {
+  const invalidate = useInvalidateCrews();
   return useMutation({
     mutationFn: (body: { label: string; color: string }) =>
-      request.post('/api/admin/pods', body) as Promise<Pod>,
+      request.post('/api/admin/crews', body) as Promise<Crew>,
     onSuccess: invalidate,
   });
 }
 
-export function useUpdatePod() {
-  const invalidate = useInvalidatePods();
+export function useUpdateCrew() {
+  const invalidate = useInvalidateCrews();
   return useMutation({
-    mutationFn: ({ value, ...body }: { value: string } & Partial<Omit<Pod, 'value'>>) =>
-      request.patch(`/api/admin/pods/${encodeURIComponent(value)}`, body) as Promise<Pod>,
+    mutationFn: ({ value, ...body }: { value: string } & Partial<Omit<Crew, 'value'>>) =>
+      request.patch(`/api/admin/crews/${encodeURIComponent(value)}`, body) as Promise<Crew>,
     onSuccess: invalidate,
   });
 }
 
-export function useDeletePod() {
-  const invalidate = useInvalidatePods();
+export function useDeleteCrew() {
+  const invalidate = useInvalidateCrews();
   return useMutation({
     mutationFn: (value: string) =>
-      request.delete(`/api/admin/pods/${encodeURIComponent(value)}`) as Promise<{
+      request.delete(`/api/admin/crews/${encodeURIComponent(value)}`) as Promise<{
         value: string;
         movedAgents: number;
       }>,
@@ -93,10 +93,10 @@ export function useDeletePod() {
 }
 
 export function useAssignAgents() {
-  const invalidate = useInvalidatePods();
+  const invalidate = useInvalidateCrews();
   return useMutation({
-    mutationFn: (body: { agentIds: string[]; pod: string }) =>
-      request.post('/api/admin/pods/assign', body) as Promise<{ pod: string; updated: number }>,
+    mutationFn: (body: { agentIds: string[]; crew: string }) =>
+      request.post('/api/admin/crews/assign', body) as Promise<{ crew: string; updated: number }>,
     onSuccess: invalidate,
   });
 }

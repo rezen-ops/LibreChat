@@ -4,34 +4,34 @@ import { Check, Plus, Trash2, Users } from 'lucide-react';
 import { Button, Input, useToastContext } from '@librechat/client';
 import type { LocalizeFunction } from '~/common';
 import {
-  usePodsQuery,
-  usePodAgentsQuery,
-  useCreatePod,
-  useUpdatePod,
-  useDeletePod,
+  useCrewsQuery,
+  useCrewAgentsQuery,
+  useCreateCrew,
+  useUpdateCrew,
+  useDeleteCrew,
   useAssignAgents,
-  type Pod,
-} from './usePods';
-import { POD_COLORS, POD_COLOR_KEYS, podColor, type PodColorKey } from './podColors';
+  type Crew,
+} from './useCrews';
+import { CREW_COLORS, CREW_COLOR_KEYS, crewColor, type CrewColorKey } from './crewColors';
 import { useAuthContext, useLocalize } from '~/hooks';
 import { NotificationSeverity } from '~/common';
 import { cn } from '~/utils';
 
 /**
- * KMH admin: pods and fleet assignment.
+ * KMH admin: crews and fleet assignment.
  *
- * Pods are LibreChat agent categories with a colour. This page exists because
+ * Crews are LibreChat agent categories with a colour. This page exists because
  * upstream seeds categories in code and offers no way to change them — which
  * made reorganising the fleet a deploy. Everything here is a database edit.
  *
  * The bulk-assign table is the load-bearing half: moving twenty agents into a
- * new pod one agent-edit-dialog at a time is the exact chore it replaces.
+ * new crew one agent-edit-dialog at a time is the exact chore it replaces.
  */
 
 const agentCountLabel = (count: number, localize: LocalizeFunction) =>
   count === 1
-    ? localize('com_kmh_pods_agent_count_one')
-    : localize('com_kmh_pods_agent_count', { count });
+    ? localize('com_kmh_crews_agent_count_one')
+    : localize('com_kmh_crews_agent_count', { count });
 
 /** Swatches, small enough to sit inside a table row. */
 function ColorRow({
@@ -39,22 +39,22 @@ function ColorRow({
   onChange,
 }: {
   value?: string | null;
-  onChange: (v: PodColorKey) => void;
+  onChange: (v: CrewColorKey) => void;
 }) {
-  const current = ((value as PodColorKey) in POD_COLORS ? value : 'none') as PodColorKey;
+  const current = ((value as CrewColorKey) in CREW_COLORS ? value : 'none') as CrewColorKey;
   return (
     <div className="flex flex-wrap items-center gap-1.5">
-      {POD_COLOR_KEYS.filter((key) => key !== 'none').map((key) => (
+      {CREW_COLOR_KEYS.filter((key) => key !== 'none').map((key) => (
         <button
           key={key}
           type="button"
-          title={POD_COLORS[key].label}
-          aria-label={POD_COLORS[key].label}
+          title={CREW_COLORS[key].label}
+          aria-label={CREW_COLORS[key].label}
           aria-pressed={key === current}
           onClick={() => onChange(key)}
           className={cn(
             'h-5 w-5 rounded-full transition',
-            POD_COLORS[key].dot,
+            CREW_COLORS[key].dot,
             key === current
               ? 'ring-2 ring-text-primary ring-offset-2 ring-offset-surface-primary'
               : 'hover:scale-110',
@@ -65,14 +65,14 @@ function ColorRow({
   );
 }
 
-function PodDeleteCell({ pod }: { pod: Pod }) {
+function CrewDeleteCell({ crew }: { crew: Crew }) {
   const localize = useLocalize();
   const { showToast } = useToastContext();
-  const deletePod = useDeletePod();
+  const deleteCrew = useDeleteCrew();
   const [confirming, setConfirming] = useState(false);
 
-  /** `unassigned` is where retired pods send their agents, so it cannot go. */
-  if (pod.value === 'unassigned') {
+  /** `unassigned` is where retired crews send their agents, so it cannot go. */
+  if (crew.value === 'unassigned') {
     return null;
   }
 
@@ -84,7 +84,7 @@ function PodDeleteCell({ pod }: { pod: Pod }) {
         variant="ghost"
         className="h-7 text-text-secondary"
         onClick={() => setConfirming(true)}
-        aria-label={localize('com_kmh_pods_remove', { pod: pod.label })}
+        aria-label={localize('com_kmh_crews_remove', { crew: crew.label })}
       >
         <Trash2 className="h-4 w-4" aria-hidden="true" />
       </Button>
@@ -94,35 +94,35 @@ function PodDeleteCell({ pod }: { pod: Pod }) {
   return (
     <div className="flex items-center justify-end gap-2">
       <span className="text-xs text-text-secondary">
-        {pod.agentCount > 0
-          ? localize('com_kmh_pods_remove_confirm_agents', { count: pod.agentCount })
-          : localize('com_kmh_pods_remove_confirm')}
+        {crew.agentCount > 0
+          ? localize('com_kmh_crews_remove_confirm_agents', { count: crew.agentCount })
+          : localize('com_kmh_crews_remove_confirm')}
       </span>
       <Button
         type="button"
         size="sm"
         variant="destructive"
         className="h-7"
-        disabled={deletePod.isLoading}
+        disabled={deleteCrew.isLoading}
         onClick={() =>
-          deletePod.mutate(pod.value, {
+          deleteCrew.mutate(crew.value, {
             onSuccess: (result) => {
               setConfirming(false);
               showToast({
                 message: result.movedAgents
-                  ? localize('com_kmh_pods_removed_moved', { count: result.movedAgents })
-                  : localize('com_kmh_pods_removed'),
+                  ? localize('com_kmh_crews_removed_moved', { count: result.movedAgents })
+                  : localize('com_kmh_crews_removed'),
               });
             },
             onError: (error: unknown) =>
               showToast({
-                message: (error as Error)?.message ?? localize('com_kmh_pods_remove_error'),
+                message: (error as Error)?.message ?? localize('com_kmh_crews_remove_error'),
                 severity: NotificationSeverity.ERROR,
               }),
           })
         }
       >
-        {localize('com_kmh_pods_yes')}
+        {localize('com_kmh_crews_yes')}
       </Button>
       <Button
         type="button"
@@ -131,27 +131,27 @@ function PodDeleteCell({ pod }: { pod: Pod }) {
         className="h-7"
         onClick={() => setConfirming(false)}
       >
-        {localize('com_kmh_pods_no')}
+        {localize('com_kmh_crews_no')}
       </Button>
     </div>
   );
 }
 
-function PodRow({ pod }: { pod: Pod }) {
+function CrewRow({ crew }: { crew: Crew }) {
   const localize = useLocalize();
   const { showToast } = useToastContext();
-  const updatePod = useUpdatePod();
-  const [label, setLabel] = useState(pod.label);
+  const updateCrew = useUpdateCrew();
+  const [label, setLabel] = useState(crew.label);
 
-  const dirty = label.trim() !== pod.label && label.trim().length > 0;
+  const dirty = label.trim() !== crew.label && label.trim().length > 0;
 
-  const save = (patch: Partial<Pod>) =>
-    updatePod.mutate(
-      { value: pod.value, ...patch },
+  const save = (patch: Partial<Crew>) =>
+    updateCrew.mutate(
+      { value: crew.value, ...patch },
       {
         onError: (error: unknown) =>
           showToast({
-            message: (error as Error)?.message ?? localize('com_kmh_pods_save_error'),
+            message: (error as Error)?.message ?? localize('com_kmh_crews_save_error'),
             severity: NotificationSeverity.ERROR,
           }),
       },
@@ -162,7 +162,7 @@ function PodRow({ pod }: { pod: Pod }) {
       <td className="py-3 pr-3 align-middle">
         <div className="flex items-center gap-2">
           <span
-            className={cn('h-2.5 w-2.5 shrink-0 rounded-full', podColor(pod.color).dot)}
+            className={cn('h-2.5 w-2.5 shrink-0 rounded-full', crewColor(crew.color).dot)}
             aria-hidden="true"
           />
           <Input
@@ -174,7 +174,7 @@ function PodRow({ pod }: { pod: Pod }) {
               }
             }}
             className="h-8 max-w-[14rem]"
-            aria-label={localize('com_kmh_pods_name_label', { pod: pod.label })}
+            aria-label={localize('com_kmh_crews_name_label', { crew: crew.label })}
           />
           {dirty ? (
             <Button
@@ -182,9 +182,9 @@ function PodRow({ pod }: { pod: Pod }) {
               size="sm"
               variant="submit"
               className="h-8 px-2"
-              aria-label={localize('com_kmh_pods_save')}
+              aria-label={localize('com_kmh_crews_save')}
               onClick={() => save({ label: label.trim() })}
-              disabled={updatePod.isLoading}
+              disabled={updateCrew.isLoading}
             >
               <Check className="h-4 w-4" aria-hidden="true" />
             </Button>
@@ -193,41 +193,41 @@ function PodRow({ pod }: { pod: Pod }) {
         {/* The stored key. Shown because a rename never touches it, which is the
             difference between a safe rename and orphaned agents. */}
         <span className="ml-[1.375rem] mt-1 block font-mono text-xs text-text-tertiary">
-          {pod.value}
+          {crew.value}
         </span>
       </td>
       <td className="py-3 pr-3 align-middle">
-        <ColorRow value={pod.color} onChange={(color) => save({ color })} />
+        <ColorRow value={crew.color} onChange={(color) => save({ color })} />
       </td>
       <td className="py-3 pr-3 align-middle text-sm text-text-secondary">
-        {agentCountLabel(pod.agentCount, localize)}
+        {agentCountLabel(crew.agentCount, localize)}
       </td>
       <td className="py-3 text-right align-middle">
-        <PodDeleteCell pod={pod} />
+        <CrewDeleteCell crew={crew} />
       </td>
     </tr>
   );
 }
 
-function PodsPanel({ pods }: { pods: Pod[] }) {
+function CrewsPanel({ crews }: { crews: Crew[] }) {
   const localize = useLocalize();
   const { showToast } = useToastContext();
-  const createPod = useCreatePod();
+  const createCrew = useCreateCrew();
   const [newLabel, setNewLabel] = useState('');
-  const [newColor, setNewColor] = useState<PodColorKey>('teal');
+  const [newColor, setNewColor] = useState<CrewColorKey>('teal');
 
   const add = () => {
     const label = newLabel.trim();
     if (!label) {
       return;
     }
-    createPod.mutate(
+    createCrew.mutate(
       { label, color: newColor },
       {
         onSuccess: () => setNewLabel(''),
         onError: (error: unknown) =>
           showToast({
-            message: (error as Error)?.message ?? localize('com_kmh_pods_create_error'),
+            message: (error as Error)?.message ?? localize('com_kmh_crews_create_error'),
             severity: NotificationSeverity.ERROR,
           }),
       },
@@ -236,21 +236,21 @@ function PodsPanel({ pods }: { pods: Pod[] }) {
 
   return (
     <section>
-      <p className="mb-4 text-sm text-text-secondary">{localize('com_kmh_pods_intro')}</p>
+      <p className="mb-4 text-sm text-text-secondary">{localize('com_kmh_crews_intro')}</p>
 
       <div className="overflow-x-auto rounded-xl border border-border-light bg-surface-secondary px-4">
         <table className="w-full min-w-[34rem] text-left">
           <thead>
             <tr className="border-b border-border-light text-xs uppercase tracking-wide text-text-tertiary">
-              <th className="py-2 pr-3 font-medium">{localize('com_kmh_pods_col_pod')}</th>
-              <th className="py-2 pr-3 font-medium">{localize('com_kmh_pods_col_colour')}</th>
-              <th className="py-2 pr-3 font-medium">{localize('com_kmh_pods_col_agents')}</th>
+              <th className="py-2 pr-3 font-medium">{localize('com_kmh_crews_col_crew')}</th>
+              <th className="py-2 pr-3 font-medium">{localize('com_kmh_crews_col_colour')}</th>
+              <th className="py-2 pr-3 font-medium">{localize('com_kmh_crews_col_agents')}</th>
               <th className="py-2" />
             </tr>
           </thead>
           <tbody>
-            {pods.map((pod) => (
-              <PodRow key={pod.value} pod={pod} />
+            {crews.map((crew) => (
+              <CrewRow key={crew.value} crew={crew} />
             ))}
           </tbody>
         </table>
@@ -259,9 +259,9 @@ function PodsPanel({ pods }: { pods: Pod[] }) {
       <div className="mt-4 flex flex-wrap items-center gap-3 rounded-xl border border-border-light bg-surface-secondary p-4">
         <Input
           value={newLabel}
-          placeholder={localize('com_kmh_pods_new_name')}
+          placeholder={localize('com_kmh_crews_new_name')}
           className="h-9 max-w-[16rem]"
-          aria-label={localize('com_kmh_pods_new_name')}
+          aria-label={localize('com_kmh_crews_new_name')}
           onChange={(e) => setNewLabel(e.target.value)}
           onKeyDown={(e) => e.key === 'Enter' && add()}
         />
@@ -270,28 +270,28 @@ function PodsPanel({ pods }: { pods: Pod[] }) {
           type="button"
           size="sm"
           variant="submit"
-          disabled={!newLabel.trim() || createPod.isLoading}
+          disabled={!newLabel.trim() || createCrew.isLoading}
           onClick={add}
         >
           <Plus className="h-4 w-4" aria-hidden="true" />
-          {localize('com_kmh_pods_add')}
+          {localize('com_kmh_crews_add')}
         </Button>
       </div>
     </section>
   );
 }
 
-function AgentsPanel({ pods }: { pods: Pod[] }) {
+function AgentsPanel({ crews }: { crews: Crew[] }) {
   const localize = useLocalize();
   const { showToast } = useToastContext();
-  const { data: agents = [], isLoading } = usePodAgentsQuery(true);
+  const { data: agents = [], isLoading } = useCrewAgentsQuery(true);
   const assign = useAssignAgents();
   const [selected, setSelected] = useState<Set<string>>(new Set());
   const [target, setTarget] = useState('');
   const [search, setSearch] = useState('');
 
-  const assignable = useMemo(() => pods.filter((pod) => pod.isActive), [pods]);
-  const podByValue = useMemo(() => new Map(pods.map((pod) => [pod.value, pod])), [pods]);
+  const assignable = useMemo(() => crews.filter((crew) => crew.isActive), [crews]);
+  const crewByValue = useMemo(() => new Map(crews.map((crew) => [crew.value, crew])), [crews]);
 
   const visible = useMemo(() => {
     const needle = search.trim().toLowerCase();
@@ -319,7 +319,7 @@ function AgentsPanel({ pods }: { pods: Pod[] }) {
       return;
     }
     assign.mutate(
-      { agentIds: [...selected], pod: target },
+      { agentIds: [...selected], crew: target },
       {
         onSuccess: (result) => {
           setSelected(new Set());
@@ -355,7 +355,7 @@ function AgentsPanel({ pods }: { pods: Pod[] }) {
     );
   } else {
     rows = visible.map((agent) => {
-      const pod = podByValue.get(agent.category);
+      const crew = crewByValue.get(agent.category);
       return (
         <tr key={agent.id} className="border-b border-border-light last:border-b-0">
           <td className="py-2.5">
@@ -370,10 +370,10 @@ function AgentsPanel({ pods }: { pods: Pod[] }) {
           <td className="py-2.5 pr-3">
             <span className="inline-flex items-center gap-1.5 text-sm text-text-secondary">
               <span
-                className={cn('h-2 w-2 shrink-0 rounded-full', podColor(pod?.color).dot)}
+                className={cn('h-2 w-2 shrink-0 rounded-full', crewColor(crew?.color).dot)}
                 aria-hidden="true"
               />
-              {pod?.label ?? localize('com_kmh_agents_unassigned')}
+              {crew?.label ?? localize('com_kmh_agents_unassigned')}
             </span>
           </td>
           <td className="py-2.5 font-mono text-xs text-text-tertiary">{agent.model || '—'}</td>
@@ -405,9 +405,9 @@ function AgentsPanel({ pods }: { pods: Pod[] }) {
             className="h-9 rounded-lg border border-border-medium bg-surface-primary px-2 text-sm text-text-primary"
           >
             <option value="">{localize('com_kmh_agents_move_to')}</option>
-            {assignable.map((pod) => (
-              <option key={pod.value} value={pod.value}>
-                {pod.label}
+            {assignable.map((crew) => (
+              <option key={crew.value} value={crew.value}>
+                {crew.label}
               </option>
             ))}
           </select>
@@ -445,7 +445,7 @@ function AgentsPanel({ pods }: { pods: Pod[] }) {
                 />
               </th>
               <th className="py-2 pr-3 font-medium">{localize('com_kmh_agents_col_agent')}</th>
-              <th className="py-2 pr-3 font-medium">{localize('com_kmh_agents_col_pod')}</th>
+              <th className="py-2 pr-3 font-medium">{localize('com_kmh_agents_col_crew')}</th>
               <th className="py-2 font-medium">{localize('com_kmh_agents_col_model')}</th>
             </tr>
           </thead>
@@ -457,7 +457,7 @@ function AgentsPanel({ pods }: { pods: Pod[] }) {
 }
 
 const TABS = [
-  ['pods', 'com_kmh_admin_tab_pods'],
+  ['crews', 'com_kmh_admin_tab_crews'],
   ['agents', 'com_kmh_admin_tab_agents'],
 ] as const;
 
@@ -465,8 +465,8 @@ export default function KmhAdmin() {
   const localize = useLocalize();
   const { user } = useAuthContext();
   const isAdmin = user?.role === SystemRoles.ADMIN;
-  const { data: pods = [], isLoading, error } = usePodsQuery(isAdmin);
-  const [tab, setTab] = useState<'pods' | 'agents'>('pods');
+  const { data: crews = [], isLoading, error } = useCrewsQuery(isAdmin);
+  const [tab, setTab] = useState<'crews' | 'agents'>('crews');
 
   if (!isAdmin) {
     return (
@@ -487,10 +487,10 @@ export default function KmhAdmin() {
     );
   } else if (isLoading) {
     body = <p className="text-sm text-text-secondary">{localize('com_kmh_admin_loading')}</p>;
-  } else if (tab === 'pods') {
-    body = <PodsPanel pods={pods} />;
+  } else if (tab === 'crews') {
+    body = <CrewsPanel crews={crews} />;
   } else {
-    body = <AgentsPanel pods={pods} />;
+    body = <AgentsPanel crews={crews} />;
   }
 
   return (

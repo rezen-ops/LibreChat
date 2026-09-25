@@ -2236,7 +2236,7 @@ const getAgentCategories = async (_req, res) => {
       label: category.label,
       count: category.agentCount,
       description: category.description,
-      /** KMH: pods carry a colour so the agent list groups read at a glance. */
+      /** KMH: crews carry a colour so the agent list groups read at a glance. */
       color: category.color,
     }));
 

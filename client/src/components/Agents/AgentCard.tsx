@@ -2,7 +2,7 @@ import React, { useMemo, useState } from 'react';
 import { Label, OGDialog, OGDialogTrigger } from '@librechat/client';
 import type t from 'librechat-data-provider';
 import { useLocalize, TranslationKeys, useAgentCategories } from '~/hooks';
-import { podColor } from '~/components/Kmh/podColors';
+import { crewColor } from '~/components/Kmh/crewColors';
 import AgentDetailContent from './AgentDetailContent';
 import { cn, renderAgentAvatar } from '~/utils';
 import AgentContact from './AgentContact';
@@ -72,12 +72,12 @@ const AgentCard: React.FC<AgentCardProps> = ({ agent, onSelect, className = '' }
             }
           }}
         >
-          {/* Category badge - top right. KMH: carries the pod's colour. */}
+          {/* Category badge - top right. KMH: carries the crew's colour. */}
           {categoryLabel && (
             <span className="absolute right-4 top-3 inline-flex items-center gap-1.5 rounded-md bg-surface-hover px-2 py-0.5 text-xs text-text-secondary">
               {category?.color ? (
                 <span
-                  className={cn('h-2 w-2 shrink-0 rounded-full', podColor(category.color).dot)}
+                  className={cn('h-2 w-2 shrink-0 rounded-full', crewColor(category.color).dot)}
                   aria-hidden="true"
                 />
               ) : null}

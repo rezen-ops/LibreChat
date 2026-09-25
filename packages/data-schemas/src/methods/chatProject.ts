@@ -15,7 +15,7 @@ export type ChatProjectSortDirection = 'asc' | 'desc';
 export type CreateChatProjectInput = {
   name: string;
   description?: string | null;
-  /** KMH: pod colour key. Empty string clears it. */
+  /** KMH: crew colour key. Empty string clears it. */
   color?: string | null;
 };
 
@@ -97,21 +97,32 @@ function normalizeLimit(limit?: number): number {
   return Math.min(Math.max(Math.floor(limit), 1), 100);
 }
 
-/** KMH: pod colour keys. Must match client/src/components/Kmh/podColors.ts. */
-const POD_COLOR_KEYS = new Set(['slate', 'teal', 'amber', 'rose', 'violet', 'green', 'blue']);
+/** KMH: crew colour keys. Must match client/src/components/Kmh/crewColors.ts. */
+const CREW_COLOR_KEYS = new Set([
+  'slate',
+  'teal',
+  'amber',
+  'rose',
+  'violet',
+  'green',
+  'blue',
+  'cyan',
+  'orange',
+  'fuchsia',
+]);
 
 /** Anything not in the palette is stored as empty rather than rejected, so a
  *  stale client can never fail a save over a colour. */
-function sanitizePodColor(value?: string | null): string {
+function sanitizeCrewColor(value?: string | null): string {
   const v = typeof value === 'string' ? value.trim().toLowerCase() : '';
-  return POD_COLOR_KEYS.has(v) ? v : '';
+  return CREW_COLOR_KEYS.has(v) ? v : '';
 }
 
 function sanitizeProjectInput(input: CreateChatProjectInput): CreateChatProjectInput {
   return {
     name: input.name.trim().slice(0, MAX_CHAT_PROJECT_NAME_LENGTH),
     description: input.description?.trim().slice(0, MAX_CHAT_PROJECT_DESCRIPTION_LENGTH) ?? '',
-    color: sanitizePodColor(input.color),
+    color: sanitizeCrewColor(input.color),
   };
 }
 
@@ -426,7 +437,7 @@ export function createChatProjectMethods(mongoose: typeof import('mongoose')): C
     const ChatProject = mongoose.models.ChatProject as Model<IChatProjectDocument>;
     const update: Partial<Pick<IChatProject, 'name' | 'description' | 'color'>> = {};
     if (input.color !== undefined) {
-      update.color = sanitizePodColor(input.color);
+      update.color = sanitizeCrewColor(input.color);
     }
     if (typeof input.name === 'string') {
       const name = input.name.trim().slice(0, MAX_CHAT_PROJECT_NAME_LENGTH);

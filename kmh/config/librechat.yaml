@@ -27,7 +27,9 @@ endpoints:
     maxRecursionLimit: 50
     disableBuilder: false
     allowedProviders: ['anthropic', 'openAI']
-    maxSubagents: 10
+    # 3 matches the "three or four angles" this was asked for, and caps the
+    # fan-out: every subagent is a separate context billed in full.
+    maxSubagents: 3
 
     capabilities:
       - file_search      # RAG retrieval — always prefer over file context
@@ -35,6 +37,7 @@ endpoints:
       - skills
       - tools
       - web_search
+      - subagents       # research fan-out: N independent contexts, one synthesis
 
     # Each citation is billed context. 20/5 is deliberate, not a default.
     maxCitations: 20
@@ -99,7 +102,7 @@ memory:
 webSearch:
   searchProvider: 'serper'
   serperApiKey: '${SERPER_API_KEY}'
-  scraperType: 'firecrawl'
+  scraperProvider: 'firecrawl'
   firecrawlApiKey: '${FIRECRAWL_API_KEY}'
   rerankerType: 'none'
 
@@ -109,6 +112,9 @@ interface:
   parameters: true
   contextUsage: true
   contextCost: true         # people spend less when they can see the meter
+  fileCitations: true       # name the knowledge file a claim came from
+  multiConvo: true          # two models side by side, to settle cost arguments with evidence
+  customWelcome: 'What are we shipping today, {{user.name}}?'
   marketplace:
     use: true
   agents:

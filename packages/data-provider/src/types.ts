@@ -286,7 +286,7 @@ export type TCategory = {
   label: string;
   description?: string;
   custom?: boolean;
-  /** KMH: pod colour key — see client/src/components/Kmh/podColors.ts. */
+  /** KMH: crew colour key — see client/src/components/Kmh/crewColors.ts. */
   color?: string;
 };
 

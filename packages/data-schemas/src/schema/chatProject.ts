@@ -39,7 +39,7 @@ const chatProjectSchema: Schema<IChatProjectDocument> = new Schema<IChatProjectD
       type: String,
       index: true,
     },
-    /** KMH: pod colour. A key from a fixed palette, not a free hex value, so
+    /** KMH: crew colour. A key from a fixed palette, not a free hex value, so
      *  projects stay visually consistent and legible in both themes. */
     color: {
       type: String,

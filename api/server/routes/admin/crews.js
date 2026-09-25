@@ -11,32 +11,32 @@ const router = express.Router();
 const requireAdminAccess = requireCapability(SystemCapabilities.ACCESS_ADMIN);
 
 /**
- * KMH pods.
+ * KMH crews.
  *
- * A pod is an agent category with a colour. LibreChat ships categories as a
- * fixed seed with no way to edit them from the UI, which is why pods had to be
+ * A crew is an agent category with a colour. LibreChat ships categories as a
+ * fixed seed with no way to edit them from the UI, which is why crews had to be
  * renamed in code. These routes make them editable so the fleet can be
  * reorganised without a deploy.
  *
  * `value` is what each agent stores, so it is assigned once at creation and
- * never rewritten — renaming a pod changes `label` only, and the agents stay
- * attached. Deleting a pod deactivates it and moves its agents to `unassigned`
+ * never rewritten — renaming a crew changes `label` only, and the agents stay
+ * attached. Deleting a crew deactivates it and moves its agents to `unassigned`
  * rather than dropping the field, so no agent ends up in a category the UI
  * cannot show.
  */
 
 /** Must match client/src/components/Kmh/podColors.ts. */
-const POD_COLOR_KEYS = new Set(['slate', 'teal', 'amber', 'rose', 'violet', 'green', 'blue']);
+const CREW_COLOR_KEYS = new Set(['slate', 'teal', 'amber', 'rose', 'violet', 'green', 'blue']);
 
 /** Out-of-palette colours are stored empty rather than rejected, so a stale
  *  client can never fail a save over a colour it doesn't know about. */
 const sanitizeColor = (value) => {
   const v = typeof value === 'string' ? value.trim().toLowerCase() : '';
-  return POD_COLOR_KEYS.has(v) ? v : '';
+  return CREW_COLOR_KEYS.has(v) ? v : '';
 };
 
 /** Reserved values: `all` is the marketplace's synthetic "everything" tab and
- *  `promoted` is injected from the agent flag, so neither may be a pod. */
+ *  `promoted` is injected from the agent flag, so neither may be a crew. */
 const RESERVED_VALUES = new Set(['all', 'promoted']);
 
 const MAX_LABEL_LENGTH = 40;
@@ -60,28 +60,28 @@ async function countsByCategory() {
   return new Map(rows.map((r) => [r._id ?? '', r.count]));
 }
 
-const shape = (pod, counts) => ({
-  value: pod.value,
-  label: pod.label,
-  color: pod.color ?? '',
-  order: pod.order ?? 0,
-  isActive: pod.isActive !== false,
-  agentCount: counts.get(pod.value) ?? 0,
+const shape = (crew, counts) => ({
+  value: crew.value,
+  label: crew.label,
+  color: crew.color ?? '',
+  order: crew.order ?? 0,
+  isActive: crew.isActive !== false,
+  agentCount: counts.get(crew.value) ?? 0,
 });
 
 router.use(requireJwtAuth, requireAdminAccess);
 
-/** Live pods only. Retiring a pod deactivates it rather than deleting the row,
- *  so the collection still holds LibreChat's original categories and every pod
+/** Live crews only. Retiring a crew deactivates it rather than deleting the row,
+ *  so the collection still holds LibreChat's original categories and every crew
  *  ever removed — listing those would put rows in the panel that mean nothing
  *  to anyone and that no control here can act on. */
 router.get('/', async (_req, res) => {
   try {
-    const [pods, counts] = await Promise.all([db.getActiveCategories(), countsByCategory()]);
-    res.status(200).json(pods.map((pod) => shape(pod, counts)));
+    const [crews, counts] = await Promise.all([db.getActiveCategories(), countsByCategory()]);
+    res.status(200).json(crews.map((crew) => shape(crew, counts)));
   } catch (error) {
-    logger.error('[/api/admin/pods] list failed:', error);
-    res.status(500).json({ error: 'Failed to list pods' });
+    logger.error('[/api/admin/crews] list failed:', error);
+    res.status(500).json({ error: 'Failed to list crews' });
   }
 });
 
@@ -89,18 +89,18 @@ router.post('/', async (req, res) => {
   try {
     const label = sanitizeLabel(req.body?.label);
     if (!label) {
-      return res.status(400).json({ error: 'A pod name is required' });
+      return res.status(400).json({ error: 'A crew name is required' });
     }
     const value = slugify(label);
     if (!value || RESERVED_VALUES.has(value)) {
-      return res.status(400).json({ error: `"${label}" is not a usable pod name` });
+      return res.status(400).json({ error: `"${label}" is not a usable crew name` });
     }
-    /** A retired pod keeps its row, so re-adding that name revives it — with
+    /** A retired crew keeps its row, so re-adding that name revives it — with
      *  the agents that were moved to Unassigned staying where they are. A 409
      *  here would refuse a name the panel shows as free. */
     const existing = await db.findCategoryByValue(value);
     if (existing && existing.isActive !== false) {
-      return res.status(409).json({ error: `A pod named "${label}" already exists` });
+      return res.status(409).json({ error: `A crew named "${label}" already exists` });
     }
     if (existing) {
       const revived = await db.updateCategory(value, {
@@ -112,21 +112,21 @@ router.post('/', async (req, res) => {
       return res.status(200).json(shape(revived, await countsByCategory()));
     }
 
-    const pods = await db.getAllCategories();
+    const crews = await db.getAllCategories();
     const created = await db.createCategory({
       value,
       label,
       color: sanitizeColor(req.body?.color),
       description: '',
-      /** Append: `unassigned` sits at 99 so new pods land above it. */
-      order: Math.min(98, pods.length),
+      /** Append: `unassigned` sits at 99 so new crews land above it. */
+      order: Math.min(98, crews.length),
       isActive: true,
       custom: true,
     });
     res.status(201).json(shape(created, await countsByCategory()));
   } catch (error) {
-    logger.error('[/api/admin/pods] create failed:', error);
-    res.status(500).json({ error: 'Failed to create pod' });
+    logger.error('[/api/admin/crews] create failed:', error);
+    res.status(500).json({ error: 'Failed to create crew' });
   }
 });
 
@@ -137,7 +137,7 @@ router.patch('/:value', async (req, res) => {
     if (req.body?.label !== undefined) {
       const label = sanitizeLabel(req.body.label);
       if (!label) {
-        return res.status(400).json({ error: 'A pod name is required' });
+        return res.status(400).json({ error: 'A crew name is required' });
       }
       update.label = label;
     }
@@ -150,18 +150,18 @@ router.patch('/:value', async (req, res) => {
     if (req.body?.isActive !== undefined) {
       update.isActive = req.body.isActive === true;
     }
-    /** `custom` marks a pod as admin-owned, which stops the startup seed from
+    /** `custom` marks a crew as admin-owned, which stops the startup seed from
      *  resetting its label back to the one hard-coded in ensureDefaultCategories. */
     update.custom = true;
 
     const updated = await db.updateCategory(value, update);
     if (!updated) {
-      return res.status(404).json({ error: 'Pod not found' });
+      return res.status(404).json({ error: 'Crew not found' });
     }
     res.status(200).json(shape(updated, await countsByCategory()));
   } catch (error) {
-    logger.error('[/api/admin/pods] update failed:', error);
-    res.status(500).json({ error: 'Failed to update pod' });
+    logger.error('[/api/admin/crews] update failed:', error);
+    res.status(500).json({ error: 'Failed to update crew' });
   }
 });
 
@@ -170,11 +170,11 @@ router.delete('/:value', async (req, res) => {
   try {
     const { value } = req.params;
     if (value === 'unassigned') {
-      return res.status(400).json({ error: 'Unassigned is where retired pods send their agents' });
+      return res.status(400).json({ error: 'Unassigned is where retired crews send their agents' });
     }
-    const pod = await db.findCategoryByValue(value);
-    if (!pod) {
-      return res.status(404).json({ error: 'Pod not found' });
+    const crew = await db.findCategoryByValue(value);
+    if (!crew) {
+      return res.status(404).json({ error: 'Crew not found' });
     }
     const moved = await Agent().updateMany(
       { category: value },
@@ -183,8 +183,8 @@ router.delete('/:value', async (req, res) => {
     await db.updateCategory(value, { isActive: false });
     res.status(200).json({ value, movedAgents: moved.modifiedCount ?? 0 });
   } catch (error) {
-    logger.error('[/api/admin/pods] delete failed:', error);
-    res.status(500).json({ error: 'Failed to delete pod' });
+    logger.error('[/api/admin/crews] delete failed:', error);
+    res.status(500).json({ error: 'Failed to delete crew' });
   }
 });
 
@@ -207,7 +207,7 @@ router.get('/agents', async (_req, res) => {
       })),
     );
   } catch (error) {
-    logger.error('[/api/admin/pods] agent list failed:', error);
+    logger.error('[/api/admin/crews] agent list failed:', error);
     res.status(500).json({ error: 'Failed to list agents' });
   }
 });
@@ -216,22 +216,25 @@ router.get('/agents', async (_req, res) => {
 router.post('/assign', async (req, res) => {
   try {
     const agentIds = Array.isArray(req.body?.agentIds) ? req.body.agentIds : [];
-    const pod = typeof req.body?.pod === 'string' ? req.body.pod : '';
+    const crew = typeof req.body?.crew === 'string' ? req.body.crew : '';
     if (agentIds.length === 0) {
       return res.status(400).json({ error: 'Select at least one agent' });
     }
-    if (!pod || RESERVED_VALUES.has(pod)) {
-      return res.status(400).json({ error: 'Choose a pod to assign to' });
+    if (!crew || RESERVED_VALUES.has(crew)) {
+      return res.status(400).json({ error: 'Choose a crew to assign to' });
     }
-    const target = await db.findCategoryByValue(pod);
+    const target = await db.findCategoryByValue(crew);
     if (!target || target.isActive === false) {
-      return res.status(400).json({ error: 'That pod no longer exists' });
+      return res.status(400).json({ error: 'That crew no longer exists' });
     }
 
-    const result = await Agent().updateMany({ id: { $in: agentIds } }, { $set: { category: pod } });
-    res.status(200).json({ pod, updated: result.modifiedCount ?? 0 });
+    const result = await Agent().updateMany(
+      { id: { $in: agentIds } },
+      { $set: { category: crew } },
+    );
+    res.status(200).json({ crew, updated: result.modifiedCount ?? 0 });
   } catch (error) {
-    logger.error('[/api/admin/pods] assign failed:', error);
+    logger.error('[/api/admin/crews] assign failed:', error);
     res.status(500).json({ error: 'Failed to assign agents' });
   }
 });

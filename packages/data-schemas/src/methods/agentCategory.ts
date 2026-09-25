@@ -180,26 +180,58 @@ export function createAgentCategoryMethods(mongoose: typeof import('mongoose')):
     const AgentCategory = mongoose.models.AgentCategory as Model<IAgentCategory>;
 
     /**
-     * KMH pods. These replace LibreChat's generic business categories
+     * KMH crews. These replace LibreChat's generic business categories
      * (General, HR, R&D, Finance, IT, Sales, After Sales), which mean nothing
-     * here — agents are grouped by the pod that owns the client.
+     * here — agents are grouped by the crew that owns the client.
      *
-     * EDIT THIS LIST to match your real pods. `value` is stored on each agent,
-     * so renaming a value orphans the agents using it; change `label` freely.
-     * `color` must be a key from client/src/components/Kmh/podColors.ts.
+     * `value` is stored on each agent, so renaming a value orphans the agents
+     * using it. Rename the `label` from the admin panel instead: an edit there
+     * marks the row `custom` and this seed then leaves it alone.
+     * `color` must be a key from client/src/components/Kmh/crewColors.ts.
      */
-    const defaultCategories = (
-      [
-        { value: 'pod-one', label: 'Pod One', color: 'teal', order: 0 },
-        { value: 'pod-two', label: 'Pod Two', color: 'amber', order: 1 },
-        { value: 'pod-three', label: 'Pod Three', color: 'violet', order: 2 },
-        { value: 'pod-four', label: 'Pod Four', color: 'rose', order: 3 },
-        { value: 'unassigned', label: 'Unassigned', color: 'slate', order: 99 },
-      ] as Array<{ value: string; label: string; color: string; order: number }>
-    ).map((c) => ({ ...c, description: '' }));
+    const CREW_COLORS_BY_INDEX = [
+      'teal',
+      'amber',
+      'violet',
+      'rose',
+      'blue',
+      'green',
+      'orange',
+      'cyan',
+      'fuchsia',
+      'slate',
+    ];
+    const defaultCategories = [
+      ...Array.from({ length: 10 }, (_, i) => ({
+        value: `kaizen-crew-${i + 1}`,
+        label: `Kaizen Crew ${i + 1}`,
+        color: CREW_COLORS_BY_INDEX[i],
+        order: i,
+      })),
+      { value: 'unassigned', label: 'Unassigned', color: '', order: 99 },
+    ].map((c) => ({ ...c, description: '' }));
+
+    /** KMH: the pilot seeded four placeholder crews (`pod-one`…`pod-four`).
+     *  Agents store the category value, so dropping those rows would strand
+     *  every agent already filed under one. Carry them across to the crew that
+     *  replaced them, once — a value that no longer exists matches nothing on
+     *  later boots, which is what makes this safe to leave in place. */
+    const RENAMED_CREWS: Record<string, string> = {
+      'pod-one': 'kaizen-crew-1',
+      'pod-two': 'kaizen-crew-2',
+      'pod-three': 'kaizen-crew-3',
+      'pod-four': 'kaizen-crew-4',
+    };
+    const Agent = mongoose.models.Agent;
+    if (Agent) {
+      for (const [from, to] of Object.entries(RENAMED_CREWS)) {
+        await Agent.updateMany({ category: from }, { $set: { category: to } });
+      }
+    }
+    await AgentCategory.deleteMany({ value: { $in: Object.keys(RENAMED_CREWS) } });
 
     /** KMH: retire LibreChat's generic business categories. Named explicitly
-     *  rather than "anything not a pod" — pods created later from the admin
+     *  rather than "anything not a crew" — crews created later from the admin
      *  panel are `custom` and must survive every restart. */
     const retiredDefaults = ['general', 'hr', 'rd', 'finance', 'it', 'sales', 'aftersales'];
     await AgentCategory.updateMany(
