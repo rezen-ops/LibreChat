@@ -42,7 +42,10 @@ async function getAgentCapabilities(req, res) {
       return res.status(404).json({ error: 'Agent not found' });
     }
 
-    const configured = req.config?.mcpServers ?? {};
+    /** `mcpConfig`, not `mcpServers`: the YAML key is renamed when the app
+     *  config is assembled, and reading the YAML name silently yields the
+     *  server id instead of the brand title. */
+    const configured = req.config?.mcpConfig ?? {};
     const tools = Array.isArray(agent.tools) ? agent.tools : [];
 
     /** One entry per server, not per tool: an agent with 23 Klaviyo tools has
