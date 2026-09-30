@@ -7,6 +7,7 @@ const { getRoleByName } = require('~/models');
 const actions = require('./actions');
 const tools = require('./tools');
 
+const kmhCapabilities = require('./kmhCapabilities');
 const router = express.Router();
 const avatar = express.Router();
 
@@ -61,6 +62,23 @@ router.get(
     resourceIdParam: 'id',
   }),
   v1.getAgent,
+);
+
+/**
+ * KMH: what this agent can reach, in plain language (VIEW permission).
+ * Derived from the agent record so the landing screen cannot go stale, and kept
+ * free of anything `/expanded` guards behind EDIT.
+ * @route GET /agents/:id/capabilities
+ */
+router.get(
+  '/:id/capabilities',
+  checkAgentAccess,
+  canAccessAgentResource({
+    requiredPermission: PermissionBits.VIEW,
+    resourceIdParam: 'id',
+  }),
+  configMiddleware,
+  kmhCapabilities.getAgentCapabilities,
 );
 
 /**

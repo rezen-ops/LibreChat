@@ -15,6 +15,7 @@ import {
 import { useChatContext, useAgentsMapContext, useAssistantsMapContext } from '~/Providers';
 import { useGetEndpointsQuery, useGetStartupConfig } from '~/data-provider';
 import { useLocalize, useAuthContext, useGreeting } from '~/hooks';
+import AgentCapabilities from '~/components/Kmh/AgentCapabilities';
 import AgentContact from '~/components/Agents/AgentContact';
 import ConvoIcon from '~/components/Endpoints/ConvoIcon';
 import temporaryStore from '~/store/temporary';
@@ -229,6 +230,11 @@ export default function Landing({ centerFormOnLanding }: { centerFormOnLanding: 
               {description}
             </div>
           ))}
+        {/* KMH: what the agent can actually reach, read from its wiring rather
+            than from prose someone has to keep up to date. */}
+        {selectedAgent && !isTemporary && (
+          <AgentCapabilities agentId={conversation?.agent_id ?? undefined} />
+        )}
         {selectedAgent && !isTemporary && (
           <AgentContact
             agent={selectedAgent}

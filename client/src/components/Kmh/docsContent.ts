@@ -101,6 +101,66 @@ direction, not proof. Ask for 365 days when you need real signal.
 
 ---
 
+## Pushing a calendar to Stratos
+
+Agents for brands that exist in Stratos can write campaign calendars straight
+into the planner. You do not copy anything across by hand.
+
+**Everything lands as a draft.** The agent cannot send, schedule, approve, edit
+or delete. A campaign it creates sits in the brand's planning calendar exactly
+where a draft you typed yourself would, and the team reviews it the same way.
+
+### How to do it
+
+It is two steps on purpose, and the agent will not skip to the second.
+
+**1. Ask for the calendar.** *Build me a campaign calendar for November.* The
+agent replies in the chat with the whole month for you to read. Nothing has
+been written yet. Change whatever you want and ask again.
+
+**2. Say push, explicitly.** *Push that to Stratos.* Only then does it write.
+It checks the brand it is connected to, looks at what is already in that window
+so it does not double up, and creates the month in one go. It reports back which
+campaigns were created and which failed, with reasons.
+
+If you want changes after a push, make them in Stratos. There is no undo from
+the chat.
+
+### Why it cannot write to the wrong brand
+
+Each agent holds one brand's key, and the server works out the brand from that
+key alone. If you tell the agent to write to a different brand, the instruction
+is ignored — it is not that it refuses, it is that the brand is not something
+the agent gets to choose. The same is true of the Klaviyo connection.
+
+Ask *which brand are you connected to?* any time you want to check.
+
+### What the planner will reject
+
+These come back as errors on the individual campaign, and the rest of the batch
+still goes through:
+
+- **A duplicate** — same name and same send date as a campaign already there.
+  This is what makes a retry safe after a partial failure.
+- **A date too far out** — more than a year in the past or roughly thirteen
+  months ahead.
+- **A value outside the vocabulary** — segment, angle and type have to match
+  what Stratos itself accepts. If the agent invents a segment name, the planner
+  says no rather than storing something the app cannot show.
+- **An archived brand.**
+
+That last group is the reason to push through the agent rather than by hand: a
+calendar with a made-up segment never reaches the planner at all.
+
+### Brands without a planner
+
+Not every Klaviyo client exists in Stratos. If an agent has no planner
+connection, the capability strip under its name will not mention drafts, and
+asking it to push will get you a calendar in the chat and nothing more. Tell
+Stan and the brand can be added.
+
+---
+
 ## Models
 
 Pick per conversation from the model selector:
