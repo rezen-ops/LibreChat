@@ -62,17 +62,22 @@ endpoints:
     # every pattern matches the brand suffix. `mcp:klaviyo:*` never matched
     # anything — the servers are `klaviyo-<brand>`.
     toolApproval:
+      # Required. Without it `isHITLEnabled` is false and the whole block below
+      # is inert — which is how it shipped, so none of these rules have ever
+      # run. Verified against the live agent: it filed to Stratos with no
+      # prompt while an `ask` rule was sitting right here.
+      enabled: true
+      # Patterns are globs anchored over the TOOL NAME, which for MCP tools is
+      # `<tool>_mcp_<server>` — e.g. `stratos_create_campaigns_mcp_stratos-arrowhead`.
+      # They are not `mcp:server:tool` paths; the original `mcp:klaviyo:*` rules
+      # matched nothing twice over, on the prefix and on the per-brand suffix.
       ask:
-        - 'mcp:stratos-*:stratos_create_campaigns'
         - 'stratos_create_campaigns*'
       deny:
-        - 'mcp:klaviyo-*:*create*'
-        - 'mcp:klaviyo-*:*update*'
-        - 'mcp:klaviyo-*:*delete*'
-        - 'mcp:klaviyo-*:*send*'
-      allow:
-        - 'mcp:kmh-data:*'
-        - 'mcp:klaviyo-*:*'
+        - '*create*_mcp_klaviyo-*'
+        - '*update*_mcp_klaviyo-*'
+        - '*delete*_mcp_klaviyo-*'
+        - '*send*_mcp_klaviyo-*'
 
     maxToolCallArgBytes: 65536
 
