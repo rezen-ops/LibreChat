@@ -48,17 +48,31 @@ endpoints:
     checkpointer:
       type: mongo
 
-    # Read-only pilot. kmh-data exposes no mutating tools at all, so this is
-    # belt-and-braces against a future tool being added carelessly.
+    # Filing a campaign calendar is the one thing here that changes a client's
+    # system, so it is gated in the runtime, not in a prompt. `ask` stops the
+    # call and puts an approve/decline in front of the person before anything
+    # is written. Wording in serverInstructions tells the model when to offer;
+    # this decides whether it may proceed, which is not the model's to decide.
+    #
+    # Reads stay ungated: checking the window before filing is what prevents a
+    # double-booked date, and a prompt on every read teaches people to click
+    # through without looking.
+    #
+    # Server names are per brand (stratos-arrowhead, klaviyo-arrowhead), so
+    # every pattern matches the brand suffix. `mcp:klaviyo:*` never matched
+    # anything — the servers are `klaviyo-<brand>`.
     toolApproval:
+      ask:
+        - 'mcp:stratos-*:stratos_create_campaigns'
+        - 'stratos_create_campaigns*'
       deny:
-        - 'mcp:klaviyo:*create*'
-        - 'mcp:klaviyo:*update*'
-        - 'mcp:klaviyo:*delete*'
-        - 'mcp:klaviyo:*send*'
+        - 'mcp:klaviyo-*:*create*'
+        - 'mcp:klaviyo-*:*update*'
+        - 'mcp:klaviyo-*:*delete*'
+        - 'mcp:klaviyo-*:*send*'
       allow:
         - 'mcp:kmh-data:*'
-        - 'mcp:klaviyo:*'
+        - 'mcp:klaviyo-*:*'
 
     maxToolCallArgBytes: 65536
 
