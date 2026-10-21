@@ -78,6 +78,14 @@ endpoints:
         - '*update*_mcp_klaviyo-*'
         - '*delete*_mcp_klaviyo-*'
         - '*send*_mcp_klaviyo-*'
+      # Required, and not cosmetic. Precedence runs deny -> ask -> allow, and in
+      # `default` mode anything matching no rule falls through to ask. Without
+      # this catch-all the gate fires on every read as well — which it did:
+      # asking a brand which calendar it owns put an approve/decline in front
+      # of the user. A prompt on every read is how people learn to approve
+      # without reading, which costs more than it protects.
+      allow:
+        - '*'
 
     maxToolCallArgBytes: 65536
 
