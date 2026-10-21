@@ -1364,8 +1364,23 @@ mcpServers:
     serverInstructions: |
       This connection is locked to Miracle Made. Never pass a brand name —
       the token already selects the brand and any brand argument is ignored.
-      Call stratos_list_brands first to confirm the brand, then
-      stratos_list_campaigns for the target window before creating anything.
+
+      NEVER call stratos_create_campaigns unless the person has asked for it in
+      that message, in plain words — "push this to Stratos", "send those three
+      across". Producing a calendar is NOT permission to file it: a calendar is
+      finished when it is written in the chat for them to read. Asking you for
+      a calendar, approving its content, saying it looks good, or asking you to
+      fix a line are all still the first step. If you are unsure whether you
+      were asked to push, you were not. Write the calendar and ask.
+
+      When they do ask, file only the campaigns they named. "Push it" after a
+      single calendar means that calendar; anything less specific, confirm which
+      campaigns before writing.
+
+      Reading is always allowed: call stratos_list_brands to confirm the brand
+      and stratos_list_campaigns for the target window before filing anything,
+      so you never double-book a date.
+
       stratos_create_campaigns only creates DRAFTS for the team to review. It
       cannot send, schedule, approve, edit or delete. Batch a whole month in one
       call (max 100). Duplicates (same name + same send_date) are rejected, so
@@ -1384,8 +1399,23 @@ mcpServers:
     serverInstructions: |
       This connection is locked to PiPi Tea. Never pass a brand name —
       the token already selects the brand and any brand argument is ignored.
-      Call stratos_list_brands first to confirm the brand, then
-      stratos_list_campaigns for the target window before creating anything.
+
+      NEVER call stratos_create_campaigns unless the person has asked for it in
+      that message, in plain words — "push this to Stratos", "send those three
+      across". Producing a calendar is NOT permission to file it: a calendar is
+      finished when it is written in the chat for them to read. Asking you for
+      a calendar, approving its content, saying it looks good, or asking you to
+      fix a line are all still the first step. If you are unsure whether you
+      were asked to push, you were not. Write the calendar and ask.
+
+      When they do ask, file only the campaigns they named. "Push it" after a
+      single calendar means that calendar; anything less specific, confirm which
+      campaigns before writing.
+
+      Reading is always allowed: call stratos_list_brands to confirm the brand
+      and stratos_list_campaigns for the target window before filing anything,
+      so you never double-book a date.
+
       stratos_create_campaigns only creates DRAFTS for the team to review. It
       cannot send, schedule, approve, edit or delete. Batch a whole month in one
       call (max 100). Duplicates (same name + same send_date) are rejected, so
@@ -1404,8 +1434,23 @@ mcpServers:
     serverInstructions: |
       This connection is locked to Billion Dollar Beauty. Never pass a brand name —
       the token already selects the brand and any brand argument is ignored.
-      Call stratos_list_brands first to confirm the brand, then
-      stratos_list_campaigns for the target window before creating anything.
+
+      NEVER call stratos_create_campaigns unless the person has asked for it in
+      that message, in plain words — "push this to Stratos", "send those three
+      across". Producing a calendar is NOT permission to file it: a calendar is
+      finished when it is written in the chat for them to read. Asking you for
+      a calendar, approving its content, saying it looks good, or asking you to
+      fix a line are all still the first step. If you are unsure whether you
+      were asked to push, you were not. Write the calendar and ask.
+
+      When they do ask, file only the campaigns they named. "Push it" after a
+      single calendar means that calendar; anything less specific, confirm which
+      campaigns before writing.
+
+      Reading is always allowed: call stratos_list_brands to confirm the brand
+      and stratos_list_campaigns for the target window before filing anything,
+      so you never double-book a date.
+
       stratos_create_campaigns only creates DRAFTS for the team to review. It
       cannot send, schedule, approve, edit or delete. Batch a whole month in one
       call (max 100). Duplicates (same name + same send_date) are rejected, so
@@ -1424,8 +1469,23 @@ mcpServers:
     serverInstructions: |
       This connection is locked to Billion Dollar Beauty Pro. Never pass a brand name —
       the token already selects the brand and any brand argument is ignored.
-      Call stratos_list_brands first to confirm the brand, then
-      stratos_list_campaigns for the target window before creating anything.
+
+      NEVER call stratos_create_campaigns unless the person has asked for it in
+      that message, in plain words — "push this to Stratos", "send those three
+      across". Producing a calendar is NOT permission to file it: a calendar is
+      finished when it is written in the chat for them to read. Asking you for
+      a calendar, approving its content, saying it looks good, or asking you to
+      fix a line are all still the first step. If you are unsure whether you
+      were asked to push, you were not. Write the calendar and ask.
+
+      When they do ask, file only the campaigns they named. "Push it" after a
+      single calendar means that calendar; anything less specific, confirm which
+      campaigns before writing.
+
+      Reading is always allowed: call stratos_list_brands to confirm the brand
+      and stratos_list_campaigns for the target window before filing anything,
+      so you never double-book a date.
+
       stratos_create_campaigns only creates DRAFTS for the team to review. It
       cannot send, schedule, approve, edit or delete. Batch a whole month in one
       call (max 100). Duplicates (same name + same send_date) are rejected, so
@@ -1444,8 +1504,23 @@ mcpServers:
     serverInstructions: |
       This connection is locked to Tattoo Zoo. Never pass a brand name —
       the token already selects the brand and any brand argument is ignored.
-      Call stratos_list_brands first to confirm the brand, then
-      stratos_list_campaigns for the target window before creating anything.
+
+      NEVER call stratos_create_campaigns unless the person has asked for it in
+      that message, in plain words — "push this to Stratos", "send those three
+      across". Producing a calendar is NOT permission to file it: a calendar is
+      finished when it is written in the chat for them to read. Asking you for
+      a calendar, approving its content, saying it looks good, or asking you to
+      fix a line are all still the first step. If you are unsure whether you
+      were asked to push, you were not. Write the calendar and ask.
+
+      When they do ask, file only the campaigns they named. "Push it" after a
+      single calendar means that calendar; anything less specific, confirm which
+      campaigns before writing.
+
+      Reading is always allowed: call stratos_list_brands to confirm the brand
+      and stratos_list_campaigns for the target window before filing anything,
+      so you never double-book a date.
+
       stratos_create_campaigns only creates DRAFTS for the team to review. It
       cannot send, schedule, approve, edit or delete. Batch a whole month in one
       call (max 100). Duplicates (same name + same send_date) are rejected, so
@@ -1464,8 +1539,23 @@ mcpServers:
     serverInstructions: |
       This connection is locked to Ocoa. Never pass a brand name —
       the token already selects the brand and any brand argument is ignored.
-      Call stratos_list_brands first to confirm the brand, then
-      stratos_list_campaigns for the target window before creating anything.
+
+      NEVER call stratos_create_campaigns unless the person has asked for it in
+      that message, in plain words — "push this to Stratos", "send those three
+      across". Producing a calendar is NOT permission to file it: a calendar is
+      finished when it is written in the chat for them to read. Asking you for
+      a calendar, approving its content, saying it looks good, or asking you to
+      fix a line are all still the first step. If you are unsure whether you
+      were asked to push, you were not. Write the calendar and ask.
+
+      When they do ask, file only the campaigns they named. "Push it" after a
+      single calendar means that calendar; anything less specific, confirm which
+      campaigns before writing.
+
+      Reading is always allowed: call stratos_list_brands to confirm the brand
+      and stratos_list_campaigns for the target window before filing anything,
+      so you never double-book a date.
+
       stratos_create_campaigns only creates DRAFTS for the team to review. It
       cannot send, schedule, approve, edit or delete. Batch a whole month in one
       call (max 100). Duplicates (same name + same send_date) are rejected, so
@@ -1484,8 +1574,23 @@ mcpServers:
     serverInstructions: |
       This connection is locked to Sofa Club Ltd. Never pass a brand name —
       the token already selects the brand and any brand argument is ignored.
-      Call stratos_list_brands first to confirm the brand, then
-      stratos_list_campaigns for the target window before creating anything.
+
+      NEVER call stratos_create_campaigns unless the person has asked for it in
+      that message, in plain words — "push this to Stratos", "send those three
+      across". Producing a calendar is NOT permission to file it: a calendar is
+      finished when it is written in the chat for them to read. Asking you for
+      a calendar, approving its content, saying it looks good, or asking you to
+      fix a line are all still the first step. If you are unsure whether you
+      were asked to push, you were not. Write the calendar and ask.
+
+      When they do ask, file only the campaigns they named. "Push it" after a
+      single calendar means that calendar; anything less specific, confirm which
+      campaigns before writing.
+
+      Reading is always allowed: call stratos_list_brands to confirm the brand
+      and stratos_list_campaigns for the target window before filing anything,
+      so you never double-book a date.
+
       stratos_create_campaigns only creates DRAFTS for the team to review. It
       cannot send, schedule, approve, edit or delete. Batch a whole month in one
       call (max 100). Duplicates (same name + same send_date) are rejected, so
@@ -1504,8 +1609,23 @@ mcpServers:
     serverInstructions: |
       This connection is locked to Outdoor Edge Cutlery. Never pass a brand name —
       the token already selects the brand and any brand argument is ignored.
-      Call stratos_list_brands first to confirm the brand, then
-      stratos_list_campaigns for the target window before creating anything.
+
+      NEVER call stratos_create_campaigns unless the person has asked for it in
+      that message, in plain words — "push this to Stratos", "send those three
+      across". Producing a calendar is NOT permission to file it: a calendar is
+      finished when it is written in the chat for them to read. Asking you for
+      a calendar, approving its content, saying it looks good, or asking you to
+      fix a line are all still the first step. If you are unsure whether you
+      were asked to push, you were not. Write the calendar and ask.
+
+      When they do ask, file only the campaigns they named. "Push it" after a
+      single calendar means that calendar; anything less specific, confirm which
+      campaigns before writing.
+
+      Reading is always allowed: call stratos_list_brands to confirm the brand
+      and stratos_list_campaigns for the target window before filing anything,
+      so you never double-book a date.
+
       stratos_create_campaigns only creates DRAFTS for the team to review. It
       cannot send, schedule, approve, edit or delete. Batch a whole month in one
       call (max 100). Duplicates (same name + same send_date) are rejected, so
@@ -1524,8 +1644,23 @@ mcpServers:
     serverInstructions: |
       This connection is locked to Newport. Never pass a brand name —
       the token already selects the brand and any brand argument is ignored.
-      Call stratos_list_brands first to confirm the brand, then
-      stratos_list_campaigns for the target window before creating anything.
+
+      NEVER call stratos_create_campaigns unless the person has asked for it in
+      that message, in plain words — "push this to Stratos", "send those three
+      across". Producing a calendar is NOT permission to file it: a calendar is
+      finished when it is written in the chat for them to read. Asking you for
+      a calendar, approving its content, saying it looks good, or asking you to
+      fix a line are all still the first step. If you are unsure whether you
+      were asked to push, you were not. Write the calendar and ask.
+
+      When they do ask, file only the campaigns they named. "Push it" after a
+      single calendar means that calendar; anything less specific, confirm which
+      campaigns before writing.
+
+      Reading is always allowed: call stratos_list_brands to confirm the brand
+      and stratos_list_campaigns for the target window before filing anything,
+      so you never double-book a date.
+
       stratos_create_campaigns only creates DRAFTS for the team to review. It
       cannot send, schedule, approve, edit or delete. Batch a whole month in one
       call (max 100). Duplicates (same name + same send_date) are rejected, so
@@ -1544,8 +1679,23 @@ mcpServers:
     serverInstructions: |
       This connection is locked to Get Soul. Never pass a brand name —
       the token already selects the brand and any brand argument is ignored.
-      Call stratos_list_brands first to confirm the brand, then
-      stratos_list_campaigns for the target window before creating anything.
+
+      NEVER call stratos_create_campaigns unless the person has asked for it in
+      that message, in plain words — "push this to Stratos", "send those three
+      across". Producing a calendar is NOT permission to file it: a calendar is
+      finished when it is written in the chat for them to read. Asking you for
+      a calendar, approving its content, saying it looks good, or asking you to
+      fix a line are all still the first step. If you are unsure whether you
+      were asked to push, you were not. Write the calendar and ask.
+
+      When they do ask, file only the campaigns they named. "Push it" after a
+      single calendar means that calendar; anything less specific, confirm which
+      campaigns before writing.
+
+      Reading is always allowed: call stratos_list_brands to confirm the brand
+      and stratos_list_campaigns for the target window before filing anything,
+      so you never double-book a date.
+
       stratos_create_campaigns only creates DRAFTS for the team to review. It
       cannot send, schedule, approve, edit or delete. Batch a whole month in one
       call (max 100). Duplicates (same name + same send_date) are rejected, so
@@ -1564,8 +1714,23 @@ mcpServers:
     serverInstructions: |
       This connection is locked to GIR. Never pass a brand name —
       the token already selects the brand and any brand argument is ignored.
-      Call stratos_list_brands first to confirm the brand, then
-      stratos_list_campaigns for the target window before creating anything.
+
+      NEVER call stratos_create_campaigns unless the person has asked for it in
+      that message, in plain words — "push this to Stratos", "send those three
+      across". Producing a calendar is NOT permission to file it: a calendar is
+      finished when it is written in the chat for them to read. Asking you for
+      a calendar, approving its content, saying it looks good, or asking you to
+      fix a line are all still the first step. If you are unsure whether you
+      were asked to push, you were not. Write the calendar and ask.
+
+      When they do ask, file only the campaigns they named. "Push it" after a
+      single calendar means that calendar; anything less specific, confirm which
+      campaigns before writing.
+
+      Reading is always allowed: call stratos_list_brands to confirm the brand
+      and stratos_list_campaigns for the target window before filing anything,
+      so you never double-book a date.
+
       stratos_create_campaigns only creates DRAFTS for the team to review. It
       cannot send, schedule, approve, edit or delete. Batch a whole month in one
       call (max 100). Duplicates (same name + same send_date) are rejected, so
@@ -1584,8 +1749,23 @@ mcpServers:
     serverInstructions: |
       This connection is locked to Onsen. Never pass a brand name —
       the token already selects the brand and any brand argument is ignored.
-      Call stratos_list_brands first to confirm the brand, then
-      stratos_list_campaigns for the target window before creating anything.
+
+      NEVER call stratos_create_campaigns unless the person has asked for it in
+      that message, in plain words — "push this to Stratos", "send those three
+      across". Producing a calendar is NOT permission to file it: a calendar is
+      finished when it is written in the chat for them to read. Asking you for
+      a calendar, approving its content, saying it looks good, or asking you to
+      fix a line are all still the first step. If you are unsure whether you
+      were asked to push, you were not. Write the calendar and ask.
+
+      When they do ask, file only the campaigns they named. "Push it" after a
+      single calendar means that calendar; anything less specific, confirm which
+      campaigns before writing.
+
+      Reading is always allowed: call stratos_list_brands to confirm the brand
+      and stratos_list_campaigns for the target window before filing anything,
+      so you never double-book a date.
+
       stratos_create_campaigns only creates DRAFTS for the team to review. It
       cannot send, schedule, approve, edit or delete. Batch a whole month in one
       call (max 100). Duplicates (same name + same send_date) are rejected, so
@@ -1604,8 +1784,23 @@ mcpServers:
     serverInstructions: |
       This connection is locked to Aktiiv. Never pass a brand name —
       the token already selects the brand and any brand argument is ignored.
-      Call stratos_list_brands first to confirm the brand, then
-      stratos_list_campaigns for the target window before creating anything.
+
+      NEVER call stratos_create_campaigns unless the person has asked for it in
+      that message, in plain words — "push this to Stratos", "send those three
+      across". Producing a calendar is NOT permission to file it: a calendar is
+      finished when it is written in the chat for them to read. Asking you for
+      a calendar, approving its content, saying it looks good, or asking you to
+      fix a line are all still the first step. If you are unsure whether you
+      were asked to push, you were not. Write the calendar and ask.
+
+      When they do ask, file only the campaigns they named. "Push it" after a
+      single calendar means that calendar; anything less specific, confirm which
+      campaigns before writing.
+
+      Reading is always allowed: call stratos_list_brands to confirm the brand
+      and stratos_list_campaigns for the target window before filing anything,
+      so you never double-book a date.
+
       stratos_create_campaigns only creates DRAFTS for the team to review. It
       cannot send, schedule, approve, edit or delete. Batch a whole month in one
       call (max 100). Duplicates (same name + same send_date) are rejected, so
@@ -1624,8 +1819,23 @@ mcpServers:
     serverInstructions: |
       This connection is locked to Arrowhead Tactical Apparel. Never pass a brand name —
       the token already selects the brand and any brand argument is ignored.
-      Call stratos_list_brands first to confirm the brand, then
-      stratos_list_campaigns for the target window before creating anything.
+
+      NEVER call stratos_create_campaigns unless the person has asked for it in
+      that message, in plain words — "push this to Stratos", "send those three
+      across". Producing a calendar is NOT permission to file it: a calendar is
+      finished when it is written in the chat for them to read. Asking you for
+      a calendar, approving its content, saying it looks good, or asking you to
+      fix a line are all still the first step. If you are unsure whether you
+      were asked to push, you were not. Write the calendar and ask.
+
+      When they do ask, file only the campaigns they named. "Push it" after a
+      single calendar means that calendar; anything less specific, confirm which
+      campaigns before writing.
+
+      Reading is always allowed: call stratos_list_brands to confirm the brand
+      and stratos_list_campaigns for the target window before filing anything,
+      so you never double-book a date.
+
       stratos_create_campaigns only creates DRAFTS for the team to review. It
       cannot send, schedule, approve, edit or delete. Batch a whole month in one
       call (max 100). Duplicates (same name + same send_date) are rejected, so
@@ -1644,8 +1854,23 @@ mcpServers:
     serverInstructions: |
       This connection is locked to Collars Co. Never pass a brand name —
       the token already selects the brand and any brand argument is ignored.
-      Call stratos_list_brands first to confirm the brand, then
-      stratos_list_campaigns for the target window before creating anything.
+
+      NEVER call stratos_create_campaigns unless the person has asked for it in
+      that message, in plain words — "push this to Stratos", "send those three
+      across". Producing a calendar is NOT permission to file it: a calendar is
+      finished when it is written in the chat for them to read. Asking you for
+      a calendar, approving its content, saying it looks good, or asking you to
+      fix a line are all still the first step. If you are unsure whether you
+      were asked to push, you were not. Write the calendar and ask.
+
+      When they do ask, file only the campaigns they named. "Push it" after a
+      single calendar means that calendar; anything less specific, confirm which
+      campaigns before writing.
+
+      Reading is always allowed: call stratos_list_brands to confirm the brand
+      and stratos_list_campaigns for the target window before filing anything,
+      so you never double-book a date.
+
       stratos_create_campaigns only creates DRAFTS for the team to review. It
       cannot send, schedule, approve, edit or delete. Batch a whole month in one
       call (max 100). Duplicates (same name + same send_date) are rejected, so
@@ -1664,8 +1889,23 @@ mcpServers:
     serverInstructions: |
       This connection is locked to Fellow. Never pass a brand name —
       the token already selects the brand and any brand argument is ignored.
-      Call stratos_list_brands first to confirm the brand, then
-      stratos_list_campaigns for the target window before creating anything.
+
+      NEVER call stratos_create_campaigns unless the person has asked for it in
+      that message, in plain words — "push this to Stratos", "send those three
+      across". Producing a calendar is NOT permission to file it: a calendar is
+      finished when it is written in the chat for them to read. Asking you for
+      a calendar, approving its content, saying it looks good, or asking you to
+      fix a line are all still the first step. If you are unsure whether you
+      were asked to push, you were not. Write the calendar and ask.
+
+      When they do ask, file only the campaigns they named. "Push it" after a
+      single calendar means that calendar; anything less specific, confirm which
+      campaigns before writing.
+
+      Reading is always allowed: call stratos_list_brands to confirm the brand
+      and stratos_list_campaigns for the target window before filing anything,
+      so you never double-book a date.
+
       stratos_create_campaigns only creates DRAFTS for the team to review. It
       cannot send, schedule, approve, edit or delete. Batch a whole month in one
       call (max 100). Duplicates (same name + same send_date) are rejected, so
@@ -1684,8 +1924,23 @@ mcpServers:
     serverInstructions: |
       This connection is locked to Foreign Waters. Never pass a brand name —
       the token already selects the brand and any brand argument is ignored.
-      Call stratos_list_brands first to confirm the brand, then
-      stratos_list_campaigns for the target window before creating anything.
+
+      NEVER call stratos_create_campaigns unless the person has asked for it in
+      that message, in plain words — "push this to Stratos", "send those three
+      across". Producing a calendar is NOT permission to file it: a calendar is
+      finished when it is written in the chat for them to read. Asking you for
+      a calendar, approving its content, saying it looks good, or asking you to
+      fix a line are all still the first step. If you are unsure whether you
+      were asked to push, you were not. Write the calendar and ask.
+
+      When they do ask, file only the campaigns they named. "Push it" after a
+      single calendar means that calendar; anything less specific, confirm which
+      campaigns before writing.
+
+      Reading is always allowed: call stratos_list_brands to confirm the brand
+      and stratos_list_campaigns for the target window before filing anything,
+      so you never double-book a date.
+
       stratos_create_campaigns only creates DRAFTS for the team to review. It
       cannot send, schedule, approve, edit or delete. Batch a whole month in one
       call (max 100). Duplicates (same name + same send_date) are rejected, so
@@ -1704,8 +1959,23 @@ mcpServers:
     serverInstructions: |
       This connection is locked to Kitchen Art Letters. Never pass a brand name —
       the token already selects the brand and any brand argument is ignored.
-      Call stratos_list_brands first to confirm the brand, then
-      stratos_list_campaigns for the target window before creating anything.
+
+      NEVER call stratos_create_campaigns unless the person has asked for it in
+      that message, in plain words — "push this to Stratos", "send those three
+      across". Producing a calendar is NOT permission to file it: a calendar is
+      finished when it is written in the chat for them to read. Asking you for
+      a calendar, approving its content, saying it looks good, or asking you to
+      fix a line are all still the first step. If you are unsure whether you
+      were asked to push, you were not. Write the calendar and ask.
+
+      When they do ask, file only the campaigns they named. "Push it" after a
+      single calendar means that calendar; anything less specific, confirm which
+      campaigns before writing.
+
+      Reading is always allowed: call stratos_list_brands to confirm the brand
+      and stratos_list_campaigns for the target window before filing anything,
+      so you never double-book a date.
+
       stratos_create_campaigns only creates DRAFTS for the team to review. It
       cannot send, schedule, approve, edit or delete. Batch a whole month in one
       call (max 100). Duplicates (same name + same send_date) are rejected, so
@@ -1724,8 +1994,23 @@ mcpServers:
     serverInstructions: |
       This connection is locked to Malie. Never pass a brand name —
       the token already selects the brand and any brand argument is ignored.
-      Call stratos_list_brands first to confirm the brand, then
-      stratos_list_campaigns for the target window before creating anything.
+
+      NEVER call stratos_create_campaigns unless the person has asked for it in
+      that message, in plain words — "push this to Stratos", "send those three
+      across". Producing a calendar is NOT permission to file it: a calendar is
+      finished when it is written in the chat for them to read. Asking you for
+      a calendar, approving its content, saying it looks good, or asking you to
+      fix a line are all still the first step. If you are unsure whether you
+      were asked to push, you were not. Write the calendar and ask.
+
+      When they do ask, file only the campaigns they named. "Push it" after a
+      single calendar means that calendar; anything less specific, confirm which
+      campaigns before writing.
+
+      Reading is always allowed: call stratos_list_brands to confirm the brand
+      and stratos_list_campaigns for the target window before filing anything,
+      so you never double-book a date.
+
       stratos_create_campaigns only creates DRAFTS for the team to review. It
       cannot send, schedule, approve, edit or delete. Batch a whole month in one
       call (max 100). Duplicates (same name + same send_date) are rejected, so
@@ -1744,8 +2029,23 @@ mcpServers:
     serverInstructions: |
       This connection is locked to Off-Grid Source. Never pass a brand name —
       the token already selects the brand and any brand argument is ignored.
-      Call stratos_list_brands first to confirm the brand, then
-      stratos_list_campaigns for the target window before creating anything.
+
+      NEVER call stratos_create_campaigns unless the person has asked for it in
+      that message, in plain words — "push this to Stratos", "send those three
+      across". Producing a calendar is NOT permission to file it: a calendar is
+      finished when it is written in the chat for them to read. Asking you for
+      a calendar, approving its content, saying it looks good, or asking you to
+      fix a line are all still the first step. If you are unsure whether you
+      were asked to push, you were not. Write the calendar and ask.
+
+      When they do ask, file only the campaigns they named. "Push it" after a
+      single calendar means that calendar; anything less specific, confirm which
+      campaigns before writing.
+
+      Reading is always allowed: call stratos_list_brands to confirm the brand
+      and stratos_list_campaigns for the target window before filing anything,
+      so you never double-book a date.
+
       stratos_create_campaigns only creates DRAFTS for the team to review. It
       cannot send, schedule, approve, edit or delete. Batch a whole month in one
       call (max 100). Duplicates (same name + same send_date) are rejected, so
@@ -1764,8 +2064,23 @@ mcpServers:
     serverInstructions: |
       This connection is locked to Hemp Collect. Never pass a brand name —
       the token already selects the brand and any brand argument is ignored.
-      Call stratos_list_brands first to confirm the brand, then
-      stratos_list_campaigns for the target window before creating anything.
+
+      NEVER call stratos_create_campaigns unless the person has asked for it in
+      that message, in plain words — "push this to Stratos", "send those three
+      across". Producing a calendar is NOT permission to file it: a calendar is
+      finished when it is written in the chat for them to read. Asking you for
+      a calendar, approving its content, saying it looks good, or asking you to
+      fix a line are all still the first step. If you are unsure whether you
+      were asked to push, you were not. Write the calendar and ask.
+
+      When they do ask, file only the campaigns they named. "Push it" after a
+      single calendar means that calendar; anything less specific, confirm which
+      campaigns before writing.
+
+      Reading is always allowed: call stratos_list_brands to confirm the brand
+      and stratos_list_campaigns for the target window before filing anything,
+      so you never double-book a date.
+
       stratos_create_campaigns only creates DRAFTS for the team to review. It
       cannot send, schedule, approve, edit or delete. Batch a whole month in one
       call (max 100). Duplicates (same name + same send_date) are rejected, so
@@ -1784,8 +2099,23 @@ mcpServers:
     serverInstructions: |
       This connection is locked to Windy Nation. Never pass a brand name —
       the token already selects the brand and any brand argument is ignored.
-      Call stratos_list_brands first to confirm the brand, then
-      stratos_list_campaigns for the target window before creating anything.
+
+      NEVER call stratos_create_campaigns unless the person has asked for it in
+      that message, in plain words — "push this to Stratos", "send those three
+      across". Producing a calendar is NOT permission to file it: a calendar is
+      finished when it is written in the chat for them to read. Asking you for
+      a calendar, approving its content, saying it looks good, or asking you to
+      fix a line are all still the first step. If you are unsure whether you
+      were asked to push, you were not. Write the calendar and ask.
+
+      When they do ask, file only the campaigns they named. "Push it" after a
+      single calendar means that calendar; anything less specific, confirm which
+      campaigns before writing.
+
+      Reading is always allowed: call stratos_list_brands to confirm the brand
+      and stratos_list_campaigns for the target window before filing anything,
+      so you never double-book a date.
+
       stratos_create_campaigns only creates DRAFTS for the team to review. It
       cannot send, schedule, approve, edit or delete. Batch a whole month in one
       call (max 100). Duplicates (same name + same send_date) are rejected, so
@@ -1804,8 +2134,23 @@ mcpServers:
     serverInstructions: |
       This connection is locked to Cooks Professional. Never pass a brand name —
       the token already selects the brand and any brand argument is ignored.
-      Call stratos_list_brands first to confirm the brand, then
-      stratos_list_campaigns for the target window before creating anything.
+
+      NEVER call stratos_create_campaigns unless the person has asked for it in
+      that message, in plain words — "push this to Stratos", "send those three
+      across". Producing a calendar is NOT permission to file it: a calendar is
+      finished when it is written in the chat for them to read. Asking you for
+      a calendar, approving its content, saying it looks good, or asking you to
+      fix a line are all still the first step. If you are unsure whether you
+      were asked to push, you were not. Write the calendar and ask.
+
+      When they do ask, file only the campaigns they named. "Push it" after a
+      single calendar means that calendar; anything less specific, confirm which
+      campaigns before writing.
+
+      Reading is always allowed: call stratos_list_brands to confirm the brand
+      and stratos_list_campaigns for the target window before filing anything,
+      so you never double-book a date.
+
       stratos_create_campaigns only creates DRAFTS for the team to review. It
       cannot send, schedule, approve, edit or delete. Batch a whole month in one
       call (max 100). Duplicates (same name + same send_date) are rejected, so
@@ -1824,8 +2169,23 @@ mcpServers:
     serverInstructions: |
       This connection is locked to Future Society. Never pass a brand name —
       the token already selects the brand and any brand argument is ignored.
-      Call stratos_list_brands first to confirm the brand, then
-      stratos_list_campaigns for the target window before creating anything.
+
+      NEVER call stratos_create_campaigns unless the person has asked for it in
+      that message, in plain words — "push this to Stratos", "send those three
+      across". Producing a calendar is NOT permission to file it: a calendar is
+      finished when it is written in the chat for them to read. Asking you for
+      a calendar, approving its content, saying it looks good, or asking you to
+      fix a line are all still the first step. If you are unsure whether you
+      were asked to push, you were not. Write the calendar and ask.
+
+      When they do ask, file only the campaigns they named. "Push it" after a
+      single calendar means that calendar; anything less specific, confirm which
+      campaigns before writing.
+
+      Reading is always allowed: call stratos_list_brands to confirm the brand
+      and stratos_list_campaigns for the target window before filing anything,
+      so you never double-book a date.
+
       stratos_create_campaigns only creates DRAFTS for the team to review. It
       cannot send, schedule, approve, edit or delete. Batch a whole month in one
       call (max 100). Duplicates (same name + same send_date) are rejected, so
@@ -1844,8 +2204,23 @@ mcpServers:
     serverInstructions: |
       This connection is locked to Garden Tower Project. Never pass a brand name —
       the token already selects the brand and any brand argument is ignored.
-      Call stratos_list_brands first to confirm the brand, then
-      stratos_list_campaigns for the target window before creating anything.
+
+      NEVER call stratos_create_campaigns unless the person has asked for it in
+      that message, in plain words — "push this to Stratos", "send those three
+      across". Producing a calendar is NOT permission to file it: a calendar is
+      finished when it is written in the chat for them to read. Asking you for
+      a calendar, approving its content, saying it looks good, or asking you to
+      fix a line are all still the first step. If you are unsure whether you
+      were asked to push, you were not. Write the calendar and ask.
+
+      When they do ask, file only the campaigns they named. "Push it" after a
+      single calendar means that calendar; anything less specific, confirm which
+      campaigns before writing.
+
+      Reading is always allowed: call stratos_list_brands to confirm the brand
+      and stratos_list_campaigns for the target window before filing anything,
+      so you never double-book a date.
+
       stratos_create_campaigns only creates DRAFTS for the team to review. It
       cannot send, schedule, approve, edit or delete. Batch a whole month in one
       call (max 100). Duplicates (same name + same send_date) are rejected, so
@@ -1864,8 +2239,23 @@ mcpServers:
     serverInstructions: |
       This connection is locked to Rescube. Never pass a brand name —
       the token already selects the brand and any brand argument is ignored.
-      Call stratos_list_brands first to confirm the brand, then
-      stratos_list_campaigns for the target window before creating anything.
+
+      NEVER call stratos_create_campaigns unless the person has asked for it in
+      that message, in plain words — "push this to Stratos", "send those three
+      across". Producing a calendar is NOT permission to file it: a calendar is
+      finished when it is written in the chat for them to read. Asking you for
+      a calendar, approving its content, saying it looks good, or asking you to
+      fix a line are all still the first step. If you are unsure whether you
+      were asked to push, you were not. Write the calendar and ask.
+
+      When they do ask, file only the campaigns they named. "Push it" after a
+      single calendar means that calendar; anything less specific, confirm which
+      campaigns before writing.
+
+      Reading is always allowed: call stratos_list_brands to confirm the brand
+      and stratos_list_campaigns for the target window before filing anything,
+      so you never double-book a date.
+
       stratos_create_campaigns only creates DRAFTS for the team to review. It
       cannot send, schedule, approve, edit or delete. Batch a whole month in one
       call (max 100). Duplicates (same name + same send_date) are rejected, so
@@ -1884,8 +2274,23 @@ mcpServers:
     serverInstructions: |
       This connection is locked to Tattoo Numbing Cream. Never pass a brand name —
       the token already selects the brand and any brand argument is ignored.
-      Call stratos_list_brands first to confirm the brand, then
-      stratos_list_campaigns for the target window before creating anything.
+
+      NEVER call stratos_create_campaigns unless the person has asked for it in
+      that message, in plain words — "push this to Stratos", "send those three
+      across". Producing a calendar is NOT permission to file it: a calendar is
+      finished when it is written in the chat for them to read. Asking you for
+      a calendar, approving its content, saying it looks good, or asking you to
+      fix a line are all still the first step. If you are unsure whether you
+      were asked to push, you were not. Write the calendar and ask.
+
+      When they do ask, file only the campaigns they named. "Push it" after a
+      single calendar means that calendar; anything less specific, confirm which
+      campaigns before writing.
+
+      Reading is always allowed: call stratos_list_brands to confirm the brand
+      and stratos_list_campaigns for the target window before filing anything,
+      so you never double-book a date.
+
       stratos_create_campaigns only creates DRAFTS for the team to review. It
       cannot send, schedule, approve, edit or delete. Batch a whole month in one
       call (max 100). Duplicates (same name + same send_date) are rejected, so
@@ -1904,8 +2309,23 @@ mcpServers:
     serverInstructions: |
       This connection is locked to JazzUpCo. Never pass a brand name —
       the token already selects the brand and any brand argument is ignored.
-      Call stratos_list_brands first to confirm the brand, then
-      stratos_list_campaigns for the target window before creating anything.
+
+      NEVER call stratos_create_campaigns unless the person has asked for it in
+      that message, in plain words — "push this to Stratos", "send those three
+      across". Producing a calendar is NOT permission to file it: a calendar is
+      finished when it is written in the chat for them to read. Asking you for
+      a calendar, approving its content, saying it looks good, or asking you to
+      fix a line are all still the first step. If you are unsure whether you
+      were asked to push, you were not. Write the calendar and ask.
+
+      When they do ask, file only the campaigns they named. "Push it" after a
+      single calendar means that calendar; anything less specific, confirm which
+      campaigns before writing.
+
+      Reading is always allowed: call stratos_list_brands to confirm the brand
+      and stratos_list_campaigns for the target window before filing anything,
+      so you never double-book a date.
+
       stratos_create_campaigns only creates DRAFTS for the team to review. It
       cannot send, schedule, approve, edit or delete. Batch a whole month in one
       call (max 100). Duplicates (same name + same send_date) are rejected, so
@@ -1924,8 +2344,23 @@ mcpServers:
     serverInstructions: |
       This connection is locked to Larissa Loden. Never pass a brand name —
       the token already selects the brand and any brand argument is ignored.
-      Call stratos_list_brands first to confirm the brand, then
-      stratos_list_campaigns for the target window before creating anything.
+
+      NEVER call stratos_create_campaigns unless the person has asked for it in
+      that message, in plain words — "push this to Stratos", "send those three
+      across". Producing a calendar is NOT permission to file it: a calendar is
+      finished when it is written in the chat for them to read. Asking you for
+      a calendar, approving its content, saying it looks good, or asking you to
+      fix a line are all still the first step. If you are unsure whether you
+      were asked to push, you were not. Write the calendar and ask.
+
+      When they do ask, file only the campaigns they named. "Push it" after a
+      single calendar means that calendar; anything less specific, confirm which
+      campaigns before writing.
+
+      Reading is always allowed: call stratos_list_brands to confirm the brand
+      and stratos_list_campaigns for the target window before filing anything,
+      so you never double-book a date.
+
       stratos_create_campaigns only creates DRAFTS for the team to review. It
       cannot send, schedule, approve, edit or delete. Batch a whole month in one
       call (max 100). Duplicates (same name + same send_date) are rejected, so
@@ -1944,8 +2379,23 @@ mcpServers:
     serverInstructions: |
       This connection is locked to Nip Fab UK. Never pass a brand name —
       the token already selects the brand and any brand argument is ignored.
-      Call stratos_list_brands first to confirm the brand, then
-      stratos_list_campaigns for the target window before creating anything.
+
+      NEVER call stratos_create_campaigns unless the person has asked for it in
+      that message, in plain words — "push this to Stratos", "send those three
+      across". Producing a calendar is NOT permission to file it: a calendar is
+      finished when it is written in the chat for them to read. Asking you for
+      a calendar, approving its content, saying it looks good, or asking you to
+      fix a line are all still the first step. If you are unsure whether you
+      were asked to push, you were not. Write the calendar and ask.
+
+      When they do ask, file only the campaigns they named. "Push it" after a
+      single calendar means that calendar; anything less specific, confirm which
+      campaigns before writing.
+
+      Reading is always allowed: call stratos_list_brands to confirm the brand
+      and stratos_list_campaigns for the target window before filing anything,
+      so you never double-book a date.
+
       stratos_create_campaigns only creates DRAFTS for the team to review. It
       cannot send, schedule, approve, edit or delete. Batch a whole month in one
       call (max 100). Duplicates (same name + same send_date) are rejected, so
@@ -1964,8 +2414,23 @@ mcpServers:
     serverInstructions: |
       This connection is locked to 8 Sheep. Never pass a brand name —
       the token already selects the brand and any brand argument is ignored.
-      Call stratos_list_brands first to confirm the brand, then
-      stratos_list_campaigns for the target window before creating anything.
+
+      NEVER call stratos_create_campaigns unless the person has asked for it in
+      that message, in plain words — "push this to Stratos", "send those three
+      across". Producing a calendar is NOT permission to file it: a calendar is
+      finished when it is written in the chat for them to read. Asking you for
+      a calendar, approving its content, saying it looks good, or asking you to
+      fix a line are all still the first step. If you are unsure whether you
+      were asked to push, you were not. Write the calendar and ask.
+
+      When they do ask, file only the campaigns they named. "Push it" after a
+      single calendar means that calendar; anything less specific, confirm which
+      campaigns before writing.
+
+      Reading is always allowed: call stratos_list_brands to confirm the brand
+      and stratos_list_campaigns for the target window before filing anything,
+      so you never double-book a date.
+
       stratos_create_campaigns only creates DRAFTS for the team to review. It
       cannot send, schedule, approve, edit or delete. Batch a whole month in one
       call (max 100). Duplicates (same name + same send_date) are rejected, so
@@ -1984,8 +2449,23 @@ mcpServers:
     serverInstructions: |
       This connection is locked to Activation Products North America. Never pass a brand name —
       the token already selects the brand and any brand argument is ignored.
-      Call stratos_list_brands first to confirm the brand, then
-      stratos_list_campaigns for the target window before creating anything.
+
+      NEVER call stratos_create_campaigns unless the person has asked for it in
+      that message, in plain words — "push this to Stratos", "send those three
+      across". Producing a calendar is NOT permission to file it: a calendar is
+      finished when it is written in the chat for them to read. Asking you for
+      a calendar, approving its content, saying it looks good, or asking you to
+      fix a line are all still the first step. If you are unsure whether you
+      were asked to push, you were not. Write the calendar and ask.
+
+      When they do ask, file only the campaigns they named. "Push it" after a
+      single calendar means that calendar; anything less specific, confirm which
+      campaigns before writing.
+
+      Reading is always allowed: call stratos_list_brands to confirm the brand
+      and stratos_list_campaigns for the target window before filing anything,
+      so you never double-book a date.
+
       stratos_create_campaigns only creates DRAFTS for the team to review. It
       cannot send, schedule, approve, edit or delete. Batch a whole month in one
       call (max 100). Duplicates (same name + same send_date) are rejected, so
@@ -2004,8 +2484,23 @@ mcpServers:
     serverInstructions: |
       This connection is locked to Ascent Bicycle. Never pass a brand name —
       the token already selects the brand and any brand argument is ignored.
-      Call stratos_list_brands first to confirm the brand, then
-      stratos_list_campaigns for the target window before creating anything.
+
+      NEVER call stratos_create_campaigns unless the person has asked for it in
+      that message, in plain words — "push this to Stratos", "send those three
+      across". Producing a calendar is NOT permission to file it: a calendar is
+      finished when it is written in the chat for them to read. Asking you for
+      a calendar, approving its content, saying it looks good, or asking you to
+      fix a line are all still the first step. If you are unsure whether you
+      were asked to push, you were not. Write the calendar and ask.
+
+      When they do ask, file only the campaigns they named. "Push it" after a
+      single calendar means that calendar; anything less specific, confirm which
+      campaigns before writing.
+
+      Reading is always allowed: call stratos_list_brands to confirm the brand
+      and stratos_list_campaigns for the target window before filing anything,
+      so you never double-book a date.
+
       stratos_create_campaigns only creates DRAFTS for the team to review. It
       cannot send, schedule, approve, edit or delete. Batch a whole month in one
       call (max 100). Duplicates (same name + same send_date) are rejected, so
@@ -2024,8 +2519,23 @@ mcpServers:
     serverInstructions: |
       This connection is locked to Audry Rose. Never pass a brand name —
       the token already selects the brand and any brand argument is ignored.
-      Call stratos_list_brands first to confirm the brand, then
-      stratos_list_campaigns for the target window before creating anything.
+
+      NEVER call stratos_create_campaigns unless the person has asked for it in
+      that message, in plain words — "push this to Stratos", "send those three
+      across". Producing a calendar is NOT permission to file it: a calendar is
+      finished when it is written in the chat for them to read. Asking you for
+      a calendar, approving its content, saying it looks good, or asking you to
+      fix a line are all still the first step. If you are unsure whether you
+      were asked to push, you were not. Write the calendar and ask.
+
+      When they do ask, file only the campaigns they named. "Push it" after a
+      single calendar means that calendar; anything less specific, confirm which
+      campaigns before writing.
+
+      Reading is always allowed: call stratos_list_brands to confirm the brand
+      and stratos_list_campaigns for the target window before filing anything,
+      so you never double-book a date.
+
       stratos_create_campaigns only creates DRAFTS for the team to review. It
       cannot send, schedule, approve, edit or delete. Batch a whole month in one
       call (max 100). Duplicates (same name + same send_date) are rejected, so
@@ -2044,8 +2554,23 @@ mcpServers:
     serverInstructions: |
       This connection is locked to UK Built Different. Never pass a brand name —
       the token already selects the brand and any brand argument is ignored.
-      Call stratos_list_brands first to confirm the brand, then
-      stratos_list_campaigns for the target window before creating anything.
+
+      NEVER call stratos_create_campaigns unless the person has asked for it in
+      that message, in plain words — "push this to Stratos", "send those three
+      across". Producing a calendar is NOT permission to file it: a calendar is
+      finished when it is written in the chat for them to read. Asking you for
+      a calendar, approving its content, saying it looks good, or asking you to
+      fix a line are all still the first step. If you are unsure whether you
+      were asked to push, you were not. Write the calendar and ask.
+
+      When they do ask, file only the campaigns they named. "Push it" after a
+      single calendar means that calendar; anything less specific, confirm which
+      campaigns before writing.
+
+      Reading is always allowed: call stratos_list_brands to confirm the brand
+      and stratos_list_campaigns for the target window before filing anything,
+      so you never double-book a date.
+
       stratos_create_campaigns only creates DRAFTS for the team to review. It
       cannot send, schedule, approve, edit or delete. Batch a whole month in one
       call (max 100). Duplicates (same name + same send_date) are rejected, so
@@ -2064,8 +2589,23 @@ mcpServers:
     serverInstructions: |
       This connection is locked to Formula 369. Never pass a brand name —
       the token already selects the brand and any brand argument is ignored.
-      Call stratos_list_brands first to confirm the brand, then
-      stratos_list_campaigns for the target window before creating anything.
+
+      NEVER call stratos_create_campaigns unless the person has asked for it in
+      that message, in plain words — "push this to Stratos", "send those three
+      across". Producing a calendar is NOT permission to file it: a calendar is
+      finished when it is written in the chat for them to read. Asking you for
+      a calendar, approving its content, saying it looks good, or asking you to
+      fix a line are all still the first step. If you are unsure whether you
+      were asked to push, you were not. Write the calendar and ask.
+
+      When they do ask, file only the campaigns they named. "Push it" after a
+      single calendar means that calendar; anything less specific, confirm which
+      campaigns before writing.
+
+      Reading is always allowed: call stratos_list_brands to confirm the brand
+      and stratos_list_campaigns for the target window before filing anything,
+      so you never double-book a date.
+
       stratos_create_campaigns only creates DRAFTS for the team to review. It
       cannot send, schedule, approve, edit or delete. Batch a whole month in one
       call (max 100). Duplicates (same name + same send_date) are rejected, so
@@ -2084,8 +2624,23 @@ mcpServers:
     serverInstructions: |
       This connection is locked to Hot Shapers. Never pass a brand name —
       the token already selects the brand and any brand argument is ignored.
-      Call stratos_list_brands first to confirm the brand, then
-      stratos_list_campaigns for the target window before creating anything.
+
+      NEVER call stratos_create_campaigns unless the person has asked for it in
+      that message, in plain words — "push this to Stratos", "send those three
+      across". Producing a calendar is NOT permission to file it: a calendar is
+      finished when it is written in the chat for them to read. Asking you for
+      a calendar, approving its content, saying it looks good, or asking you to
+      fix a line are all still the first step. If you are unsure whether you
+      were asked to push, you were not. Write the calendar and ask.
+
+      When they do ask, file only the campaigns they named. "Push it" after a
+      single calendar means that calendar; anything less specific, confirm which
+      campaigns before writing.
+
+      Reading is always allowed: call stratos_list_brands to confirm the brand
+      and stratos_list_campaigns for the target window before filing anything,
+      so you never double-book a date.
+
       stratos_create_campaigns only creates DRAFTS for the team to review. It
       cannot send, schedule, approve, edit or delete. Batch a whole month in one
       call (max 100). Duplicates (same name + same send_date) are rejected, so
@@ -2104,8 +2659,23 @@ mcpServers:
     serverInstructions: |
       This connection is locked to ICU Eyewear. Never pass a brand name —
       the token already selects the brand and any brand argument is ignored.
-      Call stratos_list_brands first to confirm the brand, then
-      stratos_list_campaigns for the target window before creating anything.
+
+      NEVER call stratos_create_campaigns unless the person has asked for it in
+      that message, in plain words — "push this to Stratos", "send those three
+      across". Producing a calendar is NOT permission to file it: a calendar is
+      finished when it is written in the chat for them to read. Asking you for
+      a calendar, approving its content, saying it looks good, or asking you to
+      fix a line are all still the first step. If you are unsure whether you
+      were asked to push, you were not. Write the calendar and ask.
+
+      When they do ask, file only the campaigns they named. "Push it" after a
+      single calendar means that calendar; anything less specific, confirm which
+      campaigns before writing.
+
+      Reading is always allowed: call stratos_list_brands to confirm the brand
+      and stratos_list_campaigns for the target window before filing anything,
+      so you never double-book a date.
+
       stratos_create_campaigns only creates DRAFTS for the team to review. It
       cannot send, schedule, approve, edit or delete. Batch a whole month in one
       call (max 100). Duplicates (same name + same send_date) are rejected, so
@@ -2124,8 +2694,23 @@ mcpServers:
     serverInstructions: |
       This connection is locked to Kineon. Never pass a brand name —
       the token already selects the brand and any brand argument is ignored.
-      Call stratos_list_brands first to confirm the brand, then
-      stratos_list_campaigns for the target window before creating anything.
+
+      NEVER call stratos_create_campaigns unless the person has asked for it in
+      that message, in plain words — "push this to Stratos", "send those three
+      across". Producing a calendar is NOT permission to file it: a calendar is
+      finished when it is written in the chat for them to read. Asking you for
+      a calendar, approving its content, saying it looks good, or asking you to
+      fix a line are all still the first step. If you are unsure whether you
+      were asked to push, you were not. Write the calendar and ask.
+
+      When they do ask, file only the campaigns they named. "Push it" after a
+      single calendar means that calendar; anything less specific, confirm which
+      campaigns before writing.
+
+      Reading is always allowed: call stratos_list_brands to confirm the brand
+      and stratos_list_campaigns for the target window before filing anything,
+      so you never double-book a date.
+
       stratos_create_campaigns only creates DRAFTS for the team to review. It
       cannot send, schedule, approve, edit or delete. Batch a whole month in one
       call (max 100). Duplicates (same name + same send_date) are rejected, so
@@ -2144,8 +2729,23 @@ mcpServers:
     serverInstructions: |
       This connection is locked to Look Our Way. Never pass a brand name —
       the token already selects the brand and any brand argument is ignored.
-      Call stratos_list_brands first to confirm the brand, then
-      stratos_list_campaigns for the target window before creating anything.
+
+      NEVER call stratos_create_campaigns unless the person has asked for it in
+      that message, in plain words — "push this to Stratos", "send those three
+      across". Producing a calendar is NOT permission to file it: a calendar is
+      finished when it is written in the chat for them to read. Asking you for
+      a calendar, approving its content, saying it looks good, or asking you to
+      fix a line are all still the first step. If you are unsure whether you
+      were asked to push, you were not. Write the calendar and ask.
+
+      When they do ask, file only the campaigns they named. "Push it" after a
+      single calendar means that calendar; anything less specific, confirm which
+      campaigns before writing.
+
+      Reading is always allowed: call stratos_list_brands to confirm the brand
+      and stratos_list_campaigns for the target window before filing anything,
+      so you never double-book a date.
+
       stratos_create_campaigns only creates DRAFTS for the team to review. It
       cannot send, schedule, approve, edit or delete. Batch a whole month in one
       call (max 100). Duplicates (same name + same send_date) are rejected, so
@@ -2164,8 +2764,23 @@ mcpServers:
     serverInstructions: |
       This connection is locked to Motive Health. Never pass a brand name —
       the token already selects the brand and any brand argument is ignored.
-      Call stratos_list_brands first to confirm the brand, then
-      stratos_list_campaigns for the target window before creating anything.
+
+      NEVER call stratos_create_campaigns unless the person has asked for it in
+      that message, in plain words — "push this to Stratos", "send those three
+      across". Producing a calendar is NOT permission to file it: a calendar is
+      finished when it is written in the chat for them to read. Asking you for
+      a calendar, approving its content, saying it looks good, or asking you to
+      fix a line are all still the first step. If you are unsure whether you
+      were asked to push, you were not. Write the calendar and ask.
+
+      When they do ask, file only the campaigns they named. "Push it" after a
+      single calendar means that calendar; anything less specific, confirm which
+      campaigns before writing.
+
+      Reading is always allowed: call stratos_list_brands to confirm the brand
+      and stratos_list_campaigns for the target window before filing anything,
+      so you never double-book a date.
+
       stratos_create_campaigns only creates DRAFTS for the team to review. It
       cannot send, schedule, approve, edit or delete. Batch a whole month in one
       call (max 100). Duplicates (same name + same send_date) are rejected, so
@@ -2184,8 +2799,23 @@ mcpServers:
     serverInstructions: |
       This connection is locked to Redu Sculpt. Never pass a brand name —
       the token already selects the brand and any brand argument is ignored.
-      Call stratos_list_brands first to confirm the brand, then
-      stratos_list_campaigns for the target window before creating anything.
+
+      NEVER call stratos_create_campaigns unless the person has asked for it in
+      that message, in plain words — "push this to Stratos", "send those three
+      across". Producing a calendar is NOT permission to file it: a calendar is
+      finished when it is written in the chat for them to read. Asking you for
+      a calendar, approving its content, saying it looks good, or asking you to
+      fix a line are all still the first step. If you are unsure whether you
+      were asked to push, you were not. Write the calendar and ask.
+
+      When they do ask, file only the campaigns they named. "Push it" after a
+      single calendar means that calendar; anything less specific, confirm which
+      campaigns before writing.
+
+      Reading is always allowed: call stratos_list_brands to confirm the brand
+      and stratos_list_campaigns for the target window before filing anything,
+      so you never double-book a date.
+
       stratos_create_campaigns only creates DRAFTS for the team to review. It
       cannot send, schedule, approve, edit or delete. Batch a whole month in one
       call (max 100). Duplicates (same name + same send_date) are rejected, so
@@ -2204,8 +2834,23 @@ mcpServers:
     serverInstructions: |
       This connection is locked to Refyne. Never pass a brand name —
       the token already selects the brand and any brand argument is ignored.
-      Call stratos_list_brands first to confirm the brand, then
-      stratos_list_campaigns for the target window before creating anything.
+
+      NEVER call stratos_create_campaigns unless the person has asked for it in
+      that message, in plain words — "push this to Stratos", "send those three
+      across". Producing a calendar is NOT permission to file it: a calendar is
+      finished when it is written in the chat for them to read. Asking you for
+      a calendar, approving its content, saying it looks good, or asking you to
+      fix a line are all still the first step. If you are unsure whether you
+      were asked to push, you were not. Write the calendar and ask.
+
+      When they do ask, file only the campaigns they named. "Push it" after a
+      single calendar means that calendar; anything less specific, confirm which
+      campaigns before writing.
+
+      Reading is always allowed: call stratos_list_brands to confirm the brand
+      and stratos_list_campaigns for the target window before filing anything,
+      so you never double-book a date.
+
       stratos_create_campaigns only creates DRAFTS for the team to review. It
       cannot send, schedule, approve, edit or delete. Batch a whole month in one
       call (max 100). Duplicates (same name + same send_date) are rejected, so
@@ -2224,8 +2869,23 @@ mcpServers:
     serverInstructions: |
       This connection is locked to Rodial. Never pass a brand name —
       the token already selects the brand and any brand argument is ignored.
-      Call stratos_list_brands first to confirm the brand, then
-      stratos_list_campaigns for the target window before creating anything.
+
+      NEVER call stratos_create_campaigns unless the person has asked for it in
+      that message, in plain words — "push this to Stratos", "send those three
+      across". Producing a calendar is NOT permission to file it: a calendar is
+      finished when it is written in the chat for them to read. Asking you for
+      a calendar, approving its content, saying it looks good, or asking you to
+      fix a line are all still the first step. If you are unsure whether you
+      were asked to push, you were not. Write the calendar and ask.
+
+      When they do ask, file only the campaigns they named. "Push it" after a
+      single calendar means that calendar; anything less specific, confirm which
+      campaigns before writing.
+
+      Reading is always allowed: call stratos_list_brands to confirm the brand
+      and stratos_list_campaigns for the target window before filing anything,
+      so you never double-book a date.
+
       stratos_create_campaigns only creates DRAFTS for the team to review. It
       cannot send, schedule, approve, edit or delete. Batch a whole month in one
       call (max 100). Duplicates (same name + same send_date) are rejected, so
@@ -2244,8 +2904,23 @@ mcpServers:
     serverInstructions: |
       This connection is locked to Stirling Timepieces. Never pass a brand name —
       the token already selects the brand and any brand argument is ignored.
-      Call stratos_list_brands first to confirm the brand, then
-      stratos_list_campaigns for the target window before creating anything.
+
+      NEVER call stratos_create_campaigns unless the person has asked for it in
+      that message, in plain words — "push this to Stratos", "send those three
+      across". Producing a calendar is NOT permission to file it: a calendar is
+      finished when it is written in the chat for them to read. Asking you for
+      a calendar, approving its content, saying it looks good, or asking you to
+      fix a line are all still the first step. If you are unsure whether you
+      were asked to push, you were not. Write the calendar and ask.
+
+      When they do ask, file only the campaigns they named. "Push it" after a
+      single calendar means that calendar; anything less specific, confirm which
+      campaigns before writing.
+
+      Reading is always allowed: call stratos_list_brands to confirm the brand
+      and stratos_list_campaigns for the target window before filing anything,
+      so you never double-book a date.
+
       stratos_create_campaigns only creates DRAFTS for the team to review. It
       cannot send, schedule, approve, edit or delete. Batch a whole month in one
       call (max 100). Duplicates (same name + same send_date) are rejected, so
@@ -2264,8 +2939,23 @@ mcpServers:
     serverInstructions: |
       This connection is locked to Stono Outdoors. Never pass a brand name —
       the token already selects the brand and any brand argument is ignored.
-      Call stratos_list_brands first to confirm the brand, then
-      stratos_list_campaigns for the target window before creating anything.
+
+      NEVER call stratos_create_campaigns unless the person has asked for it in
+      that message, in plain words — "push this to Stratos", "send those three
+      across". Producing a calendar is NOT permission to file it: a calendar is
+      finished when it is written in the chat for them to read. Asking you for
+      a calendar, approving its content, saying it looks good, or asking you to
+      fix a line are all still the first step. If you are unsure whether you
+      were asked to push, you were not. Write the calendar and ask.
+
+      When they do ask, file only the campaigns they named. "Push it" after a
+      single calendar means that calendar; anything less specific, confirm which
+      campaigns before writing.
+
+      Reading is always allowed: call stratos_list_brands to confirm the brand
+      and stratos_list_campaigns for the target window before filing anything,
+      so you never double-book a date.
+
       stratos_create_campaigns only creates DRAFTS for the team to review. It
       cannot send, schedule, approve, edit or delete. Batch a whole month in one
       call (max 100). Duplicates (same name + same send_date) are rejected, so
@@ -2284,8 +2974,23 @@ mcpServers:
     serverInstructions: |
       This connection is locked to The Great Fire Company. Never pass a brand name —
       the token already selects the brand and any brand argument is ignored.
-      Call stratos_list_brands first to confirm the brand, then
-      stratos_list_campaigns for the target window before creating anything.
+
+      NEVER call stratos_create_campaigns unless the person has asked for it in
+      that message, in plain words — "push this to Stratos", "send those three
+      across". Producing a calendar is NOT permission to file it: a calendar is
+      finished when it is written in the chat for them to read. Asking you for
+      a calendar, approving its content, saying it looks good, or asking you to
+      fix a line are all still the first step. If you are unsure whether you
+      were asked to push, you were not. Write the calendar and ask.
+
+      When they do ask, file only the campaigns they named. "Push it" after a
+      single calendar means that calendar; anything less specific, confirm which
+      campaigns before writing.
+
+      Reading is always allowed: call stratos_list_brands to confirm the brand
+      and stratos_list_campaigns for the target window before filing anything,
+      so you never double-book a date.
+
       stratos_create_campaigns only creates DRAFTS for the team to review. It
       cannot send, schedule, approve, edit or delete. Batch a whole month in one
       call (max 100). Duplicates (same name + same send_date) are rejected, so
@@ -2304,8 +3009,23 @@ mcpServers:
     serverInstructions: |
       This connection is locked to The Landmark Kids. Never pass a brand name —
       the token already selects the brand and any brand argument is ignored.
-      Call stratos_list_brands first to confirm the brand, then
-      stratos_list_campaigns for the target window before creating anything.
+
+      NEVER call stratos_create_campaigns unless the person has asked for it in
+      that message, in plain words — "push this to Stratos", "send those three
+      across". Producing a calendar is NOT permission to file it: a calendar is
+      finished when it is written in the chat for them to read. Asking you for
+      a calendar, approving its content, saying it looks good, or asking you to
+      fix a line are all still the first step. If you are unsure whether you
+      were asked to push, you were not. Write the calendar and ask.
+
+      When they do ask, file only the campaigns they named. "Push it" after a
+      single calendar means that calendar; anything less specific, confirm which
+      campaigns before writing.
+
+      Reading is always allowed: call stratos_list_brands to confirm the brand
+      and stratos_list_campaigns for the target window before filing anything,
+      so you never double-book a date.
+
       stratos_create_campaigns only creates DRAFTS for the team to review. It
       cannot send, schedule, approve, edit or delete. Batch a whole month in one
       call (max 100). Duplicates (same name + same send_date) are rejected, so
@@ -2324,8 +3044,23 @@ mcpServers:
     serverInstructions: |
       This connection is locked to KIN Apparel. Never pass a brand name —
       the token already selects the brand and any brand argument is ignored.
-      Call stratos_list_brands first to confirm the brand, then
-      stratos_list_campaigns for the target window before creating anything.
+
+      NEVER call stratos_create_campaigns unless the person has asked for it in
+      that message, in plain words — "push this to Stratos", "send those three
+      across". Producing a calendar is NOT permission to file it: a calendar is
+      finished when it is written in the chat for them to read. Asking you for
+      a calendar, approving its content, saying it looks good, or asking you to
+      fix a line are all still the first step. If you are unsure whether you
+      were asked to push, you were not. Write the calendar and ask.
+
+      When they do ask, file only the campaigns they named. "Push it" after a
+      single calendar means that calendar; anything less specific, confirm which
+      campaigns before writing.
+
+      Reading is always allowed: call stratos_list_brands to confirm the brand
+      and stratos_list_campaigns for the target window before filing anything,
+      so you never double-book a date.
+
       stratos_create_campaigns only creates DRAFTS for the team to review. It
       cannot send, schedule, approve, edit or delete. Batch a whole month in one
       call (max 100). Duplicates (same name + same send_date) are rejected, so
@@ -2344,8 +3079,23 @@ mcpServers:
     serverInstructions: |
       This connection is locked to Local Revival. Never pass a brand name —
       the token already selects the brand and any brand argument is ignored.
-      Call stratos_list_brands first to confirm the brand, then
-      stratos_list_campaigns for the target window before creating anything.
+
+      NEVER call stratos_create_campaigns unless the person has asked for it in
+      that message, in plain words — "push this to Stratos", "send those three
+      across". Producing a calendar is NOT permission to file it: a calendar is
+      finished when it is written in the chat for them to read. Asking you for
+      a calendar, approving its content, saying it looks good, or asking you to
+      fix a line are all still the first step. If you are unsure whether you
+      were asked to push, you were not. Write the calendar and ask.
+
+      When they do ask, file only the campaigns they named. "Push it" after a
+      single calendar means that calendar; anything less specific, confirm which
+      campaigns before writing.
+
+      Reading is always allowed: call stratos_list_brands to confirm the brand
+      and stratos_list_campaigns for the target window before filing anything,
+      so you never double-book a date.
+
       stratos_create_campaigns only creates DRAFTS for the team to review. It
       cannot send, schedule, approve, edit or delete. Batch a whole month in one
       call (max 100). Duplicates (same name + same send_date) are rejected, so
@@ -2364,8 +3114,23 @@ mcpServers:
     serverInstructions: |
       This connection is locked to The Nova Bottle. Never pass a brand name —
       the token already selects the brand and any brand argument is ignored.
-      Call stratos_list_brands first to confirm the brand, then
-      stratos_list_campaigns for the target window before creating anything.
+
+      NEVER call stratos_create_campaigns unless the person has asked for it in
+      that message, in plain words — "push this to Stratos", "send those three
+      across". Producing a calendar is NOT permission to file it: a calendar is
+      finished when it is written in the chat for them to read. Asking you for
+      a calendar, approving its content, saying it looks good, or asking you to
+      fix a line are all still the first step. If you are unsure whether you
+      were asked to push, you were not. Write the calendar and ask.
+
+      When they do ask, file only the campaigns they named. "Push it" after a
+      single calendar means that calendar; anything less specific, confirm which
+      campaigns before writing.
+
+      Reading is always allowed: call stratos_list_brands to confirm the brand
+      and stratos_list_campaigns for the target window before filing anything,
+      so you never double-book a date.
+
       stratos_create_campaigns only creates DRAFTS for the team to review. It
       cannot send, schedule, approve, edit or delete. Batch a whole month in one
       call (max 100). Duplicates (same name + same send_date) are rejected, so
