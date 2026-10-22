@@ -133,6 +133,17 @@ webSearch:
   firecrawlApiKey: '${FIRECRAWL_API_KEY}'
   rerankerType: 'none'
 
+# ── Who may create an account ───────────────────────────────────────────────
+# Registration is opened only to add a named colleague, then closed again. The
+# allowlist is what makes that safe: `isEmailDomainAllowed` returns TRUE for
+# everyone when the list is absent or empty, so an empty list plus
+# ALLOW_REGISTRATION=true is an open door. Matching is exact and
+# case-insensitive — no wildcards, no subdomains.
+registration:
+  allowedDomains:
+    - 'kensingtonmediahouse.com'
+    - 'visualyticsagency.com'
+
 # ── Interface ───────────────────────────────────────────────────────────────
 interface:
   modelSelect: true         # free model choice — cost is shown, not capped
