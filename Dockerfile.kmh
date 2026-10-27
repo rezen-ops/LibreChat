@@ -29,11 +29,12 @@ RUN npm run frontend
 
 # ── runtime ─────────────────────────────────────────────────────────────────
 FROM node:24.16.0-alpine AS runtime
-RUN apk upgrade --no-cache && apk add --no-cache jemalloc python3 py3-pip
+RUN apk upgrade --no-cache && apk add --no-cache jemalloc python3 py3-pip su-exec
 ENV LD_PRELOAD=/usr/lib/libjemalloc.so.2
 RUN mkdir -p /app && chown node:node /app
 WORKDIR /app
-USER node
+# Stays root so the entrypoint can chown the runtime-mounted uploads volume;
+# the entrypoint drops to `node` before exec'ing the app.
 
 COPY --from=builder --chown=node:node /app ./
 
@@ -48,5 +49,9 @@ ENV CONFIG_PATH=/app/librechat.yaml \
     PORT=3080 \
     NODE_ENV=production
 
+COPY --chown=node:node kmh/docker-entrypoint.sh /usr/local/bin/kmh-entrypoint.sh
+RUN chmod +x /usr/local/bin/kmh-entrypoint.sh
+
 EXPOSE 3080
+ENTRYPOINT ["/usr/local/bin/kmh-entrypoint.sh"]
 CMD ["npm", "run", "backend"]
