@@ -26,7 +26,18 @@ const requireAdminAccess = requireCapability(SystemCapabilities.ACCESS_ADMIN);
  */
 
 /** Must match client/src/components/Kmh/podColors.ts. */
-const CREW_COLOR_KEYS = new Set(['slate', 'teal', 'amber', 'rose', 'violet', 'green', 'blue']);
+const CREW_COLOR_KEYS = new Set([
+  'slate',
+  'teal',
+  'amber',
+  'rose',
+  'violet',
+  'green',
+  'blue',
+  'cyan',
+  'orange',
+  'fuchsia',
+]);
 
 /** Out-of-palette colours are stored empty rather than rejected, so a stale
  *  client can never fail a save over a colour it doesn't know about. */
