@@ -183,6 +183,16 @@ modelSpecs:
   # enforce:false — the tiers are presets people can pick, not a cage.
   enforce: false
   prioritize: true
+  # promptCacheTtl: '1h' on every spec. The default is 5 minutes, and the way
+  # this is actually used — send a brief, go and do something else, come back
+  # twenty minutes later — misses a 5-minute window almost every time, so the
+  # whole conversation is re-sent at full price on the next turn. An hour
+  # covers that gap. The window is refreshed on each cache hit, so an active
+  # thread keeps extending it rather than expiring an hour after it started.
+  #
+  # The trade: a 1h cache write costs more than a 5m one, so this is a loss for
+  # a thread that is written once and never continued, and a large win for one
+  # that is picked up later. The second is the common case here.
   list:
     - name: kmh-fast
       label: 'KMH Fast'
@@ -193,6 +203,7 @@ modelSpecs:
         model: 'claude-haiku-4-5-20251001'
         modelLabel: 'KMH Fast'
         promptCache: true
+        promptCacheTtl: '1h'
         maxContextTokens: 100000
 
     - name: kmh-standard
@@ -203,6 +214,7 @@ modelSpecs:
         model: 'claude-sonnet-5'
         modelLabel: 'KMH Standard'
         promptCache: true
+        promptCacheTtl: '1h'
         maxContextTokens: 200000
 
     - name: kmh-deep
@@ -213,6 +225,7 @@ modelSpecs:
         model: 'claude-opus-5'
         modelLabel: 'KMH Deep'
         promptCache: true
+        promptCacheTtl: '1h'
 
 
 # ── Per-client Klaviyo servers ───────────────────────────────────────────────
