@@ -78,6 +78,49 @@ endpoints:
         - '*update*_mcp_klaviyo-*'
         - '*delete*_mcp_klaviyo-*'
         - '*send*_mcp_klaviyo-*'
+        # Commslayer is READ-ONLY for now (config/mcp-servers.json asks for the
+        # mcp:read scope too). Its ~240 tools are verb-named; every verb below
+        # writes. Deny beats ask and allow, so moving one of these to `ask` is
+        # how a write tool gets switched on later.
+        - '*create*_mcp_commslayer*'
+        - '*update*_mcp_commslayer*'
+        - '*delete*_mcp_commslayer*'
+        - '*send*_mcp_commslayer*'
+        - '*set*_mcp_commslayer*'
+        - '*add*_mcp_commslayer*'
+        - '*remove*_mcp_commslayer*'
+        - '*assign*_mcp_commslayer*'
+        - '*change*_mcp_commslayer*'
+        - '*resolve*_mcp_commslayer*'
+        - '*merge*_mcp_commslayer*'
+        - '*split*_mcp_commslayer*'
+        - '*mark*_mcp_commslayer*'
+        - '*mute*_mcp_commslayer*'
+        - '*snooze*_mcp_commslayer*'
+        - '*toggle*_mcp_commslayer*'
+        - '*execute*_mcp_commslayer*'
+        - '*approve*_mcp_commslayer*'
+        - '*reject*_mcp_commslayer*'
+        - '*adjust*_mcp_commslayer*'
+        - '*regenerate*_mcp_commslayer*'
+        - '*answer*_mcp_commslayer*'
+        - '*dismiss*_mcp_commslayer*'
+        - '*accept*_mcp_commslayer*'
+        - '*publish*_mcp_commslayer*'
+        - '*save*_mcp_commslayer*'
+        - '*discard*_mcp_commslayer*'
+        - '*install*_mcp_commslayer*'
+        - '*share*_mcp_commslayer*'
+        - '*redeem*_mcp_commslayer*'
+        - '*cancel*_mcp_commslayer*'
+        - '*hide*_mcp_commslayer*'
+        - '*upload*_mcp_commslayer*'
+        - '*configure*_mcp_commslayer*'
+        - '*reopen*_mcp_commslayer*'
+        - '*test*_mcp_commslayer*'
+        - '*simulate*_mcp_commslayer*'
+        - '*batch*_mcp_commslayer*'
+        - '*export*_mcp_commslayer*'
       # Required, and not cosmetic. Precedence runs deny -> ask -> allow, and in
       # `default` mode anything matching no rule falls through to ask. Without
       # this catch-all the gate fires on every read as well — which it did:
@@ -143,6 +186,7 @@ registration:
   allowedDomains:
     - 'kensingtonmediahouse.com'
     - 'visualyticsagency.com'
+    - 'vigornatura.com'         # e-commerce: cs@ and anyone added to the E-commerce group
 
 # ── Interface ───────────────────────────────────────────────────────────────
 interface:
